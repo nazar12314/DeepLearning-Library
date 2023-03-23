@@ -1,65 +1,31 @@
 #include <iostream>
-#include <Eigen/Dense>
+#include <chrono>
+#include "eigen/Eigen/Eigen"
 
-#include <unsupported/Eigen/NonLinearOptimization>
-#include <unsupported/Eigen/NumericalDiff>
+using namespace std;
+using namespace Eigen;
 
-// Generic functor
-template<typename _Scalar, int NX = Eigen::Dynamic, int NY = Eigen::Dynamic>
-struct Functor
-{
-    typedef _Scalar Scalar;
-    enum {
-        InputsAtCompileTime = NX,
-        ValuesAtCompileTime = NY
-    };
-    typedef Eigen::Matrix<Scalar,InputsAtCompileTime,1> InputType;
-    typedef Eigen::Matrix<Scalar,ValuesAtCompileTime,1> ValueType;
-    typedef Eigen::Matrix<Scalar,ValuesAtCompileTime,InputsAtCompileTime> JacobianType;
+#define n 2000
 
-    int m_inputs, m_values;
+int main() {
+    Eigen::MatrixXd A = Eigen::MatrixXd::Random(n, n);
+    Eigen::MatrixXd B = Eigen::MatrixXd::Random(n, n);
+    Eigen::MatrixXd D;
 
-    Functor() : m_inputs(InputsAtCompileTime), m_values(ValuesAtCompileTime) {}
-    Functor(int inputs, int values) : m_inputs(inputs), m_values(values) {}
+    auto start_time = std::chrono::high_resolution_clock::now();
 
-    int inputs() const { return m_inputs; }
-    int values() const { return m_values; }
+    D = A * B;
 
-};
+    cout << D(0, 0) << endl;
 
-struct my_functor : Functor<double>
-{
-    my_functor(void): Functor<double>(2,2) {}
-    int operator()(const Eigen::VectorXd &x, Eigen::VectorXd &fvec) const
-    {
-        // Implement y = 10*(x0+3)^2 + (x1-5)^2
-        fvec(0) = 10.0*pow(x(0)+3.0,2) +  pow(x(1)-5.0,2);
-        fvec(1) = 0;
+    auto end_time = std::chrono::high_resolution_clock::now();
+    auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
 
-        return 0;
-    }
-};
+    cout << "Threads: " << Eigen::nbThreads() << endl;
+    cout << "Time: " << duration_ms << endl;
 
-int main(int argc, char *argv[]) {
-    Eigen::VectorXd x(2);
-    x(0) = 2.0;
-    x(1) = 3.0;
-    std::cout << "x: " << x << std::endl;
-
-    my_functor functor;
-    Eigen::NumericalDiff<my_functor> numDiff(functor);
-    Eigen::LevenbergMarquardt<Eigen::NumericalDiff<my_functor>,double> lm(numDiff);
-    lm.parameters.maxfev = 2000;
-    lm.parameters.xtol = 1.0e-10;
-    std::cout << lm.parameters.maxfev << std::endl;
-
-    int ret = lm.minimize(x);
-    std::cout << lm.iter << std::endl;
-    std::cout << ret << std::endl;
-
-    std::cout << "x that minimizes the function: " << x << std::endl;
-
-    std::cout << "press [ENTER] to continue " << std::endl;
-    std::cin.get();
     return 0;
 }
+
+
+//g++ -framework Accelerate -DEIGEN_USE_BLAS -ftree-vectorize main.cpp -Wno-deprecated-declarations -DNDEBUG -I./eigen -O3 -o main

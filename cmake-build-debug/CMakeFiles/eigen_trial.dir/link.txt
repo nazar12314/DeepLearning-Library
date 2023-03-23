@@ -1,0 +1,1 @@
+/usr/bin/c++  -g   CMakeFiles/eigen_trial.dir/main.cpp.o  -o eigen_trial 

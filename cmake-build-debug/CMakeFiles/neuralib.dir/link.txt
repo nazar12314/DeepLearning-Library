@@ -1,0 +1,1 @@
+/usr/bin/c++   -ftree-vectorize -Wno-deprecated-declarations -DNDEBUG -g   CMakeFiles/neuralib.dir/main.cpp.o  -o neuralib 
