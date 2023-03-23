@@ -1,0 +1,217 @@
+## This file contains all the build statements describing the
+# compilation DAG.
+
+# =============================================================================
+# Write statements declared in CMakeLists.txt:
+# 
+# Which is the root file.
+# =============================================================================
+
+# =============================================================================
+# Project: integrate_parallel_thread_pool
+# Configurations: Debug
+# =============================================================================
+
+#############################################
+# Minimal version of Ninja required by this file
+
+ninja_required_version = 1.5
+
+
+#############################################
+# Set configuration variable for custom commands.
+
+CONFIGURATION = Debug
+# =============================================================================
+# Include auxiliary files.
+
+
+#############################################
+# Include rules file.
+
+include CMakeFiles/rules.ninja
+
+# =============================================================================
+
+#############################################
+# Logical path to working directory; prefix for absolute paths.
+
+cmake_ninja_workdir = /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake-build-debug/
+# =============================================================================
+# Object build statements for EXECUTABLE target integrate_parallel_thread_pool
+
+
+#############################################
+# Order-only phony target for integrate_parallel_thread_pool
+
+build cmake_object_order_depends_target_integrate_parallel_thread_pool: phony || CMakeFiles/integrate_parallel_thread_pool.dir
+
+build CMakeFiles/integrate_parallel_thread_pool.dir/main.cpp.o: CXX_COMPILER__integrate_parallel_thread_pool_Debug /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/main.cpp || cmake_object_order_depends_target_integrate_parallel_thread_pool
+  DEFINES = -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_PROGRAM_OPTIONS_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB
+  DEP_FILE = CMakeFiles/integrate_parallel_thread_pool.dir/main.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -Wextra -Werror=vla -O3 -std=gnu++17
+  INCLUDES = -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/options_parser" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/threadsafe_queue" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/functions" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/config_parser" -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/integrate_parallel_thread_pool.dir
+  OBJECT_FILE_DIR = CMakeFiles/integrate_parallel_thread_pool.dir
+
+build CMakeFiles/integrate_parallel_thread_pool.dir/options_parser/options_parser.cpp.o: CXX_COMPILER__integrate_parallel_thread_pool_Debug /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/options_parser/options_parser.cpp || cmake_object_order_depends_target_integrate_parallel_thread_pool
+  DEFINES = -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_PROGRAM_OPTIONS_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB
+  DEP_FILE = CMakeFiles/integrate_parallel_thread_pool.dir/options_parser/options_parser.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -Wextra -Werror=vla -O3 -std=gnu++17
+  INCLUDES = -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/options_parser" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/threadsafe_queue" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/functions" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/config_parser" -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/integrate_parallel_thread_pool.dir
+  OBJECT_FILE_DIR = CMakeFiles/integrate_parallel_thread_pool.dir/options_parser
+
+build CMakeFiles/integrate_parallel_thread_pool.dir/functions/functions.cpp.o: CXX_COMPILER__integrate_parallel_thread_pool_Debug /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/functions/functions.cpp || cmake_object_order_depends_target_integrate_parallel_thread_pool
+  DEFINES = -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_PROGRAM_OPTIONS_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB
+  DEP_FILE = CMakeFiles/integrate_parallel_thread_pool.dir/functions/functions.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -Wextra -Werror=vla -O3 -std=gnu++17
+  INCLUDES = -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/options_parser" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/threadsafe_queue" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/functions" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/config_parser" -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/integrate_parallel_thread_pool.dir
+  OBJECT_FILE_DIR = CMakeFiles/integrate_parallel_thread_pool.dir/functions
+
+build CMakeFiles/integrate_parallel_thread_pool.dir/config_parser/config_parser.cpp.o: CXX_COMPILER__integrate_parallel_thread_pool_Debug /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/config_parser/config_parser.cpp || cmake_object_order_depends_target_integrate_parallel_thread_pool
+  DEFINES = -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_PROGRAM_OPTIONS_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB
+  DEP_FILE = CMakeFiles/integrate_parallel_thread_pool.dir/config_parser/config_parser.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -Wextra -Werror=vla -O3 -std=gnu++17
+  INCLUDES = -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/options_parser" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/threadsafe_queue" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/functions" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/config_parser" -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/integrate_parallel_thread_pool.dir
+  OBJECT_FILE_DIR = CMakeFiles/integrate_parallel_thread_pool.dir/config_parser
+
+build CMakeFiles/integrate_parallel_thread_pool.dir/thread_pool/thread_pool.cpp.o: CXX_COMPILER__integrate_parallel_thread_pool_Debug /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/thread_pool/thread_pool.cpp || cmake_object_order_depends_target_integrate_parallel_thread_pool
+  DEFINES = -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_PROGRAM_OPTIONS_NO_LIB -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB
+  DEP_FILE = CMakeFiles/integrate_parallel_thread_pool.dir/thread_pool/thread_pool.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk -Wextra -Werror=vla -O3 -std=gnu++17
+  INCLUDES = -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/options_parser" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/threadsafe_queue" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/functions" -I"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/config_parser" -isystem /opt/homebrew/include
+  OBJECT_DIR = CMakeFiles/integrate_parallel_thread_pool.dir
+  OBJECT_FILE_DIR = CMakeFiles/integrate_parallel_thread_pool.dir/thread_pool
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target integrate_parallel_thread_pool
+
+
+#############################################
+# Link the executable integrate_parallel_thread_pool
+
+build integrate_parallel_thread_pool: CXX_EXECUTABLE_LINKER__integrate_parallel_thread_pool_Debug CMakeFiles/integrate_parallel_thread_pool.dir/main.cpp.o CMakeFiles/integrate_parallel_thread_pool.dir/options_parser/options_parser.cpp.o CMakeFiles/integrate_parallel_thread_pool.dir/functions/functions.cpp.o CMakeFiles/integrate_parallel_thread_pool.dir/config_parser/config_parser.cpp.o CMakeFiles/integrate_parallel_thread_pool.dir/thread_pool/thread_pool.cpp.o | /opt/homebrew/lib/libboost_program_options-mt.dylib /opt/homebrew/lib/libboost_system-mt.dylib
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX13.1.sdk
+  LINK_LIBRARIES = /opt/homebrew/lib/libboost_program_options-mt.dylib  /opt/homebrew/lib/libboost_system-mt.dylib
+  OBJECT_DIR = CMakeFiles/integrate_parallel_thread_pool.dir
+  POST_BUILD = :
+  PRE_LINK = :
+  TARGET_FILE = integrate_parallel_thread_pool
+  TARGET_PDB = integrate_parallel_thread_pool.dbg
+
+
+#############################################
+# Utility command for edit_cache
+
+build CMakeFiles/edit_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/cmake-build-debug" && /opt/homebrew/Cellar/cmake/3.24.2/bin/ccmake -S"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5" -B"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/cmake-build-debug"
+  DESC = Running CMake cache editor...
+  pool = console
+  restat = 1
+
+build edit_cache: phony CMakeFiles/edit_cache.util
+
+
+#############################################
+# Utility command for rebuild_cache
+
+build CMakeFiles/rebuild_cache.util: CUSTOM_COMMAND
+  COMMAND = cd "/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/cmake-build-debug" && /opt/homebrew/Cellar/cmake/3.24.2/bin/cmake --regenerate-during-build -S"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5" -B"/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/cmake-build-debug"
+  DESC = Running CMake to regenerate build system...
+  pool = console
+  restat = 1
+
+build rebuild_cache: phony CMakeFiles/rebuild_cache.util
+
+
+#############################################
+# Utility command for list_install_components
+
+build list_install_components: phony
+
+
+#############################################
+# Utility command for install
+
+build CMakeFiles/install.util: CUSTOM_COMMAND all
+  COMMAND = cd "/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/cmake-build-debug" && /opt/homebrew/Cellar/cmake/3.24.2/bin/cmake -P cmake_install.cmake
+  DESC = Install the project...
+  pool = console
+  restat = 1
+
+build install: phony CMakeFiles/install.util
+
+
+#############################################
+# Utility command for install/local
+
+build CMakeFiles/install/local.util: CUSTOM_COMMAND all
+  COMMAND = cd "/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/cmake-build-debug" && /opt/homebrew/Cellar/cmake/3.24.2/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+  DESC = Installing only the local directory...
+  pool = console
+  restat = 1
+
+build install/local: phony CMakeFiles/install/local.util
+
+
+#############################################
+# Utility command for install/strip
+
+build CMakeFiles/install/strip.util: CUSTOM_COMMAND all
+  COMMAND = cd "/Users/nazarkononenko/Dev/University/2 year/ACS/lab5/cmake-build-debug" && /opt/homebrew/Cellar/cmake/3.24.2/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+  DESC = Installing the project stripped...
+  pool = console
+  restat = 1
+
+build install/strip: phony CMakeFiles/install/strip.util
+
+# =============================================================================
+# Target aliases.
+
+# =============================================================================
+# Folder targets.
+
+# =============================================================================
+
+#############################################
+# Folder: /Users/nazarkononenko/Dev/University/2 year/ACS/lab5/cmake-build-debug
+
+build all: phony integrate_parallel_thread_pool
+
+# =============================================================================
+# Built-in targets
+
+
+#############################################
+# Re-run CMake if any of its inputs changed.
+
+build build.ninja: RERUN_CMAKE | /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/CMakeLists.txt /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/CompilerWarnings.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/Errors.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/PVS-Studio-conf.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/Sanitizers.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/Windows.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/main-config.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCXXInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeGenericSystem.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeInitializeConfigs.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeLanguageInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CheckCSourceCompiles.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CheckIncludeFile.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CheckLibraryExists.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/Clang.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/GNU.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/FindBoost.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/FindPackageHandleStandardArgs.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/FindPackageMessage.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/FindThreads.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Internal/CheckSourceCompiles.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang-C.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Darwin-Initialize.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Darwin.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/UnixPaths.cmake /opt/homebrew/lib/cmake/Boost-1.81.0/BoostConfig.cmake /opt/homebrew/lib/cmake/Boost-1.81.0/BoostConfigVersion.cmake /opt/homebrew/lib/cmake/BoostDetectToolset-1.81.0.cmake /opt/homebrew/lib/cmake/boost_headers-1.81.0/boost_headers-config-version.cmake /opt/homebrew/lib/cmake/boost_headers-1.81.0/boost_headers-config.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/boost_program_options-config-version.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/boost_program_options-config.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/libboost_program_options-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/libboost_program_options-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/libboost_program_options-variant-shared.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/libboost_program_options-variant-static.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/boost_system-config-version.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/boost_system-config.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/libboost_system-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/libboost_system-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/libboost_system-variant-shared.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/libboost_system-variant-static.cmake CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake
+  pool = console
+
+
+#############################################
+# A missing CMake input file is not an error.
+
+build /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/CMakeLists.txt /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/CompilerWarnings.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/Errors.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/PVS-Studio-conf.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/Sanitizers.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/Windows.cmake /Users/nazarkononenko/Dev/University/2$ year/ACS/lab5/cmake/main-config.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCXXInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeCommonLanguageInclude.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeGenericSystem.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeInitializeConfigs.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeLanguageInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeSystemSpecificInformation.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CMakeSystemSpecificInitialize.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CheckCSourceCompiles.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CheckIncludeFile.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/CheckLibraryExists.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/CMakeCommonCompilerMacros.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/Clang.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Compiler/GNU.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/FindBoost.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/FindPackageHandleStandardArgs.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/FindPackageMessage.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/FindThreads.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Internal/CheckSourceCompiles.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-AppleClang-C.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-AppleClang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang-C.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang-CXX.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Apple-Clang.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Darwin-Initialize.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/Darwin.cmake /opt/homebrew/Cellar/cmake/3.24.2/share/cmake/Modules/Platform/UnixPaths.cmake /opt/homebrew/lib/cmake/Boost-1.81.0/BoostConfig.cmake /opt/homebrew/lib/cmake/Boost-1.81.0/BoostConfigVersion.cmake /opt/homebrew/lib/cmake/BoostDetectToolset-1.81.0.cmake /opt/homebrew/lib/cmake/boost_headers-1.81.0/boost_headers-config-version.cmake /opt/homebrew/lib/cmake/boost_headers-1.81.0/boost_headers-config.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/boost_program_options-config-version.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/boost_program_options-config.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/libboost_program_options-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/libboost_program_options-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/libboost_program_options-variant-shared.cmake /opt/homebrew/lib/cmake/boost_program_options-1.81.0/libboost_program_options-variant-static.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/boost_system-config-version.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/boost_system-config.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/libboost_system-variant-mt-shared.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/libboost_system-variant-mt-static.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/libboost_system-variant-shared.cmake /opt/homebrew/lib/cmake/boost_system-1.81.0/libboost_system-variant-static.cmake CMakeCache.txt CMakeFiles/3.24.2/CMakeCCompiler.cmake CMakeFiles/3.24.2/CMakeCXXCompiler.cmake CMakeFiles/3.24.2/CMakeSystem.cmake: phony
+
+
+#############################################
+# Clean all the built files.
+
+build clean: CLEAN
+
+
+#############################################
+# Print all primary targets available.
+
+build help: HELP
+
+
+#############################################
+# Make the all target the default.
+
+default all
