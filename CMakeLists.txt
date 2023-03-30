@@ -11,13 +11,14 @@ set(ENABLE_ASAN OFF)
 set(ENABLE_TSan OFF)
 set(ENABLE_MSAN OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -framework Accelerate -DEIGEN_USE_BLAS -ftree-vectorize -Wno-deprecated-declarations -DNDEBUG")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lopenblas -ftree-vectorize -Wno-deprecated-declarations -DNDEBUG")
+#-DEIGEN_USE_BLAS
 
 if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif ()
 
-include(cmake/CompilerWarnings.cmake)
+#include(cmake/CompilerWarnings.cmake)
 
 add_executable(${PROJECT_NAME} main.cpp)
 
@@ -29,6 +30,8 @@ target_compile_options(${PROJECT_NAME} PUBLIC -O3)
 find_package(Boost 1.71.0 COMPONENTS program_options system REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
 target_link_libraries(${PROJECT_NAME} Boost::program_options Boost::system)
+
+#target_link_libraries(${PROJECT_NAME} blas)
 
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 target_link_libraries (neuralib Eigen3::Eigen)

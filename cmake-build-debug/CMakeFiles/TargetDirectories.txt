@@ -1,7 +1,0 @@
-/Users/nazarkononenko/Dev/University/2 year/ACS/neuralibrary/cmake-build-debug/CMakeFiles/neuralib.dir
-/Users/nazarkononenko/Dev/University/2 year/ACS/neuralibrary/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/nazarkononenko/Dev/University/2 year/ACS/neuralibrary/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/nazarkononenko/Dev/University/2 year/ACS/neuralibrary/cmake-build-debug/CMakeFiles/list_install_components.dir
-/Users/nazarkononenko/Dev/University/2 year/ACS/neuralibrary/cmake-build-debug/CMakeFiles/install.dir
-/Users/nazarkononenko/Dev/University/2 year/ACS/neuralibrary/cmake-build-debug/CMakeFiles/install/local.dir
-/Users/nazarkononenko/Dev/University/2 year/ACS/neuralibrary/cmake-build-debug/CMakeFiles/install/strip.dir

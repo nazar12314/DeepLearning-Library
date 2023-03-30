@@ -1,16 +1,22 @@
 #include <iostream>
 #include <chrono>
-#include "eigen/Eigen/Eigen"
+//#include "eigen/Eigen/Eigen"
+#include "eigen3/unsupported/Eigen/CXX11/Tensor"
 
 using namespace std;
 using namespace Eigen;
 
-#define n 10000
+#define n 2000
 
 int main() {
-    Eigen::MatrixXd A = Eigen::MatrixXd::Random(n, n);
-    Eigen::MatrixXd B = Eigen::MatrixXd::Random(n, n);
-    Eigen::MatrixXd D;
+//    Eigen::MatrixXd A_ = Eigen::MatrixXd::Random(n, n);
+    Tensor<double, 2> A(n, n);
+    A.setRandom();
+//    Eigen::MatrixXd B = Eigen::MatrixXd::Random(n, n);
+//    Eigen::MatrixXd D;
+    Tensor<double, 2> B(n, n);
+    B.setRandom();
+    Tensor<double, 2> D(n, n);
 
     auto start_time = std::chrono::high_resolution_clock::now();
 
