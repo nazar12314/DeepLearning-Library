@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DBOOST_ALL_NO_LIB -DBOOST_PROGRAM_OPTIONS_DYN_LINK -DBOOST_SYSTEM_DYN_LINK
 
-CXX_INCLUDES = -isystem /usr/include/eigen3
+CXX_INCLUDES = -I/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include -isystem /usr/include/eigen3
 
-CXX_FLAGS =  -ftree-vectorize -Wno-deprecated-declarations -DNDEBUG -g -O3
+CXX_FLAGS =  -ftree-vectorize -Wno-deprecated-declarations -DNDEBUG -g -O3 -std=gnu++20
 

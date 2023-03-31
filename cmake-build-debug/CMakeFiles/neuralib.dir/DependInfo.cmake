@@ -8,7 +8,14 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/models/Model.cpp" "CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o" "gcc" "CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o.d"
+  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Activation.cpp" "CMakeFiles/neuralib.dir/layers/Activation.cpp.o" "gcc" "CMakeFiles/neuralib.dir/layers/Activation.cpp.o.d"
+  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Dense.cpp" "CMakeFiles/neuralib.dir/layers/Dense.cpp.o" "gcc" "CMakeFiles/neuralib.dir/layers/Dense.cpp.o.d"
+  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Layer.cpp" "CMakeFiles/neuralib.dir/layers/Layer.cpp.o" "gcc" "CMakeFiles/neuralib.dir/layers/Layer.cpp.o.d"
   "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/main.cpp" "CMakeFiles/neuralib.dir/main.cpp.o" "gcc" "CMakeFiles/neuralib.dir/main.cpp.o.d"
+  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Initializer.cpp" "CMakeFiles/neuralib.dir/utils/Initializer.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/Initializer.cpp.o.d"
+  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Optimizer.cpp" "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o.d"
+  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/SGD.cpp" "CMakeFiles/neuralib.dir/utils/SGD.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/SGD.cpp.o.d"
   )
 
 # Targets to which this target links.

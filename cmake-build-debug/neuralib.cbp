@@ -27,6 +27,7 @@
 					<Add option="-DBOOST_ALL_NO_LIB"/>
 					<Add option="-DBOOST_PROGRAM_OPTIONS_DYN_LINK"/>
 					<Add option="-DBOOST_SYSTEM_DYN_LINK"/>
+					<Add directory="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include"/>
 					<Add directory="/usr/include"/>
 					<Add directory="/usr/include/eigen3"/>
 					<Add directory="/usr/include/c++/11"/>
@@ -53,6 +54,7 @@
 					<Add option="-DBOOST_ALL_NO_LIB"/>
 					<Add option="-DBOOST_PROGRAM_OPTIONS_DYN_LINK"/>
 					<Add option="-DBOOST_SYSTEM_DYN_LINK"/>
+					<Add directory="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include"/>
 					<Add directory="/usr/include"/>
 					<Add directory="/usr/include/eigen3"/>
 					<Add directory="/usr/include/c++/11"/>
@@ -130,7 +132,49 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Activation.h">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Dense.h">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/models/Model.h">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/Initializer.h">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/Optimizer.h">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/SGD.h">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/models/Model.cpp">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Activation.cpp">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Dense.cpp">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Layer.cpp">
+			<Option target="neuralib"/>
+		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/main.cpp">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Initializer.cpp">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Optimizer.cpp">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/SGD.cpp">
 			<Option target="neuralib"/>
 		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/CMakeLists.txt">

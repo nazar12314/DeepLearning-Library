@@ -174,6 +174,102 @@ neuralib/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/build
 .PHONY : neuralib/fast
 
+include/utils/models/Model.o: include/utils/models/Model.cpp.o
+.PHONY : include/utils/models/Model.o
+
+# target to build an object file
+include/utils/models/Model.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o
+.PHONY : include/utils/models/Model.cpp.o
+
+include/utils/models/Model.i: include/utils/models/Model.cpp.i
+.PHONY : include/utils/models/Model.i
+
+# target to preprocess a source file
+include/utils/models/Model.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.i
+.PHONY : include/utils/models/Model.cpp.i
+
+include/utils/models/Model.s: include/utils/models/Model.cpp.s
+.PHONY : include/utils/models/Model.s
+
+# target to generate assembly for a file
+include/utils/models/Model.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.s
+.PHONY : include/utils/models/Model.cpp.s
+
+layers/Activation.o: layers/Activation.cpp.o
+.PHONY : layers/Activation.o
+
+# target to build an object file
+layers/Activation.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/layers/Activation.cpp.o
+.PHONY : layers/Activation.cpp.o
+
+layers/Activation.i: layers/Activation.cpp.i
+.PHONY : layers/Activation.i
+
+# target to preprocess a source file
+layers/Activation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/layers/Activation.cpp.i
+.PHONY : layers/Activation.cpp.i
+
+layers/Activation.s: layers/Activation.cpp.s
+.PHONY : layers/Activation.s
+
+# target to generate assembly for a file
+layers/Activation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/layers/Activation.cpp.s
+.PHONY : layers/Activation.cpp.s
+
+layers/Dense.o: layers/Dense.cpp.o
+.PHONY : layers/Dense.o
+
+# target to build an object file
+layers/Dense.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/layers/Dense.cpp.o
+.PHONY : layers/Dense.cpp.o
+
+layers/Dense.i: layers/Dense.cpp.i
+.PHONY : layers/Dense.i
+
+# target to preprocess a source file
+layers/Dense.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/layers/Dense.cpp.i
+.PHONY : layers/Dense.cpp.i
+
+layers/Dense.s: layers/Dense.cpp.s
+.PHONY : layers/Dense.s
+
+# target to generate assembly for a file
+layers/Dense.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/layers/Dense.cpp.s
+.PHONY : layers/Dense.cpp.s
+
+layers/Layer.o: layers/Layer.cpp.o
+.PHONY : layers/Layer.o
+
+# target to build an object file
+layers/Layer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/layers/Layer.cpp.o
+.PHONY : layers/Layer.cpp.o
+
+layers/Layer.i: layers/Layer.cpp.i
+.PHONY : layers/Layer.i
+
+# target to preprocess a source file
+layers/Layer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/layers/Layer.cpp.i
+.PHONY : layers/Layer.cpp.i
+
+layers/Layer.s: layers/Layer.cpp.s
+.PHONY : layers/Layer.s
+
+# target to generate assembly for a file
+layers/Layer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/layers/Layer.cpp.s
+.PHONY : layers/Layer.cpp.s
+
 main.o: main.cpp.o
 .PHONY : main.o
 
@@ -198,6 +294,78 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+utils/Initializer.o: utils/Initializer.cpp.o
+.PHONY : utils/Initializer.o
+
+# target to build an object file
+utils/Initializer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Initializer.cpp.o
+.PHONY : utils/Initializer.cpp.o
+
+utils/Initializer.i: utils/Initializer.cpp.i
+.PHONY : utils/Initializer.i
+
+# target to preprocess a source file
+utils/Initializer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Initializer.cpp.i
+.PHONY : utils/Initializer.cpp.i
+
+utils/Initializer.s: utils/Initializer.cpp.s
+.PHONY : utils/Initializer.s
+
+# target to generate assembly for a file
+utils/Initializer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Initializer.cpp.s
+.PHONY : utils/Initializer.cpp.s
+
+utils/Optimizer.o: utils/Optimizer.cpp.o
+.PHONY : utils/Optimizer.o
+
+# target to build an object file
+utils/Optimizer.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o
+.PHONY : utils/Optimizer.cpp.o
+
+utils/Optimizer.i: utils/Optimizer.cpp.i
+.PHONY : utils/Optimizer.i
+
+# target to preprocess a source file
+utils/Optimizer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Optimizer.cpp.i
+.PHONY : utils/Optimizer.cpp.i
+
+utils/Optimizer.s: utils/Optimizer.cpp.s
+.PHONY : utils/Optimizer.s
+
+# target to generate assembly for a file
+utils/Optimizer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Optimizer.cpp.s
+.PHONY : utils/Optimizer.cpp.s
+
+utils/SGD.o: utils/SGD.cpp.o
+.PHONY : utils/SGD.o
+
+# target to build an object file
+utils/SGD.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/SGD.cpp.o
+.PHONY : utils/SGD.cpp.o
+
+utils/SGD.i: utils/SGD.cpp.i
+.PHONY : utils/SGD.i
+
+# target to preprocess a source file
+utils/SGD.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/SGD.cpp.i
+.PHONY : utils/SGD.cpp.i
+
+utils/SGD.s: utils/SGD.cpp.s
+.PHONY : utils/SGD.s
+
+# target to generate assembly for a file
+utils/SGD.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/SGD.cpp.s
+.PHONY : utils/SGD.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -211,9 +379,30 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... neuralib"
+	@echo "... include/utils/models/Model.o"
+	@echo "... include/utils/models/Model.i"
+	@echo "... include/utils/models/Model.s"
+	@echo "... layers/Activation.o"
+	@echo "... layers/Activation.i"
+	@echo "... layers/Activation.s"
+	@echo "... layers/Dense.o"
+	@echo "... layers/Dense.i"
+	@echo "... layers/Dense.s"
+	@echo "... layers/Layer.o"
+	@echo "... layers/Layer.i"
+	@echo "... layers/Layer.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... utils/Initializer.o"
+	@echo "... utils/Initializer.i"
+	@echo "... utils/Initializer.s"
+	@echo "... utils/Optimizer.o"
+	@echo "... utils/Optimizer.i"
+	@echo "... utils/Optimizer.s"
+	@echo "... utils/SGD.o"
+	@echo "... utils/SGD.i"
+	@echo "... utils/SGD.s"
 .PHONY : help
 
 
