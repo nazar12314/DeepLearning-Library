@@ -1,7 +1,7 @@
 CMakeFiles/neuralib.dir/layers/Dense.cpp.o: \
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Dense.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Dense.h \
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Dense.h \
  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \
  /usr/include/eigen3/Eigen/Core \
  /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
@@ -470,5 +470,6 @@ CMakeFiles/neuralib.dir/layers/Dense.cpp.o: \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h \
  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/../utils/Initializer.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Layer.h
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/../utils/Initializer.h \
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h \
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h

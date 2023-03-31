@@ -1,7 +1,7 @@
 CMakeFiles/neuralib.dir/layers/Layer.cpp.o: \
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Layer.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Layer.h \
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h \
  /usr/include/c++/11/string \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \

@@ -1,6 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o"
-  "CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o.d"
   "CMakeFiles/neuralib.dir/layers/Activation.cpp.o"
   "CMakeFiles/neuralib.dir/layers/Activation.cpp.o.d"
   "CMakeFiles/neuralib.dir/layers/Dense.cpp.o"
@@ -9,6 +7,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/neuralib.dir/layers/Layer.cpp.o.d"
   "CMakeFiles/neuralib.dir/main.cpp.o"
   "CMakeFiles/neuralib.dir/main.cpp.o.d"
+  "CMakeFiles/neuralib.dir/models/Model.cpp.o"
+  "CMakeFiles/neuralib.dir/models/Model.cpp.o.d"
   "CMakeFiles/neuralib.dir/utils/Initializer.cpp.o"
   "CMakeFiles/neuralib.dir/utils/Initializer.cpp.o.d"
   "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o"

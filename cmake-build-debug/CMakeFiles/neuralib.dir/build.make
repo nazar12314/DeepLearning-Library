@@ -167,19 +167,19 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/neuralib.dir/utils/SGD.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/SGD.cpp -o CMakeFiles/neuralib.dir/utils/SGD.cpp.s
 
-CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o: CMakeFiles/neuralib.dir/flags.make
-CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o: ../include/utils/models/Model.cpp
-CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o: CMakeFiles/neuralib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o -MF CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o.d -o CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o -c /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/models/Model.cpp
+CMakeFiles/neuralib.dir/models/Model.cpp.o: CMakeFiles/neuralib.dir/flags.make
+CMakeFiles/neuralib.dir/models/Model.cpp.o: ../models/Model.cpp
+CMakeFiles/neuralib.dir/models/Model.cpp.o: CMakeFiles/neuralib.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/neuralib.dir/models/Model.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/neuralib.dir/models/Model.cpp.o -MF CMakeFiles/neuralib.dir/models/Model.cpp.o.d -o CMakeFiles/neuralib.dir/models/Model.cpp.o -c /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/models/Model.cpp
 
-CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/models/Model.cpp > CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.i
+CMakeFiles/neuralib.dir/models/Model.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/neuralib.dir/models/Model.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/models/Model.cpp > CMakeFiles/neuralib.dir/models/Model.cpp.i
 
-CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/models/Model.cpp -o CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.s
+CMakeFiles/neuralib.dir/models/Model.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/neuralib.dir/models/Model.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/models/Model.cpp -o CMakeFiles/neuralib.dir/models/Model.cpp.s
 
 # Object files for target neuralib
 neuralib_OBJECTS = \
@@ -190,7 +190,7 @@ neuralib_OBJECTS = \
 "CMakeFiles/neuralib.dir/layers/Activation.cpp.o" \
 "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o" \
 "CMakeFiles/neuralib.dir/utils/SGD.cpp.o" \
-"CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o"
+"CMakeFiles/neuralib.dir/models/Model.cpp.o"
 
 # External object files for target neuralib
 neuralib_EXTERNAL_OBJECTS =
@@ -202,7 +202,7 @@ neuralib: CMakeFiles/neuralib.dir/utils/Initializer.cpp.o
 neuralib: CMakeFiles/neuralib.dir/layers/Activation.cpp.o
 neuralib: CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o
 neuralib: CMakeFiles/neuralib.dir/utils/SGD.cpp.o
-neuralib: CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o
+neuralib: CMakeFiles/neuralib.dir/models/Model.cpp.o
 neuralib: CMakeFiles/neuralib.dir/build.make
 neuralib: /usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.74.0
 neuralib: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.74.0

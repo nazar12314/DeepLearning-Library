@@ -174,30 +174,6 @@ neuralib/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/build
 .PHONY : neuralib/fast
 
-include/utils/models/Model.o: include/utils/models/Model.cpp.o
-.PHONY : include/utils/models/Model.o
-
-# target to build an object file
-include/utils/models/Model.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.o
-.PHONY : include/utils/models/Model.cpp.o
-
-include/utils/models/Model.i: include/utils/models/Model.cpp.i
-.PHONY : include/utils/models/Model.i
-
-# target to preprocess a source file
-include/utils/models/Model.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.i
-.PHONY : include/utils/models/Model.cpp.i
-
-include/utils/models/Model.s: include/utils/models/Model.cpp.s
-.PHONY : include/utils/models/Model.s
-
-# target to generate assembly for a file
-include/utils/models/Model.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/include/utils/models/Model.cpp.s
-.PHONY : include/utils/models/Model.cpp.s
-
 layers/Activation.o: layers/Activation.cpp.o
 .PHONY : layers/Activation.o
 
@@ -294,6 +270,30 @@ main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/main.cpp.s
 .PHONY : main.cpp.s
 
+models/Model.o: models/Model.cpp.o
+.PHONY : models/Model.o
+
+# target to build an object file
+models/Model.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/models/Model.cpp.o
+.PHONY : models/Model.cpp.o
+
+models/Model.i: models/Model.cpp.i
+.PHONY : models/Model.i
+
+# target to preprocess a source file
+models/Model.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/models/Model.cpp.i
+.PHONY : models/Model.cpp.i
+
+models/Model.s: models/Model.cpp.s
+.PHONY : models/Model.s
+
+# target to generate assembly for a file
+models/Model.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/models/Model.cpp.s
+.PHONY : models/Model.cpp.s
+
 utils/Initializer.o: utils/Initializer.cpp.o
 .PHONY : utils/Initializer.o
 
@@ -379,9 +379,6 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... neuralib"
-	@echo "... include/utils/models/Model.o"
-	@echo "... include/utils/models/Model.i"
-	@echo "... include/utils/models/Model.s"
 	@echo "... layers/Activation.o"
 	@echo "... layers/Activation.i"
 	@echo "... layers/Activation.s"
@@ -394,6 +391,9 @@ help:
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"
+	@echo "... models/Model.o"
+	@echo "... models/Model.i"
+	@echo "... models/Model.s"
 	@echo "... utils/Initializer.o"
 	@echo "... utils/Initializer.i"
 	@echo "... utils/Initializer.s"

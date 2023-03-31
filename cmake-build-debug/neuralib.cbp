@@ -153,9 +153,6 @@
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/SGD.h">
 			<Option target="neuralib"/>
 		</Unit>
-		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/models/Model.cpp">
-			<Option target="neuralib"/>
-		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Activation.cpp">
 			<Option target="neuralib"/>
 		</Unit>
@@ -166,6 +163,9 @@
 			<Option target="neuralib"/>
 		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/main.cpp">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/models/Model.cpp">
 			<Option target="neuralib"/>
 		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Initializer.cpp">
