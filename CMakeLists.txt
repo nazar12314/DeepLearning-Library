@@ -11,8 +11,7 @@ set(ENABLE_ASAN OFF)
 set(ENABLE_TSan OFF)
 set(ENABLE_MSAN OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lopenblas -ftree-vectorize -Wno-deprecated-declarations -DNDEBUG")
-#-DEIGEN_USE_BLAS
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftree-vectorize -Wno-deprecated-declarations -DNDEBUG")
 
 if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)

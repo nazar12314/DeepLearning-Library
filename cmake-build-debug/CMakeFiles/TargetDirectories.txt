@@ -1,0 +1,7 @@
+/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles/neuralib.dir
+/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles/edit_cache.dir
+/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles/list_install_components.dir
+/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles/install.dir
+/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles/install/local.dir
+/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles/install/strip.dir
