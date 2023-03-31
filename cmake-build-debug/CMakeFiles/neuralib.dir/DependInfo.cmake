@@ -14,6 +14,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/main.cpp" "CMakeFiles/neuralib.dir/main.cpp.o" "gcc" "CMakeFiles/neuralib.dir/main.cpp.o.d"
   "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/models/Model.cpp" "CMakeFiles/neuralib.dir/models/Model.cpp.o" "gcc" "CMakeFiles/neuralib.dir/models/Model.cpp.o.d"
   "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Initializer.cpp" "CMakeFiles/neuralib.dir/utils/Initializer.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/Initializer.cpp.o.d"
+  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Loss.cpp" "CMakeFiles/neuralib.dir/utils/Loss.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/Loss.cpp.o.d"
   "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Optimizer.cpp" "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o.d"
   "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/SGD.cpp" "CMakeFiles/neuralib.dir/utils/SGD.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/SGD.cpp.o.d"
   )

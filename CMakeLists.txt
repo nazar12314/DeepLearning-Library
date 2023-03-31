@@ -19,7 +19,7 @@ endif ()
 
 #include(cmake/CompilerWarnings.cmake)
 
-add_executable(${PROJECT_NAME} main.cpp layers/Layer.cpp include/layers/Layer.h include/layers/Layer.h layers/Layer.cpp layers/Dense.cpp include/layers/Dense.h utils/Initializer.cpp include/utils/Initializer.h layers/Activation.cpp include/layers/Activation.h utils/Optimizer.cpp include/utils/Optimizer.h utils/SGD.cpp include/utils/SGD.h models/Model.cpp include/models/Model.h)
+add_executable(${PROJECT_NAME} main.cpp layers/Layer.cpp include/layers/Layer.h include/layers/Layer.h layers/Layer.cpp layers/Dense.cpp include/layers/Dense.h utils/Initializer.cpp include/utils/Initializer.h layers/Activation.cpp include/layers/Activation.h utils/Optimizer.cpp include/utils/Optimizer.h utils/SGD.cpp include/utils/SGD.h models/Model.cpp include/models/Model.h utils/Loss.cpp include/utils/Loss.h)
 
 target_compile_options(${PROJECT_NAME} PUBLIC -O3)
 #

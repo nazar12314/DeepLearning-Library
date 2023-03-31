@@ -147,6 +147,9 @@
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/Initializer.h">
 			<Option target="neuralib"/>
 		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/Loss.h">
+			<Option target="neuralib"/>
+		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/Optimizer.h">
 			<Option target="neuralib"/>
 		</Unit>
@@ -169,6 +172,9 @@
 			<Option target="neuralib"/>
 		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Initializer.cpp">
+			<Option target="neuralib"/>
+		</Unit>
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Loss.cpp">
 			<Option target="neuralib"/>
 		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Optimizer.cpp">

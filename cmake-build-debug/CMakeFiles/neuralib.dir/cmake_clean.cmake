@@ -11,6 +11,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/neuralib.dir/models/Model.cpp.o.d"
   "CMakeFiles/neuralib.dir/utils/Initializer.cpp.o"
   "CMakeFiles/neuralib.dir/utils/Initializer.cpp.o.d"
+  "CMakeFiles/neuralib.dir/utils/Loss.cpp.o"
+  "CMakeFiles/neuralib.dir/utils/Loss.cpp.o.d"
   "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o"
   "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o.d"
   "CMakeFiles/neuralib.dir/utils/SGD.cpp.o"

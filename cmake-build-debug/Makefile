@@ -318,6 +318,30 @@ utils/Initializer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Initializer.cpp.s
 .PHONY : utils/Initializer.cpp.s
 
+utils/Loss.o: utils/Loss.cpp.o
+.PHONY : utils/Loss.o
+
+# target to build an object file
+utils/Loss.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Loss.cpp.o
+.PHONY : utils/Loss.cpp.o
+
+utils/Loss.i: utils/Loss.cpp.i
+.PHONY : utils/Loss.i
+
+# target to preprocess a source file
+utils/Loss.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Loss.cpp.i
+.PHONY : utils/Loss.cpp.i
+
+utils/Loss.s: utils/Loss.cpp.s
+.PHONY : utils/Loss.s
+
+# target to generate assembly for a file
+utils/Loss.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/Loss.cpp.s
+.PHONY : utils/Loss.cpp.s
+
 utils/Optimizer.o: utils/Optimizer.cpp.o
 .PHONY : utils/Optimizer.o
 
@@ -397,6 +421,9 @@ help:
 	@echo "... utils/Initializer.o"
 	@echo "... utils/Initializer.i"
 	@echo "... utils/Initializer.s"
+	@echo "... utils/Loss.o"
+	@echo "... utils/Loss.i"
+	@echo "... utils/Loss.s"
 	@echo "... utils/Optimizer.o"
 	@echo "... utils/Optimizer.i"
 	@echo "... utils/Optimizer.s"
