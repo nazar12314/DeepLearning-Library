@@ -1,8 +1,0 @@
-# ninja log v5
-1280	1329	1678371054331735056	integrate_parallel_queue	d9678bcfafe65e18
-0	916	1678911040617363988	CMakeFiles/integrate_parallel_thread_pool.dir/options_parser/options_parser.cpp.o	9f06478a616fc340
-0	134	1678911039837766526	CMakeFiles/integrate_parallel_thread_pool.dir/functions/functions.cpp.o	5ea619183623633
-5	480	1678912734250677888	CMakeFiles/integrate_parallel_thread_pool.dir/thread_pool/thread_pool.cpp.o	a818f83fbac941eb
-0	1102	1678911040802860995	CMakeFiles/integrate_parallel_thread_pool.dir/config_parser/config_parser.cpp.o	f99678afd14580b
-7	1288	1678914403776374429	CMakeFiles/integrate_parallel_thread_pool.dir/main.cpp.o	a40d9f39ce0a8529
-1288	1335	1678914403829924147	integrate_parallel_thread_pool	452d580f05a68049
