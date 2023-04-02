@@ -13,10 +13,10 @@ using Eigen::Tensor;
 
 template<class T>
 class DenseLayer : public Layer<T> {
+    Initializer<T> initializer;
     TensorHolder<T> weights;
     TensorHolder<T> biases;
     TensorHolder<T> inputs;
-    Initializer<T> initializer;
 
 public:
     DenseLayer(const std::string &name, bool trainable, const Initializer<T> &initializer_) :
