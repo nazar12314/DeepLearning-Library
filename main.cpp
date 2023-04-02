@@ -1,31 +1,21 @@
 #include <iostream>
 #include <chrono>
-#include "eigen/Eigen/Eigen"
+#include <utils/TensorHolder.h>
+#include "eigen3/unsupported/Eigen/CXX11/Tensor"
 
 using namespace std;
 using namespace Eigen;
 
-#define n 10000
 
 int main() {
-    Eigen::MatrixXd A = Eigen::MatrixXd::Random(n, n);
-    Eigen::MatrixXd B = Eigen::MatrixXd::Random(n, n);
-    Eigen::MatrixXd D;
+    Tensor<double, 2> tensor(2, 3);
+    tensor.setConstant(1.0);
+    std::cout << tensor << std::endl;
 
-    auto start_time = std::chrono::high_resolution_clock::now();
+    TensorHolder<double> my_tensor_holder(tensor);
 
-    D = A * B;
-
-    cout << D(0, 0) << endl;
-
-    auto end_time = std::chrono::high_resolution_clock::now();
-    auto duration_ms = std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count();
-
-    cout << "Threads: " << Eigen::nbThreads() << endl;
-    cout << "Time: " << duration_ms << endl;
+    auto& retrieved_tensor = my_tensor_holder.get<2>();
+    std::cout << retrieved_tensor << std::endl;
 
     return 0;
 }
-
-
-//g++ -framework Accelerate -DEIGEN_USE_BLAS -ftree-vectorize main.cpp -Wno-deprecated-declarations -DNDEBUG -I./eigen -O3 -o main
