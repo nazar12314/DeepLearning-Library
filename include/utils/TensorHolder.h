@@ -37,6 +37,12 @@ public:
     [[nodiscard]] constexpr int size() const noexcept {
         return _size;
     }
+
+    TensorHolder& operator=(const TensorHolder& other) {
+        _held = other._held;
+        _size = other._size;
+        return *this;
+    }
 };
 
 

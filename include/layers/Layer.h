@@ -17,18 +17,19 @@ class Layer {
     bool trainable;
 
 public:
+    Layer(const std::string & name, bool trainable): name(name), trainable(trainable) {}
 
-    Layer(const std::string &name, bool trainable): name(name), trainable(trainable) {}
+    virtual TensorHolder<T> forward(const TensorHolder<T> & inputs) = 0;
 
-    virtual TensorHolder<T> forward(const TensorHolder<T> &) = 0;
+    virtual TensorHolder<T> backward(TensorHolder<T> & out_gradient) = 0;
 
-    virtual TensorHolder<T> backward(const TensorHolder<T> &) = 0;
-
-    virtual void set_weights(const TensorHolder<T> &) = 0;
+    virtual void set_weights(const TensorHolder<T> & weights_) = 0;
 
     virtual const TensorHolder<T> &get_weights() = 0;
 
-    virtual void adjust_weights(const TensorHolder<T> &) = 0;
+    virtual void adjust_weights(TensorHolder<T> & weights_) = 0;
+
+    virtual void adjust_biases(TensorHolder<T> & biases_) = 0;
 
     virtual ~Layer() = default;
 };
