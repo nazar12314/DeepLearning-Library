@@ -12,8 +12,17 @@ using Eigen::Tensor;
 
 template<class T>
 class Initializer {
+protected:
+    size_t outputs;
+    size_t inputs;
+
 public:
-    TensorHolder<T> get_weights(){return TensorHolder(Tensor<T, 2>());};
+    Initializer(size_t inputs_, size_t outputs_): inputs(inputs_), outputs(outputs_) {};
+
+    virtual TensorHolder<T> get_weights() = 0;
+    virtual TensorHolder<T> get_biases() = 0;
+
+    virtual ~Initializer() = default;
 };
 
 
