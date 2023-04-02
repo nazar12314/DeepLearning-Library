@@ -11,38 +11,42 @@
 using Eigen::Tensor;
 
 
-template <class T, class Func>
+template <class T>
 class Optimizer {
 protected:
-    Func optimization_step;
+//    Func optimization_step;
+    std::function<TensorHolder<T>(TensorHolder<T>&, std::vector<T>)> optimization_step;
 public:
-    explicit Optimizer(Func optimizationStep) : optimization_step(optimizationStep) {}
+    explicit Optimizer(std::function<TensorHolder<T>(TensorHolder<T>&, std::vector<T>)> optimizationStep) : optimization_step(optimizationStep) {}
 
-    virtual TensorHolder<T> apply_optimization(TensorHolder<T>& gradients) = 0;
+    virtual void apply_optimization(TensorHolder<T>& gradients, Layer<T>& layer) = 0;
 };
 
 namespace optimizers{
     template <class T>
-    TensorHolder<T> sgd_step(TensorHolder<T> &gradients, T learning_rate){
+    TensorHolder<T> sgd_step(TensorHolder<T> &gradients, std::vector<T> params){
+        // params: learning rate
+        T learning_rate = params[0];
         if (gradients.size() == 2){
-            Tensor<T, 2> grads = gradients.template get<2>();
+            Tensor<T, 2>& grads = gradients.template get<2>();
             Tensor<T, 2> grads_multiplied = grads * grads.constant(learning_rate);
             return TensorHolder<T>(grads_multiplied);
         }
-        Tensor<T, 3> grads = gradients.template get<3>();
+        Tensor<T, 3>& grads = gradients.template get<3>();
         Tensor<T, 3> grads_multiplied = grads * grads.constant(learning_rate);
         return TensorHolder<T>(grads_multiplied);
     };
 
     template <class T>
-    class SGD: Optimizer<T, TensorHolder<T> (*)(TensorHolder<T>&, T)> {
+    class SGD: Optimizer<T> {
         T learning_rate;
     public:
-        explicit SGD(T learning_date_): Optimizer<T, TensorHolder<T> (*)(TensorHolder<T>&, T)>(sgd_step),
+        explicit SGD(T learning_date_): Optimizer<T>(sgd_step<T>),
                 learning_rate{learning_date_}{};
 
-        TensorHolder<T> apply_optimization(TensorHolder<T>& gradients) override{
-            return this->optimization_step(gradients, learning_rate);
+        void apply_optimization(TensorHolder<T>& gradients, Layer<T>& layer) override{
+            layer.adjust_weights(this->optimization_step(gradients, std::vector{learning_rate}));
+//            return this->optimization_step(gradients, std::vector{learning_rate});
         }
     };
 }
