@@ -12,17 +12,15 @@
 template<class T>
 class RandomNormal: public Initializer<T> {
 public:
-    RandomNormal(size_t inputs_, size_t outputs_): Initializer<T>(inputs_, outputs_) {};
-
-    TensorHolder<T> get_weights() override {
-        Tensor<T, 2> weights(this->inputs, this->outputs);
+    TensorHolder<T> get_weights(size_t n_in, size_t n_hidden) override {
+        Tensor<T, 2> weights(n_hidden, n_in);
         weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
 
         return TensorHolder<T>(weights);
     };
 
-    TensorHolder<T> get_biases() override {
-        Tensor<T, 2> biases(this->inputs, 1);
+    TensorHolder<T> get_biases(size_t n_hidden) override {
+        Tensor<T, 2> biases(n_hidden, 1);
         biases.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
 
         return TensorHolder<T>(biases);

@@ -17,7 +17,7 @@ class Layer {
     bool trainable;
 
 public:
-    Layer(const std::string & name, bool trainable): name(name), trainable(trainable) {}
+    Layer(const std::string & name, bool trainable): name(name), trainable(trainable) {};
 
     virtual TensorHolder<T> forward(const TensorHolder<T> & inputs) = 0;
 

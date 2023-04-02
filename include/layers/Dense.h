@@ -7,7 +7,6 @@
 
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
 #include "utils/Initializer.h"
-#include "utils/Initializer.h"
 #include "Layer.h"
 #include "utils/RandomNormal.h"
 
@@ -15,17 +14,19 @@ using Eigen::Tensor;
 
 template<class T>
 class DenseLayer : public Layer<T> {
-    RandomNormal<T> initializer;
+    size_t n_in;
+    size_t n_hidden;
     TensorHolder<T> weights;
     TensorHolder<T> biases;
     TensorHolder<T> X;
 
 public:
-    DenseLayer(const std::string& name, const RandomNormal<T>& initializer_, bool trainable) :
+    DenseLayer(size_t n_in_, size_t n_hidden_, const std::string& name, Initializer<T>& initializer, bool trainable = true) :
             Layer<T>(name, trainable),
-            initializer(initializer_),
-            weights{initializer.get_weights()},
-            biases{initializer.get_biases()},
+            n_in(n_in_),
+            n_hidden(n_hidden_),
+            weights{initializer.get_weights(n_hidden, n_in)},
+            biases{initializer.get_biases(n_hidden)},
             X{TensorHolder<T>(Tensor<T, 2>())} {
     };
 
@@ -34,6 +35,10 @@ public:
         Tensor<T, 2> X_tensor = X.template get<2>();
         Tensor<T, 2> weights_tensor = weights.template get<2>();
         Tensor<T, 2> biases_tensor = biases.template get<2>();
+
+        if (weights_tensor.dimension(1) != X_tensor.dimension(0)) {
+            throw std::invalid_argument("Incompatible tensor shapes");
+        }
 
         Tensor<T, 2> output_tensor = weights_tensor.contract(
                 X_tensor,
@@ -53,7 +58,7 @@ public:
                 Eigen::array<Eigen::IndexPair<int>, 1> {Eigen::IndexPair<int>(1, 0)}
                 );
 
-        return out_gradient;
+        return TensorHolder(output_tensor);
     };
 
     void set_weights(const TensorHolder<T> & weights_) override {

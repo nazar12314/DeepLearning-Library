@@ -1,25 +1,26 @@
 #include <iostream>
-#include <chrono>
 #include <utils/TensorHolder.h>
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
 #include "layers/Dense.h"
-#include "utils/Initializer.h"
+#include "utils/RandomNormal.h"
+
 
 using namespace std;
 using namespace Eigen;
 
 
 int main() {
-    Initializer<double> in{};
-    DenseLayer<double> dn("1", true, in);
-    Tensor<double, 2> tensor(2, 3);
-    tensor.setConstant(1.0);
-    std::cout << tensor << std::endl;
+    RandomNormal<double> rn {};
 
-    TensorHolder<double> my_tensor_holder(tensor);
+    DenseLayer<double> dl(15, 5, "1", rn);
 
-    auto& retrieved_tensor = my_tensor_holder.get<2>();
-    std::cout << retrieved_tensor << std::endl;
+    Tensor<double, 2> X (5, 1);
+
+    X.setRandom();
+
+    Tensor<double, 2> forwarded = dl.forward(TensorHolder(X)).template get<2>();
+
+    std::cout << forwarded;
 
     return 0;
 }
