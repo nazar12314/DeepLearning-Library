@@ -17,6 +17,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o.d"
   "CMakeFiles/neuralib.dir/utils/SGD.cpp.o"
   "CMakeFiles/neuralib.dir/utils/SGD.cpp.o.d"
+  "CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o"
+  "CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o.d"
   "neuralib"
   "neuralib.pdb"
 )

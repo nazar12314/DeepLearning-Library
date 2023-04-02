@@ -390,6 +390,30 @@ utils/SGD.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/SGD.cpp.s
 .PHONY : utils/SGD.cpp.s
 
+utils/tensor_holder.o: utils/tensor_holder.cpp.o
+.PHONY : utils/tensor_holder.o
+
+# target to build an object file
+utils/tensor_holder.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o
+.PHONY : utils/tensor_holder.cpp.o
+
+utils/tensor_holder.i: utils/tensor_holder.cpp.i
+.PHONY : utils/tensor_holder.i
+
+# target to preprocess a source file
+utils/tensor_holder.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.i
+.PHONY : utils/tensor_holder.cpp.i
+
+utils/tensor_holder.s: utils/tensor_holder.cpp.s
+.PHONY : utils/tensor_holder.s
+
+# target to generate assembly for a file
+utils/tensor_holder.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.s
+.PHONY : utils/tensor_holder.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -430,6 +454,9 @@ help:
 	@echo "... utils/SGD.o"
 	@echo "... utils/SGD.i"
 	@echo "... utils/SGD.s"
+	@echo "... utils/tensor_holder.o"
+	@echo "... utils/tensor_holder.i"
+	@echo "... utils/tensor_holder.s"
 .PHONY : help
 
 
