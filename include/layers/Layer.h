@@ -20,7 +20,7 @@ public:
 
     Layer(const std::string &name, bool trainable): name(name), trainable(trainable) {}
 
-    virtual void forward(const TensorHolder<T> &) = 0;
+    virtual TensorHolder<T> forward(const TensorHolder<T> &) = 0;
 
     virtual TensorHolder<T> backward(const TensorHolder<T> &) = 0;
 

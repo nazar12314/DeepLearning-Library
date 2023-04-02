@@ -13,20 +13,32 @@ using Eigen::Tensor;
 
 template<class T>
 class DenseLayer : public Layer<T> {
+    Initializer<T> initializer;
     TensorHolder<T> weights;
     TensorHolder<T> biases;
-    TensorHolder<T> inputs;
-    Initializer<T> initializer;
+    TensorHolder<T> X;
 
 public:
     DenseLayer(const std::string &name, bool trainable, const Initializer<T> &initializer_) :
             Layer<T>(name, trainable), initializer(initializer_), weights{initializer.get_weights()},
-            biases{initializer.get_weights()}, inputs{TensorHolder<T>(Tensor<T, 2>())}{
+            biases{initializer.get_weights()}, X{TensorHolder<T>(Tensor<T, 2>())} {
     };
 
-    void forward(const TensorHolder<T> &) override {};
+    TensorHolder<T> forward(const TensorHolder<T> & inputs) override {
+        X = std::move(inputs);
+        Tensor<T, 2> X_tensor = X.template get<2>();
+        Tensor<T, 2> weights_tensor = weights.template get<2>();
+        Tensor<T, 2> output_tensor = weights_tensor.contract(X_tensor, { {1, 0} });
 
-    TensorHolder<T> backward(const TensorHolder<T> &) override { return TensorHolder(Tensor<double, 2>()); };
+        return TensorHolder<T> (output_tensor + biases);
+    };
+
+    TensorHolder<T> backward(const TensorHolder<T> & out_gradient) override {
+        Tensor<T, 2> out_gradient_tensor = out_gradient.template get<2>();
+        Tensor<T, 2> weights_tensor = weights.template get<2>();
+
+        return
+    };
 
     void set_weights(const TensorHolder<T> &) override {};
 
