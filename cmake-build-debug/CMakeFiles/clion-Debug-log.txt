@@ -1,6 +1,0 @@
-C:\WINDOWS\system32\wsl.exe --distribution Ubuntu --exec /bin/bash -c "export CMAKE_COLOR_DIAGNOSTICS=ON && export CLION_IDE=TRUE && export JETBRAINS_IDE=TRUE && cd /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug && /usr/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G 'CodeBlocks - Unix Makefiles' -S /mnt/c/Study/AKS/semestr_project/DeepLearning-Library -B /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug"
-
-- UCU.APPS.CS: Consider enabling PVS-Studio in CMakeLists.txt by 'set(ENABLE_PVS_STUDIO ON)' flag or use Windows PVS Studio GUI.
--- Configuring done
--- Generating done
--- Build files have been written to: /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug
