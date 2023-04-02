@@ -19,7 +19,7 @@ class DenseLayer : public Layer<T> {
     TensorHolder<T> X;
 
 public:
-    DenseLayer(const std::string &name, bool trainable, const Initializer<T> &initializer_) :
+    DenseLayer(const std::string &name, const Initializer<T> &initializer_, bool trainable = true) :
             Layer<T>(name, trainable), initializer(initializer_), weights{initializer.get_weights()},
             biases{initializer.get_weights()}, X{TensorHolder<T>(Tensor<T, 2>())} {
     };
@@ -36,15 +36,26 @@ public:
     TensorHolder<T> backward(const TensorHolder<T> & out_gradient) override {
         Tensor<T, 2> out_gradient_tensor = out_gradient.template get<2>();
         Tensor<T, 2> weights_tensor = weights.template get<2>();
+        Tensor<T, 2> weights_tensor_T = weights_tensor.shuffle({1, 0});
 
-        return
+        Tensor<T, 2> output_tensor = weights_tensor_T.contract(out_gradient_tensor, { {1, 0} });
+
+        return TensorHolder<T> (output_tensor);
     };
 
-    void set_weights(const TensorHolder<T> &) override {};
+    void set_weights(const TensorHolder<T> & weights_) override {
+        weights = std::move(weights_);
+    };
 
     const TensorHolder<T> &get_weights() override { return weights; };
 
-    void adjust_weights(const TensorHolder<T> &) override {};
+    void adjust_weights(const TensorHolder<T> & weights_) override {
+        weights -= weights_;
+    };
+
+    void adjust_biases(const TensorHolder<T> & biases_) override {
+        biases -= biases_;
+    };
 };
 
 #endif //NEURALIB_DENSE_H
