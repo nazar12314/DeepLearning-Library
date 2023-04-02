@@ -160,12 +160,7 @@ CMakeFiles/neuralib.dir/main.cpp.o: \
  /usr/include/c++/11/bits/locale_facets.tcc \
  /usr/include/c++/11/bits/basic_ios.tcc \
  /usr/include/c++/11/bits/ostream.tcc /usr/include/c++/11/istream \
- /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/chrono \
- /usr/include/c++/11/ratio /usr/include/c++/11/limits \
- /usr/include/c++/11/ctime /usr/include/c++/11/bits/parse_numbers.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h \
- /usr/include/c++/11/any /usr/include/c++/11/utility \
- /usr/include/c++/11/bits/stl_relops.h \
+ /usr/include/c++/11/bits/istream.tcc \
  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \
  /usr/include/eigen3/Eigen/Core \
  /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
@@ -180,7 +175,8 @@ CMakeFiles/neuralib.dir/main.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
  /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
  /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
- /usr/include/c++/11/bits/specfun.h /usr/include/c++/11/tr1/gamma.tcc \
+ /usr/include/c++/11/bits/specfun.h /usr/include/c++/11/limits \
+ /usr/include/c++/11/tr1/gamma.tcc \
  /usr/include/c++/11/tr1/special_function_util.h \
  /usr/include/c++/11/tr1/bessel_function.tcc \
  /usr/include/c++/11/tr1/beta_function.tcc \
@@ -202,7 +198,8 @@ CMakeFiles/neuralib.dir/main.cpp.o: \
  /usr/include/eigen3/Eigen/src/Core/util/MKL_support.h \
  /usr/include/c++/11/cstddef /usr/include/c++/11/cassert \
  /usr/include/assert.h /usr/include/c++/11/functional \
- /usr/include/c++/11/tuple /usr/include/c++/11/array \
+ /usr/include/c++/11/tuple /usr/include/c++/11/utility \
+ /usr/include/c++/11/bits/stl_relops.h /usr/include/c++/11/array \
  /usr/include/c++/11/bits/uses_allocator.h \
  /usr/include/c++/11/bits/invoke.h /usr/include/c++/11/bits/refwrap.h \
  /usr/include/c++/11/bits/std_function.h \
@@ -396,6 +393,8 @@ CMakeFiles/neuralib.dir/main.cpp.o: \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/util/EmulateArray.h \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/util/CXX11Workarounds.h \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/util/MaxSizeVector.h \
+ /usr/include/c++/11/chrono /usr/include/c++/11/ratio \
+ /usr/include/c++/11/ctime /usr/include/c++/11/bits/parse_numbers.h \
  /usr/include/c++/11/random /usr/include/c++/11/bits/random.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/opt_random.h \
  /usr/include/c++/11/bits/random.tcc /usr/include/c++/11/numeric \
@@ -470,4 +469,8 @@ CMakeFiles/neuralib.dir/main.cpp.o: \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h \
  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
- /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h \
+ /usr/include/c++/11/any \
+ /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Activation.h \
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h
