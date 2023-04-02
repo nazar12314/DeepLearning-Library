@@ -15,7 +15,6 @@ template<class T>
 class Layer {
     std::string name;
     bool trainable;
-    TensorHolder<T> inputs;
 
 public:
 

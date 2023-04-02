@@ -5,8 +5,15 @@
 #ifndef NEURALIB_INITIALIZER_H
 #define NEURALIB_INITIALIZER_H
 
-class Initializer {
+#include "utils/TensorHolder.h"
+#include "eigen3/unsupported/Eigen/CXX11/Tensor"
 
+using Eigen::Tensor;
+
+template<class T>
+class Initializer {
+public:
+    TensorHolder<T> get_weights(){return TensorHolder(Tensor<T, 2>());};
 };
 
 
