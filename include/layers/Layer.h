@@ -15,7 +15,6 @@ class Layer {
     std::string name;
     bool trainable;
     Tensor<T, Dim> inputs;
-    Tensor<T, Dim> outputs;
 
 public:
 
