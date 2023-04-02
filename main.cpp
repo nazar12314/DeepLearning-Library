@@ -12,13 +12,13 @@ using namespace Eigen;
 int main() {
     RandomNormal<double> rn {};
 
-    DenseLayer<double> dl(15, 5, "1", rn);
+    DenseLayer<double> dl(5, 2, "1", rn);
 
     Tensor<double, 2> X (5, 1);
 
     X.setRandom();
 
-    Tensor<double, 2> forwarded = dl.forward(TensorHolder(X)).template get<2>();
+    Tensor<double, 2> forwarded = dl.forward(TensorHolder(X)).get<2>();
 
     std::cout << forwarded;
 

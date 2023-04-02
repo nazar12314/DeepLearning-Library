@@ -18,13 +18,6 @@ public:
 
         return TensorHolder<T>(weights);
     };
-
-    TensorHolder<T> get_biases(size_t n_hidden) override {
-        Tensor<T, 2> biases(n_hidden, 1);
-        biases.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
-
-        return TensorHolder<T>(biases);
-    };
 };
 
 #endif //NEURALIB_RANDOMNORMAL_H

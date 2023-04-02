@@ -25,8 +25,8 @@ public:
             Layer<T>(name, trainable),
             n_in(n_in_),
             n_hidden(n_hidden_),
-            weights{initializer.get_weights(n_hidden, n_in)},
-            biases{initializer.get_biases(n_hidden)},
+            weights{initializer.get_weights(n_in_, n_hidden_)},
+            biases{initializer.get_weights(1, n_hidden_)},
             X{TensorHolder<T>(Tensor<T, 2>())} {
     };
 

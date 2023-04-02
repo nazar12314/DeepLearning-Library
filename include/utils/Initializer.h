@@ -16,7 +16,6 @@ class Initializer {
 public:
 
     virtual TensorHolder<T> get_weights(size_t n_in, size_t n_hidden) = 0;
-    virtual TensorHolder<T> get_biases(size_t n_hidden) = 0;
 //
     virtual ~Initializer() = default;
 };
