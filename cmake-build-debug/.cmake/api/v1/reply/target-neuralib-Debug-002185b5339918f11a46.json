@@ -289,12 +289,12 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
-			"path" : "utils/tensor_holder.cpp",
+			"path" : "utils/TensorHolder.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 1,
-			"path" : "include/utils/tensor_holder.h",
+			"path" : "include/utils/TensorHolder.h",
 			"sourceGroupIndex" : 1
 		}
 	],

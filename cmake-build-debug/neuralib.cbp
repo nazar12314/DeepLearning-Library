@@ -156,7 +156,7 @@
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/SGD.h">
 			<Option target="neuralib"/>
 		</Unit>
-		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/tensor_holder.h">
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h">
 			<Option target="neuralib"/>
 		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Activation.cpp">
@@ -186,7 +186,7 @@
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/SGD.cpp">
 			<Option target="neuralib"/>
 		</Unit>
-		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/tensor_holder.cpp">
+		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/TensorHolder.cpp">
 			<Option target="neuralib"/>
 		</Unit>
 		<Unit filename="/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/CMakeLists.txt">

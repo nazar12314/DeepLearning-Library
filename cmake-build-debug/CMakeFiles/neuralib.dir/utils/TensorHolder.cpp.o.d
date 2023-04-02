@@ -1,13 +1,9 @@
-CMakeFiles/neuralib.dir/utils/SGD.cpp.o: \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/SGD.cpp \
+CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o: \
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/TensorHolder.cpp \
  /usr/include/stdc-predef.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/SGD.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/Optimizer.h \
- /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \
- /usr/include/eigen3/Eigen/Core \
- /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
- /usr/include/eigen3/Eigen/src/Core/util/Macros.h \
- /usr/include/c++/11/cmath \
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h \
+ /usr/include/c++/11/any /usr/include/c++/11/typeinfo \
+ /usr/include/c++/11/bits/exception.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/os_defines.h \
  /usr/include/features.h /usr/include/features-time64.h \
@@ -19,8 +15,19 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.o: \
  /usr/include/x86_64-linux-gnu/gnu/stubs-64.h \
  /usr/include/x86_64-linux-gnu/c++/11/bits/cpu_defines.h \
  /usr/include/c++/11/pstl/pstl_config.h \
+ /usr/include/c++/11/bits/hash_bytes.h /usr/include/c++/11/new \
+ /usr/include/c++/11/utility /usr/include/c++/11/bits/stl_relops.h \
+ /usr/include/c++/11/bits/stl_pair.h /usr/include/c++/11/bits/move.h \
+ /usr/include/c++/11/type_traits /usr/include/c++/11/compare \
+ /usr/include/c++/11/concepts /usr/include/c++/11/initializer_list \
+ /usr/include/c++/11/ext/numeric_traits.h \
  /usr/include/c++/11/bits/cpp_type_traits.h \
- /usr/include/c++/11/ext/type_traits.h /usr/include/math.h \
+ /usr/include/c++/11/ext/type_traits.h \
+ /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \
+ /usr/include/eigen3/Eigen/Core \
+ /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
+ /usr/include/eigen3/Eigen/src/Core/util/Macros.h \
+ /usr/include/c++/11/cmath /usr/include/math.h \
  /usr/include/x86_64-linux-gnu/bits/libc-header-start.h \
  /usr/include/x86_64-linux-gnu/bits/types.h \
  /usr/include/x86_64-linux-gnu/bits/typesizes.h \
@@ -72,10 +79,6 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.o: \
  /usr/include/c++/11/bits/stl_algobase.h \
  /usr/include/c++/11/bits/functexcept.h \
  /usr/include/c++/11/bits/exception_defines.h \
- /usr/include/c++/11/ext/numeric_traits.h \
- /usr/include/c++/11/bits/stl_pair.h /usr/include/c++/11/bits/move.h \
- /usr/include/c++/11/type_traits /usr/include/c++/11/compare \
- /usr/include/c++/11/concepts \
  /usr/include/c++/11/bits/stl_iterator_base_types.h \
  /usr/include/c++/11/bits/iterator_concepts.h \
  /usr/include/c++/11/bits/ptr_traits.h \
@@ -83,8 +86,8 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.o: \
  /usr/include/c++/11/bits/stl_iterator_base_funcs.h \
  /usr/include/c++/11/bits/concept_check.h \
  /usr/include/c++/11/debug/assertions.h \
- /usr/include/c++/11/bits/stl_iterator.h /usr/include/c++/11/new \
- /usr/include/c++/11/bits/exception.h /usr/include/c++/11/debug/debug.h \
+ /usr/include/c++/11/bits/stl_iterator.h \
+ /usr/include/c++/11/debug/debug.h \
  /usr/include/c++/11/bits/predefined_ops.h /usr/include/c++/11/limits \
  /usr/include/c++/11/tr1/gamma.tcc \
  /usr/include/c++/11/tr1/special_function_util.h \
@@ -119,7 +122,6 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.o: \
  /usr/include/x86_64-linux-gnu/bits/wchar2.h \
  /usr/include/c++/11/exception /usr/include/c++/11/bits/exception_ptr.h \
  /usr/include/c++/11/bits/cxxabi_init_exception.h \
- /usr/include/c++/11/typeinfo /usr/include/c++/11/bits/hash_bytes.h \
  /usr/include/c++/11/bits/nested_exception.h \
  /usr/include/c++/11/bits/char_traits.h /usr/include/c++/11/cstdint \
  /usr/lib/gcc/x86_64-linux-gnu/11/include/stdint.h /usr/include/stdint.h \
@@ -155,7 +157,7 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.o: \
  /usr/include/c++/11/backward/binders.h \
  /usr/include/c++/11/bits/stl_algo.h \
  /usr/include/c++/11/bits/algorithmfwd.h \
- /usr/include/c++/11/initializer_list /usr/include/c++/11/bits/stl_heap.h \
+ /usr/include/c++/11/bits/stl_heap.h \
  /usr/include/c++/11/bits/stl_tempbuf.h \
  /usr/include/c++/11/bits/stl_construct.h \
  /usr/include/c++/11/bits/uniform_int_dist.h \
@@ -200,8 +202,7 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.o: \
  /usr/include/eigen3/Eigen/src/Core/util/MKL_support.h \
  /usr/include/c++/11/cstddef /usr/include/c++/11/cassert \
  /usr/include/assert.h /usr/include/c++/11/functional \
- /usr/include/c++/11/tuple /usr/include/c++/11/utility \
- /usr/include/c++/11/bits/stl_relops.h /usr/include/c++/11/array \
+ /usr/include/c++/11/tuple /usr/include/c++/11/array \
  /usr/include/c++/11/bits/uses_allocator.h \
  /usr/include/c++/11/bits/invoke.h /usr/include/c++/11/bits/refwrap.h \
  /usr/include/c++/11/bits/std_function.h \
@@ -470,8 +471,4 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.o: \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorMap.h \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h \
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h \
- /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/../layers/Layer.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h \
- /usr/include/c++/11/any \
- /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
+ /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h

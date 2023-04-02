@@ -11,13 +11,14 @@
 using Eigen::Tensor;
 
 
-template <class Func>
+template <class T, class Func>
 class Optimizer {
     Func optimization_step;
 
 public:
-    template<class T, size_t Dim = 2>
-    const Tensor<T, Dim>& apply_gradient(const Tensor<T, Dim>& gradients, Layer<T, Dim> Layer);
+    explicit Optimizer(Func optimizationStep) : optimization_step(optimizationStep) {}
+
+    virtual const TensorHolder<T>& apply_gradient(const TensorHolder<T>& gradients, Layer<T> Layer) = 0;
 };
 
 

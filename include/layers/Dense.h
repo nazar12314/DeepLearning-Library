@@ -11,20 +11,25 @@
 
 using Eigen::Tensor;
 
-template <class T, size_t Dim = 2>
-class DenseLayer : public Layer<T, Dim> {
-    Tensor<T, Dim> weights;
-    Tensor<T, Dim> biases;
+template<class T>
+class DenseLayer : public Layer<T> {
+    TensorHolder<T> weights;
+    TensorHolder<T> biases;
     Initializer initializer;
 
 public:
-    DenseLayer(const std::string &name, bool trainable, const Initializer &initializer):
-        Layer<T, Dim>(name, trainable), initializer(initializer) {};
-    void forward(const Tensor<T, Dim> &) override {};
-    Tensor<T, Dim> backward(const Tensor<T, Dim> &) override {return Tensor<T, Dim>();};
-    void set_weights(const Tensor<T, Dim> &) override {};
-    const Tensor<T, Dim> &get_weights() override {return Tensor<T, Dim>();};
-    void adjust_weights(const Tensor<T, Dim> &) override {};
+    DenseLayer(const std::string &name, bool trainable, const Initializer &initializer) :
+            Layer<T>(name, trainable), initializer(initializer) {};
+
+    void forward(const TensorHolder<T> &) override {};
+
+    TensorHolder<T> backward(const TensorHolder<T> &) override { return TensorHolder<T>(); };
+
+    void set_weights(const TensorHolder<T> &) override {};
+
+    const TensorHolder<T> &get_weights() override { return TensorHolder<T>(); };
+
+    void adjust_weights(const TensorHolder<T> &) override {};
 };
 
 #endif //NEURALIB_DENSE_H

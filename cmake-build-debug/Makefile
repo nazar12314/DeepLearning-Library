@@ -390,29 +390,29 @@ utils/SGD.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/SGD.cpp.s
 .PHONY : utils/SGD.cpp.s
 
-utils/tensor_holder.o: utils/tensor_holder.cpp.o
-.PHONY : utils/tensor_holder.o
+utils/TensorHolder.o: utils/TensorHolder.cpp.o
+.PHONY : utils/TensorHolder.o
 
 # target to build an object file
-utils/tensor_holder.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o
-.PHONY : utils/tensor_holder.cpp.o
+utils/TensorHolder.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o
+.PHONY : utils/TensorHolder.cpp.o
 
-utils/tensor_holder.i: utils/tensor_holder.cpp.i
-.PHONY : utils/tensor_holder.i
+utils/TensorHolder.i: utils/TensorHolder.cpp.i
+.PHONY : utils/TensorHolder.i
 
 # target to preprocess a source file
-utils/tensor_holder.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.i
-.PHONY : utils/tensor_holder.cpp.i
+utils/TensorHolder.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.i
+.PHONY : utils/TensorHolder.cpp.i
 
-utils/tensor_holder.s: utils/tensor_holder.cpp.s
-.PHONY : utils/tensor_holder.s
+utils/TensorHolder.s: utils/TensorHolder.cpp.s
+.PHONY : utils/TensorHolder.s
 
 # target to generate assembly for a file
-utils/tensor_holder.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.s
-.PHONY : utils/tensor_holder.cpp.s
+utils/TensorHolder.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/neuralib.dir/build.make CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.s
+.PHONY : utils/TensorHolder.cpp.s
 
 # Help Target
 help:
@@ -454,9 +454,9 @@ help:
 	@echo "... utils/SGD.o"
 	@echo "... utils/SGD.i"
 	@echo "... utils/SGD.s"
-	@echo "... utils/tensor_holder.o"
-	@echo "... utils/tensor_holder.i"
-	@echo "... utils/tensor_holder.s"
+	@echo "... utils/TensorHolder.o"
+	@echo "... utils/TensorHolder.i"
+	@echo "... utils/TensorHolder.s"
 .PHONY : help
 
 

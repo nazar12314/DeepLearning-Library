@@ -535,7 +535,10 @@ CMakeFiles/neuralib.dir/layers/Activation.cpp.o: ../layers/Activation.cpp \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h \
   /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
-  ../include/layers/Layer.h
+  ../include/layers/Layer.h \
+  ../include/utils/TensorHolder.h \
+  /usr/include/c++/11/any \
+  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
 
 CMakeFiles/neuralib.dir/layers/Dense.cpp.o: ../layers/Dense.cpp \
   /usr/include/stdc-predef.h \
@@ -1073,6 +1076,9 @@ CMakeFiles/neuralib.dir/layers/Dense.cpp.o: ../layers/Dense.cpp \
   /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
   ../include/utils/Initializer.h \
   ../include/layers/Layer.h \
+  ../include/utils/TensorHolder.h \
+  /usr/include/c++/11/any \
+  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \
   ../include/layers/Layer.h
 
 CMakeFiles/neuralib.dir/layers/Layer.cpp.o: ../layers/Layer.cpp \
@@ -1245,6 +1251,11 @@ CMakeFiles/neuralib.dir/layers/Layer.cpp.o: ../layers/Layer.cpp \
   /usr/include/x86_64-linux-gnu/bits/types/error_t.h \
   /usr/include/c++/11/bits/charconv.h \
   /usr/include/c++/11/bits/basic_string.tcc \
+  ../include/utils/TensorHolder.h \
+  /usr/include/c++/11/any \
+  /usr/include/c++/11/typeinfo \
+  /usr/include/c++/11/utility \
+  /usr/include/c++/11/bits/stl_relops.h \
   /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \
   /usr/include/eigen3/Eigen/Core \
   /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
@@ -1287,7 +1298,6 @@ CMakeFiles/neuralib.dir/layers/Layer.cpp.o: ../layers/Layer.cpp \
   /usr/include/c++/11/exception \
   /usr/include/c++/11/bits/exception_ptr.h \
   /usr/include/c++/11/bits/cxxabi_init_exception.h \
-  /usr/include/c++/11/typeinfo \
   /usr/include/c++/11/bits/nested_exception.h \
   /usr/include/c++/11/bits/ios_base.h \
   /usr/include/c++/11/bits/locale_classes.h \
@@ -1317,8 +1327,6 @@ CMakeFiles/neuralib.dir/layers/Layer.cpp.o: ../layers/Layer.cpp \
   /usr/include/assert.h \
   /usr/include/c++/11/functional \
   /usr/include/c++/11/tuple \
-  /usr/include/c++/11/utility \
-  /usr/include/c++/11/bits/stl_relops.h \
   /usr/include/c++/11/array \
   /usr/include/c++/11/bits/uses_allocator.h \
   /usr/include/c++/11/bits/invoke.h \
@@ -1608,7 +1616,8 @@ CMakeFiles/neuralib.dir/layers/Layer.cpp.o: ../layers/Layer.cpp \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorMap.h \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h \
-  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
+  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
+  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
 
 CMakeFiles/neuralib.dir/main.cpp.o: ../main.cpp \
   /usr/include/stdc-predef.h \
@@ -1813,7 +1822,7 @@ CMakeFiles/neuralib.dir/main.cpp.o: ../main.cpp \
   /usr/include/c++/11/limits \
   /usr/include/c++/11/ctime \
   /usr/include/c++/11/bits/parse_numbers.h \
-  ../include/utils/tensor_holder.h \
+  ../include/utils/TensorHolder.h \
   /usr/include/c++/11/any \
   /usr/include/c++/11/utility \
   /usr/include/c++/11/bits/stl_relops.h \
@@ -2324,6 +2333,11 @@ CMakeFiles/neuralib.dir/models/Model.cpp.o: ../models/Model.cpp \
   /usr/include/c++/11/bits/stl_bvector.h \
   /usr/include/c++/11/bits/vector.tcc \
   ../include/layers/Layer.h \
+  ../include/utils/TensorHolder.h \
+  /usr/include/c++/11/any \
+  /usr/include/c++/11/typeinfo \
+  /usr/include/c++/11/utility \
+  /usr/include/c++/11/bits/stl_relops.h \
   /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \
   /usr/include/eigen3/Eigen/Core \
   /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h \
@@ -2366,7 +2380,6 @@ CMakeFiles/neuralib.dir/models/Model.cpp.o: ../models/Model.cpp \
   /usr/include/c++/11/exception \
   /usr/include/c++/11/bits/exception_ptr.h \
   /usr/include/c++/11/bits/cxxabi_init_exception.h \
-  /usr/include/c++/11/typeinfo \
   /usr/include/c++/11/bits/nested_exception.h \
   /usr/include/c++/11/bits/ios_base.h \
   /usr/include/c++/11/bits/locale_classes.h \
@@ -2396,8 +2409,6 @@ CMakeFiles/neuralib.dir/models/Model.cpp.o: ../models/Model.cpp \
   /usr/include/assert.h \
   /usr/include/c++/11/functional \
   /usr/include/c++/11/tuple \
-  /usr/include/c++/11/utility \
-  /usr/include/c++/11/bits/stl_relops.h \
   /usr/include/c++/11/array \
   /usr/include/c++/11/bits/uses_allocator.h \
   /usr/include/c++/11/bits/invoke.h \
@@ -2683,6 +2694,7 @@ CMakeFiles/neuralib.dir/models/Model.cpp.o: ../models/Model.cpp \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h \
   /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
+  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \
   ../include/utils/Optimizer.h \
   ../include/layers/Layer.h \
   ../include/utils/Loss.h
@@ -3229,7 +3241,10 @@ CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o: ../utils/Optimizer.cpp \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h \
   /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
-  ../include/layers/Layer.h
+  ../include/layers/Layer.h \
+  ../include/utils/TensorHolder.h \
+  /usr/include/c++/11/any \
+  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
 
 CMakeFiles/neuralib.dir/utils/SGD.cpp.o: ../utils/SGD.cpp \
   /usr/include/stdc-predef.h \
@@ -3766,11 +3781,14 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.o: ../utils/SGD.cpp \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h \
   /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h \
   /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h \
-  ../include/layers/Layer.h
+  ../include/layers/Layer.h \
+  ../include/utils/TensorHolder.h \
+  /usr/include/c++/11/any \
+  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
 
-CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o: ../utils/tensor_holder.cpp \
+CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o: ../utils/TensorHolder.cpp \
   /usr/include/stdc-predef.h \
-  ../include/utils/tensor_holder.h \
+  ../include/utils/TensorHolder.h \
   /usr/include/c++/11/any \
   /usr/include/c++/11/typeinfo \
   /usr/include/c++/11/bits/exception.h \
@@ -4305,7 +4323,7 @@ CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o: ../utils/tensor_holder.cpp \
   /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
 
 
-../utils/tensor_holder.cpp:
+../utils/TensorHolder.cpp:
 
 ../include/utils/SGD.h:
 
@@ -4704,8 +4722,6 @@ CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o: ../utils/tensor_holder.cpp \
 /usr/include/eigen3/Eigen/src/Core/Solve.h:
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/cpu_defines.h:
-
-../include/utils/tensor_holder.h:
 
 /usr/include/c++/11/limits:
 
@@ -5382,6 +5398,8 @@ CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o: ../utils/tensor_holder.cpp \
 /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h:
 
 ../include/layers/Layer.h:
+
+../include/utils/TensorHolder.h:
 
 ../include/layers/Dense.h:
 

@@ -195,19 +195,19 @@ CMakeFiles/neuralib.dir/utils/Loss.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/neuralib.dir/utils/Loss.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Loss.cpp -o CMakeFiles/neuralib.dir/utils/Loss.cpp.s
 
-CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o: CMakeFiles/neuralib.dir/flags.make
-CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o: ../utils/tensor_holder.cpp
-CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o: CMakeFiles/neuralib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o -MF CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o.d -o CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o -c /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/tensor_holder.cpp
+CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o: CMakeFiles/neuralib.dir/flags.make
+CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o: ../utils/TensorHolder.cpp
+CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o: CMakeFiles/neuralib.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o -MF CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o.d -o CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o -c /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/TensorHolder.cpp
 
-CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/tensor_holder.cpp > CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.i
+CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/TensorHolder.cpp > CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.i
 
-CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/tensor_holder.cpp -o CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.s
+CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/TensorHolder.cpp -o CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.s
 
 # Object files for target neuralib
 neuralib_OBJECTS = \
@@ -220,7 +220,7 @@ neuralib_OBJECTS = \
 "CMakeFiles/neuralib.dir/utils/SGD.cpp.o" \
 "CMakeFiles/neuralib.dir/models/Model.cpp.o" \
 "CMakeFiles/neuralib.dir/utils/Loss.cpp.o" \
-"CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o"
+"CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o"
 
 # External object files for target neuralib
 neuralib_EXTERNAL_OBJECTS =
@@ -234,7 +234,7 @@ neuralib: CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o
 neuralib: CMakeFiles/neuralib.dir/utils/SGD.cpp.o
 neuralib: CMakeFiles/neuralib.dir/models/Model.cpp.o
 neuralib: CMakeFiles/neuralib.dir/utils/Loss.cpp.o
-neuralib: CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o
+neuralib: CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o
 neuralib: CMakeFiles/neuralib.dir/build.make
 neuralib: /usr/lib/x86_64-linux-gnu/libboost_program_options.so.1.74.0
 neuralib: /usr/lib/x86_64-linux-gnu/libboost_system.so.1.74.0

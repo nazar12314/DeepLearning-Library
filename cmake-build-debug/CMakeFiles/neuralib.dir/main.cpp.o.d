@@ -163,7 +163,7 @@ CMakeFiles/neuralib.dir/main.cpp.o: \
  /usr/include/c++/11/bits/istream.tcc /usr/include/c++/11/chrono \
  /usr/include/c++/11/ratio /usr/include/c++/11/limits \
  /usr/include/c++/11/ctime /usr/include/c++/11/bits/parse_numbers.h \
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/tensor_holder.h \
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h \
  /usr/include/c++/11/any /usr/include/c++/11/utility \
  /usr/include/c++/11/bits/stl_relops.h \
  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor \

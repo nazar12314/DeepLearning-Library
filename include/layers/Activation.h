@@ -11,21 +11,21 @@
 
 using Eigen::Tensor;
 
-template<class T, size_t Dim, class Func>
-class Activation : Layer<T, Dim> {
+template<class T, class Func>
+class Activation : Layer<T> {
     Func activation;
     Func activation_prime;
 public:
     Activation(const std::string &name, bool trainable, Func activation, Func activationPrime) :
-            Layer<T, Dim>(name, trainable),
+            Layer<T>(name, trainable),
             activation(activation),
             activation_prime(activationPrime) {}
 
-    void set_weights(const Tensor<T, Dim> &) override = delete;
+    void set_weights(const TensorHolder<T> &) override = delete;
 
-    const Tensor<T, Dim> &get_weights() override = delete;
+    const TensorHolder<T> &get_weights() override = delete;
 
-    void adjust_weights(const Tensor<T, Dim> &) override = delete;
+    void adjust_weights(const TensorHolder<T> &) override = delete;
 };
 
 

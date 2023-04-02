@@ -537,6 +537,9 @@ CMakeFiles/neuralib.dir/layers/Activation.cpp.o
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h
  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h
+ /usr/include/c++/11/any
+ /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
 
 CMakeFiles/neuralib.dir/layers/Dense.cpp.o
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/layers/Dense.cpp
@@ -1075,6 +1078,9 @@ CMakeFiles/neuralib.dir/layers/Dense.cpp.o
  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/Initializer.h
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h
+ /usr/include/c++/11/any
+ /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h
 
 CMakeFiles/neuralib.dir/layers/Layer.cpp.o
@@ -1248,6 +1254,11 @@ CMakeFiles/neuralib.dir/layers/Layer.cpp.o
  /usr/include/x86_64-linux-gnu/bits/types/error_t.h
  /usr/include/c++/11/bits/charconv.h
  /usr/include/c++/11/bits/basic_string.tcc
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h
+ /usr/include/c++/11/any
+ /usr/include/c++/11/typeinfo
+ /usr/include/c++/11/utility
+ /usr/include/c++/11/bits/stl_relops.h
  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
  /usr/include/eigen3/Eigen/Core
  /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h
@@ -1290,7 +1301,6 @@ CMakeFiles/neuralib.dir/layers/Layer.cpp.o
  /usr/include/c++/11/exception
  /usr/include/c++/11/bits/exception_ptr.h
  /usr/include/c++/11/bits/cxxabi_init_exception.h
- /usr/include/c++/11/typeinfo
  /usr/include/c++/11/bits/nested_exception.h
  /usr/include/c++/11/bits/ios_base.h
  /usr/include/c++/11/bits/locale_classes.h
@@ -1320,8 +1330,6 @@ CMakeFiles/neuralib.dir/layers/Layer.cpp.o
  /usr/include/assert.h
  /usr/include/c++/11/functional
  /usr/include/c++/11/tuple
- /usr/include/c++/11/utility
- /usr/include/c++/11/bits/stl_relops.h
  /usr/include/c++/11/array
  /usr/include/c++/11/bits/uses_allocator.h
  /usr/include/c++/11/bits/invoke.h
@@ -1612,6 +1620,7 @@ CMakeFiles/neuralib.dir/layers/Layer.cpp.o
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h
  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
+ /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
 
 CMakeFiles/neuralib.dir/main.cpp.o
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/main.cpp
@@ -1817,7 +1826,7 @@ CMakeFiles/neuralib.dir/main.cpp.o
  /usr/include/c++/11/limits
  /usr/include/c++/11/ctime
  /usr/include/c++/11/bits/parse_numbers.h
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/tensor_holder.h
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h
  /usr/include/c++/11/any
  /usr/include/c++/11/utility
  /usr/include/c++/11/bits/stl_relops.h
@@ -2329,6 +2338,11 @@ CMakeFiles/neuralib.dir/models/Model.cpp.o
  /usr/include/c++/11/bits/stl_bvector.h
  /usr/include/c++/11/bits/vector.tcc
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h
+ /usr/include/c++/11/any
+ /usr/include/c++/11/typeinfo
+ /usr/include/c++/11/utility
+ /usr/include/c++/11/bits/stl_relops.h
  /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
  /usr/include/eigen3/Eigen/Core
  /usr/include/eigen3/Eigen/src/Core/util/DisableStupidWarnings.h
@@ -2371,7 +2385,6 @@ CMakeFiles/neuralib.dir/models/Model.cpp.o
  /usr/include/c++/11/exception
  /usr/include/c++/11/bits/exception_ptr.h
  /usr/include/c++/11/bits/cxxabi_init_exception.h
- /usr/include/c++/11/typeinfo
  /usr/include/c++/11/bits/nested_exception.h
  /usr/include/c++/11/bits/ios_base.h
  /usr/include/c++/11/bits/locale_classes.h
@@ -2401,8 +2414,6 @@ CMakeFiles/neuralib.dir/models/Model.cpp.o
  /usr/include/assert.h
  /usr/include/c++/11/functional
  /usr/include/c++/11/tuple
- /usr/include/c++/11/utility
- /usr/include/c++/11/bits/stl_relops.h
  /usr/include/c++/11/array
  /usr/include/c++/11/bits/uses_allocator.h
  /usr/include/c++/11/bits/invoke.h
@@ -2688,6 +2699,7 @@ CMakeFiles/neuralib.dir/models/Model.cpp.o
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorRef.h
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h
  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
+ /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/Optimizer.h
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/Loss.h
@@ -3238,6 +3250,9 @@ CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h
  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h
+ /usr/include/c++/11/any
+ /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
 
 CMakeFiles/neuralib.dir/utils/SGD.cpp.o
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/SGD.cpp
@@ -3776,11 +3791,14 @@ CMakeFiles/neuralib.dir/utils/SGD.cpp.o
  /usr/include/eigen3/unsupported/Eigen/CXX11/src/Tensor/TensorIO.h
  /usr/include/eigen3/Eigen/src/Core/util/ReenableStupidWarnings.h
  /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/layers/Layer.h
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h
+ /usr/include/c++/11/any
+ /usr/include/eigen3/unsupported/Eigen/CXX11/Tensor
 
-CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/tensor_holder.cpp
+CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/TensorHolder.cpp
  /usr/include/stdc-predef.h
- /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/tensor_holder.h
+ /mnt/c/Study/AKS/semestr_project/DeepLearning-Library/include/utils/TensorHolder.h
  /usr/include/c++/11/any
  /usr/include/c++/11/typeinfo
  /usr/include/c++/11/bits/exception.h

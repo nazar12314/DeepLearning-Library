@@ -17,7 +17,7 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Loss.cpp" "CMakeFiles/neuralib.dir/utils/Loss.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/Loss.cpp.o.d"
   "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/Optimizer.cpp" "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/Optimizer.cpp.o.d"
   "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/SGD.cpp" "CMakeFiles/neuralib.dir/utils/SGD.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/SGD.cpp.o.d"
-  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/tensor_holder.cpp" "CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/tensor_holder.cpp.o.d"
+  "/mnt/c/Study/AKS/semestr_project/DeepLearning-Library/utils/TensorHolder.cpp" "CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o" "gcc" "CMakeFiles/neuralib.dir/utils/TensorHolder.cpp.o.d"
   )
 
 # Targets to which this target links.

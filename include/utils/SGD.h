@@ -8,8 +8,8 @@
 
 #include "Optimizer.h"
 
-template <class Func>
-class SGD: Optimizer<Func> {
+template <class T, class Func>
+class SGD: Optimizer<T, Func> {
 
 };
 
