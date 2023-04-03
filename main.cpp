@@ -1,21 +1,28 @@
 #include <iostream>
-#include <chrono>
 #include <utils/TensorHolder.h>
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
+#include "layers/Dense.h"
+#include "utils/Optimizer.h"
+#include <chrono>
+#include "layers/Dense.h"
+#include "utils/Initializer.h"
+#include "models/Model.h"
 
-using namespace std;
 using namespace Eigen;
 
-
 int main() {
-    Tensor<double, 2> tensor(2, 3);
-    tensor.setConstant(1.0);
-    std::cout << tensor << std::endl;
+    initializers::RandomNormal<double> ci (10);
+    Model<double> ml;
 
-    TensorHolder<double> my_tensor_holder(tensor);
+    Tensor<double, 2> ts (10, 1);
+    ts.setRandom();
 
-    auto& retrieved_tensor = my_tensor_holder.get<2>();
-    std::cout << retrieved_tensor << std::endl;
+    TensorHolder<double> th (ts);
+
+    ml.addLayer(new DenseLayer<double> (10, 5, "Dense 1", ci));
+    ml.addLayer(new DenseLayer<double> (5, 15, "Dense 2", ci));
+
+    std::cout << ml.predict(th).get<2>();
 
     return 0;
 }

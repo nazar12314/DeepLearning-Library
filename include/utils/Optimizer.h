@@ -6,20 +6,51 @@
 #define NEURALIB_OPTIMIZER_H
 
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
-#include "../layers/Layer.h"
+#include "utils/TensorHolder.h"
+#include <iostream>
 
 using Eigen::Tensor;
 
 
-template <class T, class Func>
+template <class T>
 class Optimizer {
-    Func optimization_step;
-
+protected:
+//    Func optimization_step;
+    std::function<TensorHolder<T>(const TensorHolder<T>&, std::vector<T>&)> optimization_step;
 public:
-    explicit Optimizer(Func optimizationStep) : optimization_step(optimizationStep) {}
+    explicit Optimizer(std::function<TensorHolder<T>(const TensorHolder<T>&, std::vector<T>&)> optimizationStep) : optimization_step(optimizationStep) {}
 
-    virtual const TensorHolder<T>& apply_gradient(const TensorHolder<T>& gradients, Layer<T> Layer) = 0;
+    virtual TensorHolder<T>  apply_optimization(const TensorHolder<T>& gradients) = 0;
 };
+
+namespace optimizers{
+    template <class T>
+    TensorHolder<T> sgd_step(const TensorHolder<T> &gradients, std::vector<T>& params){
+        // params: learning rate
+        T learning_rate = params[0];
+        if (gradients.size() == 2){
+            const Tensor<T, 2>& grads = gradients.template get<2>();
+            Tensor<T, 2> grads_multiplied = grads * grads.constant(learning_rate);
+            return TensorHolder<T>(grads_multiplied);
+        }
+        const Tensor<T, 3>& grads = gradients.template get<3>();
+        Tensor<T, 3> grads_multiplied = grads * grads.constant(learning_rate);
+        return TensorHolder<T>(grads_multiplied);
+    };
+
+    template <class T>
+    class SGD: public Optimizer<T> {
+        T learning_rate;
+    public:
+        explicit SGD(T learning_date_): Optimizer<T>(sgd_step<T>),
+                learning_rate{learning_date_}{};
+
+        TensorHolder<T> apply_optimization(const TensorHolder<T>& gradients) override{
+            std::vector<T> params{learning_rate};
+            return this->optimization_step(gradients, params);
+        }
+    };
+}
 
 
 #endif //NEURALIB_OPTIMIZER_H
