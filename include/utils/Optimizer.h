@@ -46,7 +46,6 @@ namespace optimizers{
                 learning_rate{learning_date_}{};
 
         TensorHolder<T> apply_optimization(const TensorHolder<T>& gradients) override{
-            std::cout << "APPLYING OPTIMIZATION" << std::endl;
             std::vector<T> params{learning_rate};
             return this->optimization_step(gradients, params);
         }

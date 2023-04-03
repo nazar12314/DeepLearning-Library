@@ -8,7 +8,6 @@
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
 #include "utils/Initializer.h"
 #include "Layer.h"
-#include "utils/RandomNormal.h"
 #include "utils/Optimizer.h"
 
 using Eigen::Tensor;
@@ -30,9 +29,7 @@ public:
             biases{initializer.get_weights(1, n_hidden_)}{};
 
     TensorHolder<T> forward(const TensorHolder<T> & inputs) override {
-//        X = std::move(inputs);
         X = inputs.template get<2>();
-//        Tensor<T, 2>& X_tensor = X.template get<2>();
         Tensor<T, 2>& weights_tensor = weights.template get<2>();
 
         if (weights_tensor.dimension(1) != X.dimension(0)) {
@@ -53,12 +50,10 @@ public:
         Tensor<T, 2>& biases_tensor = biases.template get<2>();
         const Tensor<T, 2>& out_gradient_tensor = out_gradient.template get<2>();
 
-        Tensor<T, 2> weights_tensor_T = weights_tensor.shuffle(Eigen::array<int, 2>{1, 0});
-        Tensor<T, 2> weights_gradient = out_gradient_tensor.contract(X, contract_dims);
-
+        Tensor<T, 2> weights_gradient = out_gradient_tensor.contract(X.shuffle(Eigen::array<int, 2>{1, 0}), contract_dims);
         weights_tensor -= optimizer.apply_optimization(TensorHolder<T>(weights_gradient)).template get<2>();
         biases_tensor -= optimizer.apply_optimization(out_gradient).template get<2>();
-        Tensor<T, 2> output_tensor = weights_tensor_T.contract(
+        Tensor<T, 2> output_tensor = weights_tensor.shuffle(Eigen::array<int, 2>{1, 0}).contract(
                 out_gradient_tensor,
                 contract_dims);
 
