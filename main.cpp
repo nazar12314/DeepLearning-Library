@@ -2,7 +2,6 @@
 #include <utils/TensorHolder.h>
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
 #include "layers/Dense.h"
-#include "utils/RandomNormal.h"
 #include "utils/Optimizer.h"
 #include <chrono>
 #include "layers/Dense.h"
