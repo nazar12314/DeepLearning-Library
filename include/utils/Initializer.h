@@ -12,16 +12,11 @@ using Eigen::Tensor;
 
 template<class T>
 class Initializer {
-protected:
-    size_t outputs;
-    size_t inputs;
 
 public:
-    Initializer(size_t inputs_, size_t outputs_): inputs(inputs_), outputs(outputs_) {};
 
-    virtual TensorHolder<T> get_weights() = 0;
-    virtual TensorHolder<T> get_biases() = 0;
-
+    virtual TensorHolder<T> get_weights(size_t n_in, size_t n_hidden) = 0;
+//
     virtual ~Initializer() = default;
 };
 

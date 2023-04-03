@@ -13,11 +13,11 @@
 #include "utils/Loss.h"
 
 
-template <class T, class Func>
+template <class T>
 class Model {
     std::string name;
     std::vector<Layer<T>> layers;
-    Optimizer<T, Func> optimizer;
+    Optimizer<T> optimizer;
     Loss loss;
 };
 

@@ -8,6 +8,7 @@
 #include <string>
 #include "utils/TensorHolder.h"
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
+//#include "utils/Optimizer.h"
 
 using Eigen::Tensor;
 
@@ -17,7 +18,7 @@ class Layer {
     bool trainable;
 
 public:
-    Layer(const std::string & name, bool trainable): name(name), trainable(trainable) {}
+    Layer(const std::string & name, bool trainable): name(name), trainable(trainable) {};
 
     virtual TensorHolder<T> forward(const TensorHolder<T> & inputs) = 0;
 
@@ -27,7 +28,7 @@ public:
 
     virtual const TensorHolder<T> &get_weights() = 0;
 
-    virtual void adjust_weights(TensorHolder<T> & weights_) = 0;
+    virtual void adjust_weights(TensorHolder<T> weights_) = 0;
 
     virtual void adjust_biases(TensorHolder<T> & biases_) = 0;
 

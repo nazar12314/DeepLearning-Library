@@ -45,5 +45,4 @@ public:
     }
 };
 
-
 #endif //NEURALIB_TENSORHOLDER_H
