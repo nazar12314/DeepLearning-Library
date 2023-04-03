@@ -9,6 +9,7 @@
 #include "utils/Initializer.h"
 #include "Layer.h"
 #include "utils/RandomNormal.h"
+#include "utils/Optimizer.h"
 
 using Eigen::Tensor;
 
@@ -18,8 +19,7 @@ class DenseLayer : public Layer<T> {
     size_t n_hidden;
     TensorHolder<T> weights;
     TensorHolder<T> biases;
-    TensorHolder<T> X;
-    Tensor<double, 2> A;
+    Tensor<double, 2> X;;
 
 public:
     DenseLayer(size_t n_in_, size_t n_hidden_, const std::string& name, Initializer<T>& initializer, bool trainable = true) :
@@ -27,34 +27,37 @@ public:
             n_in(n_in_),
             n_hidden(n_hidden_),
             weights{initializer.get_weights(n_in_, n_hidden_)},
-            biases{initializer.get_weights(1, n_hidden_)},
-            X{TensorHolder<T>(Tensor<T, 2>())} {
-    };
+            biases{initializer.get_weights(1, n_hidden_)}{};
 
     TensorHolder<T> forward(const TensorHolder<T> & inputs) override {
-        X = std::move(inputs);
-        Tensor<T, 2>& X_tensor = X.template get<2>();
+//        X = std::move(inputs);
+        X = inputs.template get<2>();
+//        Tensor<T, 2>& X_tensor = X.template get<2>();
         Tensor<T, 2>& weights_tensor = weights.template get<2>();
 
-        if (weights_tensor.dimension(1) != X_tensor.dimension(0)) {
+        if (weights_tensor.dimension(1) != X.dimension(0)) {
             throw std::invalid_argument("Incompatible tensor shapes");
         }
 
         Tensor<T, 2> output_tensor = weights_tensor.contract(
-                X_tensor,
+                X,
                 Eigen::array<Eigen::IndexPair<int>, 1> {Eigen::IndexPair<int>(1, 0)}
                 ) + biases.template get<2>();
 
         return TensorHolder(output_tensor);
     };
 
-    TensorHolder<T> backward(TensorHolder<T> & out_gradient) override {
+    TensorHolder<T> backward(const TensorHolder<T> & out_gradient, Optimizer<T>& optimizer) override {
         Eigen::array<Eigen::IndexPair<int>, 1> contract_dims = { Eigen::IndexPair<int>(1, 0) };
-        Tensor<T, 2>& out_gradient_tensor = out_gradient.template get<2>();
         Tensor<T, 2>& weights_tensor = weights.template get<2>();
-        Tensor<T, 2> weights_tensor_T = weights_tensor.shuffle(Eigen::array<int, 2>{1, 0});
-        Tensor<T, 2> weights_gradient = out_gradient_tensor.contract(X.template get<2>(), contract_dims);
+        Tensor<T, 2>& biases_tensor = biases.template get<2>();
+        const Tensor<T, 2>& out_gradient_tensor = out_gradient.template get<2>();
 
+        Tensor<T, 2> weights_tensor_T = weights_tensor.shuffle(Eigen::array<int, 2>{1, 0});
+        Tensor<T, 2> weights_gradient = out_gradient_tensor.contract(X, contract_dims);
+
+        weights_tensor -= optimizer.apply_optimization(TensorHolder<T>(weights_gradient)).template get<2>();
+        biases_tensor -= optimizer.apply_optimization(out_gradient).template get<2>();
         Tensor<T, 2> output_tensor = weights_tensor_T.contract(
                 out_gradient_tensor,
                 contract_dims);
@@ -68,23 +71,6 @@ public:
 
     const TensorHolder<T> &get_weights() override { return weights; };
 
-    void adjust_weights(TensorHolder<T> other_weights) override {
-        Tensor<T, 2>& other_weights_tensor = other_weights.template get<2>();
-        Tensor<T, 2>& weights_tensor = weights.template get<2>();
-
-        Tensor<T, 2> result = weights_tensor - other_weights_tensor;
-
-        weights = std::move(TensorHolder<T>(result));
-    };
-
-    void adjust_biases(TensorHolder<T> & other_biases) override {
-        Tensor<T, 2>& other_biases_tensor = other_biases.template get<2>();
-        Tensor<T, 2>& biases_tensor = biases.template get<2>();
-
-        Tensor<T, 2> result = biases_tensor - other_biases_tensor;
-
-        biases = std::move(TensorHolder<T>(result));
-    };
 };
 
 #endif //NEURALIB_DENSE_H

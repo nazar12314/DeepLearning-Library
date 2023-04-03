@@ -20,6 +20,11 @@ public:
             _held{std::move(tensor)},
             _size{N} {}
 
+//    template<int N>
+//    constexpr explicit TensorHolder(const Eigen::Tensor<T, N>& tensor) :
+//            _held{tensor},
+//            _size{N} {}
+
     constexpr TensorHolder(const TensorHolder &) = default;
 
     constexpr TensorHolder(TensorHolder &&) noexcept = default;
@@ -31,7 +36,7 @@ public:
 
     template<size_t N>
     const Eigen::Tensor<T, N> &get() const {
-        return std::any_cast<Eigen::Tensor<T, N> &>(_held);
+        return std::any_cast<const Eigen::Tensor<T, N> &>(_held);
     }
 
     [[nodiscard]] constexpr int size() const noexcept {
@@ -39,6 +44,12 @@ public:
     }
 
     TensorHolder& operator=(const TensorHolder& other) {
+        _held = other._held;
+        _size = other._size;
+        return *this;
+    }
+
+    TensorHolder& operator=(TensorHolder&& other)  noexcept {
         _held = other._held;
         _size = other._size;
         return *this;
