@@ -17,7 +17,6 @@ template<class T>
 class Layer {
     std::string name;
     bool trainable;
-
 public:
     Layer(const std::string & name, bool trainable): name(name), trainable(trainable) {};
 
