@@ -14,7 +14,6 @@ using Eigen::Tensor;
 template <class T>
 class Optimizer {
 protected:
-//    Func optimization_step;
     std::function<TensorHolder<T>(TensorHolder<T>&, std::vector<T>)> optimization_step;
 public:
     explicit Optimizer(std::function<TensorHolder<T>(TensorHolder<T>&, std::vector<T>)> optimizationStep) : optimization_step(optimizationStep) {}
