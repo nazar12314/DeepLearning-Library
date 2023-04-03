@@ -5,33 +5,25 @@
 #include "utils/RandomNormal.h"
 #include "utils/Optimizer.h"
 #include <chrono>
+#include "layers/Dense.h"
+#include "utils/Initializer.h"
+#include "models/Model.h"
 
-using namespace std;
 using namespace Eigen;
 
-std::vector<double> func(){
-    return std::vector<double>{3};
-}
-
-double func2(const std::vector<double>& vect){
-    return vect[0];
-}
-
 int main() {
-    func2(func());
-    optimizers::SGD<double> sgd(2.0);
-//    Optimizer<double>* sgd = new optimizers::SGD<double>(1.0);
-    const auto* sgd_optimizer = new optimizers::SGD<double>(1.0);
-    std::vector<const Optimizer<double>*> vct;
-    vct.push_back(sgd_optimizer);
-    RandomNormal<double> rn {};
+    initializers::RandomNormal<double> ci (10);
+    Model<double> ml;
 
-    DenseLayer<double> dl(100, 100, "1", rn);
-    Tensor<double, 2> X(100, 1);
-    Tensor<double, 2> grads(100, 100);
-    grads.setRandom();
-    dl.forward(TensorHolder<double>(X));
-//    dl.backward(TensorHolder(grads), sgd);
+    Tensor<double, 2> ts (10, 1);
+    ts.setRandom();
+
+    TensorHolder<double> th (ts);
+
+    ml.addLayer(new DenseLayer<double> (10, 5, "Dense 1", ci));
+    ml.addLayer(new DenseLayer<double> (5, 15, "Dense 2", ci));
+
+    std::cout << ml.predict(th).get<2>();
 
     return 0;
 }
