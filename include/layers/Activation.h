@@ -33,23 +33,6 @@ protected:
 
 
 namespace activations {
-    // ReLU
-    template<class T>
-    TensorHolder<T> relu_function(const TensorHolder<T> &input, const std::vector<T> &) {
-        constexpr auto Dim = input.size();
-        const Tensor<T, Dim> &input_tensor = input.template get<Dim>();
-        Tensor<T, Dim> output_tensor = input_tensor.cwiseMax(Tensor<T, Dim>::Zero());
-        return TensorHolder<T>(output_tensor);
-    }
-
-    template<class T>
-    TensorHolder<T> relu_function_prime(const TensorHolder<T> &input, const std::vector<T> &) {
-        constexpr auto Dim = input.size();
-        const Tensor<T, Dim> &input_tensor = input.template get<Dim>();
-        Tensor<T, Dim> output_tensor = input_tensor.cwiseSign().cwiseMax(Tensor<T, Dim>::Zero());
-        return TensorHolder<T>(output_tensor);
-    }
-
 
     template<class T>
     class ReLU : public Activation<T> {
