@@ -4,7 +4,6 @@
 #include "layers/Dense.h"
 #include "utils/Optimizer.h"
 #include <chrono>
-#include "layers/Dense.h"
 #include "utils/Initializer.h"
 #include "models/Model.h"
 #include "layers/Activation.h"
@@ -26,7 +25,6 @@ int main() {
     ml.addLayer(new DenseLayer<double> (5, 15, "Dense 2", ci));
 
 //    std::cout << ml.predict(th).get<2>() << std::endl;
-
     Activation<double>* activation = new activations::ReLU<double>("relu");
     auto res = activation->forward(th);
     std::cout << res.get<2>() << std::endl;

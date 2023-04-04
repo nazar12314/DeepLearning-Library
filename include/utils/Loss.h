@@ -2,8 +2,8 @@
 // Created by Naz on 3/31/2023.
 //
 
-#ifndef NEURALIB_ACTIVATION_H
-#define NEURALIB_ACTIVATION_H
+#ifndef NEURALIB_LOSS_H
+#define NEURALIB_LOSS_H
 
 
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
@@ -22,7 +22,7 @@ protected:
 };
 
 
-namespace activations {
+namespace loss_functions {
 
     template<class T>
     class MSE : public Loss<T> {
@@ -50,4 +50,4 @@ namespace activations {
     };
 }
 
-#endif //NEURALIB_ACTIVATION_H
+#endif //NEURALIB_LOSS_H

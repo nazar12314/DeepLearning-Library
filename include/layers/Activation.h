@@ -29,9 +29,9 @@ public:
         throw std::logic_error("Weights aren't implemented for Activation class");
     }
 
-    virtual TensorHolder<T> forward(const TensorHolder<T> &inputs) override = 0;
+    virtual TensorHolder<T> forward(const TensorHolder<T> &inputs) = 0;
 
-    virtual TensorHolder<T> backward(const TensorHolder<T> &out_gradient, Optimizer<T> &optimizer) override = 0;
+    virtual TensorHolder<T> backward(const TensorHolder<T> &out_gradient, Optimizer<T> &optimizer) = 0;
 
 protected:
     std::function<TensorHolder<T>(const TensorHolder<T> &, std::vector<T> &)> activation;
