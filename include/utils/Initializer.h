@@ -41,7 +41,7 @@ namespace initializers {
         };
 
         TensorHolder<T> get_weights(size_t n_in, size_t n_hidden) override {
-            Tensor<T, 2> weights(n_hidden, n_in);
+            Tensor<T, 2> weights (n_hidden, n_in);
 
             srand(this -> seed);
             weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();

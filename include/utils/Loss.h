@@ -21,7 +21,6 @@ protected:
     virtual TensorHolder<T> error_prime_func(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) = 0;
 };
 
-
 namespace loss_functions {
 
     template<class T>

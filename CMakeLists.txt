@@ -19,12 +19,13 @@ endif ()
 
 #include(cmake/CompilerWarnings.cmake)
 
-add_executable(${PROJECT_NAME} main.cpp layers/Layer.cpp include/layers/Layer.h include/layers/Layer.h layers/Layer.cpp layers/Dense.cpp include/layers/Dense.h utils/Initializer.cpp include/utils/Initializer.h layers/Activation.cpp include/layers/Activation.h utils/Optimizer.cpp include/utils/Optimizer.h models/Model.cpp include/models/Model.h utils/Loss.cpp include/utils/Loss.h utils/TensorHolder.cpp include/utils/TensorHolder.h)
+add_executable(${PROJECT_NAME} main.cpp src/layers/Layer.cpp include/layers/Layer.h include/layers/Layer.h src/layers/Layer.cpp src/layers/Dense.cpp include/layers/Dense.h src/utils/Initializer.cpp include/utils/Initializer.h src/layers/Activation.cpp include/layers/Activation.h src/utils/Optimizer.cpp include/utils/Optimizer.h src/models/Model.cpp include/models/Model.h src/utils/Loss.cpp include/utils/Loss.h src/utils/TensorHolder.cpp include/utils/TensorHolder.h)
 
 target_compile_options(${PROJECT_NAME} PUBLIC -O3)
 #
 #! Put path to your project headers
 include_directories(include)
+include_directories(src)
 #! Add external packages
 find_package(Boost 1.71.0 COMPONENTS program_options system REQUIRED)
 target_include_directories(${PROJECT_NAME} PRIVATE ${Boost_INCLUDE_DIR})
