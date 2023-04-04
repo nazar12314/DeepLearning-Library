@@ -14,17 +14,17 @@
 
 template <class T>
 class Model {
-//    std::string name;
+    std::string name;
     std::list<Layer<T>*> layers;
-//    Optimizer<T> optimizer;
-//    Loss<T> loss;
+    Optimizer<T> optimizer;
+    Loss<T> loss;
 
 public:
-//    Model(const std::string& name_, Optimizer<T>& optimizer_, Loss<T>& loss_):
-//        name(name_),
-//        optimizer(optimizer_),
-//        loss(loss_)
-//    {};
+    Model(const std::string& name_, Optimizer<T>& optimizer_, Loss<T>& loss_):
+        name(name_),
+        optimizer(optimizer_),
+        loss(loss_)
+    {};
 
     void addLayer(Layer<T>* layer) {
         layers.push_back(layer);
@@ -38,6 +38,22 @@ public:
         }
 
         return output;
+    }
+
+    void fit(const TensorHolder<T>& inputs, const TensorHolder<T>& labels, const size_t epochs) {
+        for (int epoch = 0; epoch < epochs; ++epoch) {
+
+            TensorHolder<T> output = predict(inputs);
+            int error = loss.calculate_loss(output, labels);
+
+            TensorHolder<T> grads = loss.calculate_grads(output, labels);
+
+            for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
+                grads = (*it) -> backward(grads, optimizer);
+            }
+
+            std::cout << "Epoch: " << epoch << "; Loss: " << error << std::endl;
+        }
     }
 };
 

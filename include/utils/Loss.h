@@ -5,10 +5,7 @@
 #ifndef NEURALIB_LOSS_H
 #define NEURALIB_LOSS_H
 
-
-class Loss {
-
-};
-
+template<class T>
+class Loss {};
 
 #endif //NEURALIB_LOSS_H

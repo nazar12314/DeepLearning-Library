@@ -22,7 +22,7 @@ int main() {
     ml.addLayer(new DenseLayer<double> (10, 5, "Dense 1", ci));
     ml.addLayer(new DenseLayer<double> (5, 15, "Dense 2", ci));
 
-    std::cout << ml.predict(th).get<2>();
+    std::cout << ml.predict(th).template get<2>();
 
     return 0;
 }
