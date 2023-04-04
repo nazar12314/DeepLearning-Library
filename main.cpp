@@ -25,14 +25,25 @@ int main() {
 //
 //    std::cout << ml.predict(th).template get<2>();
 
-    Tensor<double, 2> ts1 (10, 1);
+    Tensor<double, 2> ts1 (3, 1);
     ts1.setRandom();
     TensorHolder<double> th1 (ts1);
 
-    Tensor<double, 2> ts2 (10, 1);
+    Tensor<double, 2> ts2 (3, 1);
     ts2.setRandom();
     TensorHolder<double> th2 (ts2);
-
-    loss_functions::MSE<double>() l;
+//    std::cout<<ts1<<std::endl<<std::endl<<ts2<<std::endl<<std::endl;
+//    auto error = (ts1 - ts2).pow(2).mean();
+//    std::cout<<error;
+//    return 0;
+//
+//    Tensor<double, 2> differ = (ts1-ts2);
+//    Tensor<double, 2> error = differ*differ.constant(2.0f/differ.dimension(0));
+//    std::cout<<error;
+//    return 0;
+    Loss<double>* l = new loss_functions::MSE<double>();
+    std::cout<<ts1<<std::endl<<std::endl<<ts2<<std::endl<<std::endl;
+    std::cout<<l->get_error(th1, th2)<<std::endl;
+    std::cout<<l->get_error_der(th1, th2).template get<2>();
     return 0;
 }
