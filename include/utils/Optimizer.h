@@ -41,13 +41,13 @@ namespace optimizers {
 
     template<class T>
     class SGD : public Optimizer<T> {
-        T learning_rate;
+        std::vector<T> params;
     public:
-        explicit SGD(T learning_date_) : Optimizer<T>(sgd_step<T>),
-                                         learning_rate{learning_date_} {};
+        explicit SGD(T learning_date_) : Optimizer<T>(sgd_step<T>){
+            params.template emplace_back(learning_date_);
+        }
 
         TensorHolder<T> apply_optimization(const TensorHolder<T> &gradients) override {
-            std::vector<T> params{learning_rate};
             return this->optimization_step(gradients, params);
         }
     };

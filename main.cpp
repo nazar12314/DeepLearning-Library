@@ -17,15 +17,17 @@ int main() {
 
     Tensor<double, 2> ts (10, 1);
     ts.setRandom();
+    ts += ts.constant(-0.5);
+    std::cout << ts << std::endl << std::endl;
 
     TensorHolder<double> th (ts);
 
     ml.addLayer(new DenseLayer<double> (10, 5, "Dense 1", ci));
     ml.addLayer(new DenseLayer<double> (5, 15, "Dense 2", ci));
 
-    std::cout << ml.predict(th).get<2>() << std::endl;
+//    std::cout << ml.predict(th).get<2>() << std::endl;
 
-    Activation<double>* activation = new activations::ReLU<double>();
+    Activation<double>* activation = new activations::ReLU<double>("relu");
     auto res = activation->forward(th);
     std::cout << res.get<2>() << std::endl;
 
