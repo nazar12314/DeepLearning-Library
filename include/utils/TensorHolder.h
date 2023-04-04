@@ -20,11 +20,6 @@ public:
             _held{std::move(tensor)},
             _size{N} {}
 
-//    template<int N>
-//    constexpr explicit TensorHolder(const Eigen::Tensor<T, N>& tensor) :
-//            _held{tensor},
-//            _size{N} {}
-
     constexpr TensorHolder(const TensorHolder &) = default;
 
     constexpr TensorHolder(TensorHolder &&) noexcept = default;
