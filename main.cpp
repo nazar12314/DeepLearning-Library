@@ -24,7 +24,6 @@ int main() {
     ml.addLayer(new DenseLayer<double> (5, 15, "Dense 2", ci));
 
     std::cout << ml.predict(th).get<2>() << std::endl;
-
     Activation<double>* activation = new activations::ReLU<double>();
     auto res = activation->forward(th);
     std::cout << res.get<2>() << std::endl;
