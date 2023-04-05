@@ -5,11 +5,11 @@
 #include "utils/MnistDataset.h"
 
 int main(int argc, char* argv[]) {
-    MnistDataset mnst;
+    MnistDataset<double> mnst;
 
-    TensorHolder<uint8_t> training_labels = mnst.get_training_labels();
+    TensorHolder<double> training_images = mnst.get_training_images();
 
-    std::cout << training_labels.get<1>() << std::endl;
+    std::cout << training_images.get<2>().dimensions() << std::endl;
 
     return 0;
 }

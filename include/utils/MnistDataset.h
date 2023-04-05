@@ -12,6 +12,7 @@
 
 using Eigen::Tensor;
 
+template<class T>
 class MnistDataset {
     mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
             mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION);
@@ -20,19 +21,19 @@ public:
         mnist::binarize_dataset(dataset);
     }
 
-    TensorHolder<uint8_t> get_training_images() {
+    TensorHolder<T> get_training_images() {
         const size_t num_images = dataset.training_images.size();
         const size_t image_size = dataset.training_images[0].size();
 
-        Eigen::TensorMap<Eigen::Tensor<uint8_t, 2>> images(
+        Eigen::TensorMap<Eigen::Tensor<uint8_t , 2>> images(
                 dataset.training_images[0].data(),
                 num_images,
                 image_size
                 );
 
-        Tensor<uint8_t, 2> images_tensor = images;
+        Tensor<T, 2> images_tensor = images.cast<T>();
 
-        return TensorHolder<uint8_t>(images_tensor);
+        return TensorHolder<T>(images_tensor);
     }
 
     TensorHolder<uint8_t> get_training_labels() {
@@ -46,7 +47,7 @@ public:
         return TensorHolder<uint8_t>(tensor_labels);
     }
 
-    TensorHolder<uint8_t> get_test_images() {
+    TensorHolder<T> get_test_images() {
         const size_t num_images = dataset.test_images.size();
         const size_t image_size = dataset.test_images[0].size();
 
@@ -56,9 +57,9 @@ public:
                 image_size
         );
 
-        Tensor<uint8_t, 2> images_tensor = images;
+        Tensor<T, 2> images_tensor = images.cast<T>();
 
-        return TensorHolder<uint8_t>(images_tensor);
+        return TensorHolder<T>(images_tensor);
     }
 
     TensorHolder<uint8_t> get_test_labels() {
