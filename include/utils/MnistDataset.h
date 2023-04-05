@@ -36,7 +36,7 @@ public:
         return TensorHolder<T>(images_tensor);
     }
 
-    TensorHolder<uint8_t> get_training_labels() {
+    TensorHolder<T> get_training_labels() {
         Eigen::TensorMap<Eigen::Tensor<uint8_t, 1>> labels(
                 dataset.training_labels.data(),
                 dataset.training_labels.size()
@@ -48,8 +48,8 @@ public:
                 Eigen::array<Eigen::Index,
                 2>({data_size, 1})
                 );
-
-        return TensorHolder<uint8_t>(tensor_labels);
+        Tensor<T, 2> labels_converted = tensor_labels.template cast<T>();
+        return TensorHolder<T>(labels_converted);
     }
 
     TensorHolder<T> get_test_images() {
