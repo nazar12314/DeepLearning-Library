@@ -20,6 +20,9 @@ protected:
 public:
     explicit Optimizer(std::function<TensorHolder<T>(const TensorHolder<T> &, std::vector<T> &)> optimizationStep)
             : optimization_step(optimizationStep) {}
+    explicit Optimizer(const Optimizer<T>* opt):
+        optimization_step{opt->optimization_step}
+    {};
 
     virtual TensorHolder<T> apply_optimization(const TensorHolder<T> &gradients) = 0;
 };

@@ -13,7 +13,7 @@
 using Eigen::Tensor;
 
 template<class T>
-class Activation : Layer<T> {
+class Activation : public Layer<T> {
 public:
     Activation(const std::string & name,
                std::function<TensorHolder<T>(const TensorHolder<T> &, std::vector<T> &)> activation_,
