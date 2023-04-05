@@ -70,12 +70,49 @@ namespace activations {
             return this->activation(inputs, params);
         }
 
-        TensorHolder<T> backward(const TensorHolder<T> &out_gradient, Optimizer<T> &optimizer) override {
+        TensorHolder<T> backward(const TensorHolder<T> &out_gradient, Optimizer<T> &) override {
             return this->activation_prime(out_gradient, params);
         }
 
     };
 
+    template<class T>
+    TensorHolder<T> sigmoid(const TensorHolder<T> &input, std::vector<T> &) {
+        constexpr size_t Dim = 2;
+        const Tensor<T, Dim> &input_tensor = input.template get<Dim>();
+        const Tensor<T, Dim> &minus_input_tensor = -input_tensor;
+        Tensor<T, Dim> output_tensor = input_tensor.constant(1) / (input_tensor.constant(1) + minus_input_tensor.exp());
+        return TensorHolder<T>(output_tensor);
+    }
+
+    template<class T>
+    TensorHolder<T> sigmoid_prime(const TensorHolder<T> &input, std::vector<T> &) {
+        constexpr size_t Dim = 2;
+
+        const Tensor<T, Dim> &input_tensor = input.template get<Dim>();
+        const Tensor<T, Dim> &minus_input_tensor = -input_tensor;
+        Tensor<T, Dim> output_tensor = input_tensor.constant(1) / (input_tensor.constant(1) + minus_input_tensor.exp());
+
+        output_tensor = output_tensor * (output_tensor.constant(1) - output_tensor);
+        return TensorHolder<T>(output_tensor);
+    }
+
+    template<class T>
+    class Sigmoid : public Activation<T> {
+    private:
+        std::vector<T> params{};
+    public:
+        explicit Sigmoid(const std::string & name) : Activation<T>(name, sigmoid<T>, sigmoid_prime<T>) {}
+
+        TensorHolder<T> forward(const TensorHolder<T> &inputs) override {
+            return this->activation(inputs, params);
+        }
+
+        TensorHolder<T> backward(const TensorHolder<T> &out_gradient, Optimizer<T> & optimizer) override {
+            return this->activation_prime(out_gradient, params);
+        }
+
+    };
 }
 
 
