@@ -65,6 +65,34 @@ namespace loss_functions {
     public:
         MSE() : Loss<T>(mse_func<T>, mse_prime_func<T>) {}
     };
+
+    template<class T>
+    Tensor<T, 0> binary_cross_entropy_func(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) {
+        constexpr size_t Dim = 2;
+        const Tensor<T, Dim> &pred_tensor = pred_output.template get<Dim>();
+        const Tensor<T, Dim> &true_tensor = true_output.template get<Dim>();
+        const T epsilon = 1e-15;
+        const Tensor<double, 0> error = (true_tensor*((pred_tensor+pred_tensor.constant(epsilon)).log()) +
+                                ((true_tensor.constant(1.0) - true_tensor) * ((pred_tensor.constant(1.0) - pred_tensor + pred_tensor.constant(epsilon)).log())))
+                                .mean();
+        return -error;
+    }
+
+    template<class T>
+    TensorHolder<T> binary_cross_entropy_prime_func(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) {
+        constexpr size_t Dim = 2;
+        const Tensor<T, Dim> &pred_tensor = pred_output.template get<Dim>();
+        const Tensor<T, Dim> &true_tensor = true_output.template get<Dim>();
+        const T epsilon = 1e-15;
+        const Tensor<T, Dim> error = -(true_tensor/pred_tensor+pred_tensor.constant(epsilon)) + ((pred_tensor.constant(1.0)-true_tensor)/(pred_tensor.constant(1.0)-pred_tensor+pred_tensor.constant(epsilon)));
+        return TensorHolder<T>(error);
+    }
+
+    template<class T>
+    class BinaryCrossEntropy : public Loss<T> {
+    public:
+        BinaryCrossEntropy() : Loss<T>(binary_cross_entropy_func<T>, binary_cross_entropy_prime_func<T>) {}
+    };
 }
 
 #endif //NEURALIB_LOSS_H
