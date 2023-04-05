@@ -7,9 +7,9 @@
 int main(int argc, char* argv[]) {
     MnistDataset<double> mnst;
 
-    TensorHolder<double> training_images = mnst.get_training_images();
+    TensorHolder<uint8_t> training_labels = mnst.get_test_labels();
 
-    std::cout << training_images.get<2>().dimensions() << std::endl;
+    std::cout << training_labels.get<2>().dimensions() << std::endl;
 
     return 0;
 }

@@ -42,7 +42,12 @@ public:
                 dataset.training_labels.size()
                 );
 
-        Eigen::Tensor<uint8_t, 1> tensor_labels = labels;
+        constexpr size_t data_size = 60000;
+
+        Eigen::Tensor<uint8_t, 2> tensor_labels = labels.reshape(
+                Eigen::array<Eigen::Index,
+                2>({data_size, 1})
+                );
 
         return TensorHolder<uint8_t>(tensor_labels);
     }
@@ -68,7 +73,12 @@ public:
                 dataset.test_labels.size()
         );
 
-        Eigen::Tensor<uint8_t, 1> tensor_labels = labels;
+        constexpr size_t data_size = 10000;
+
+        Eigen::Tensor<uint8_t, 2> tensor_labels = labels.reshape(
+                Eigen::array<Eigen::Index,
+                        2>({data_size, 1})
+        );
 
         return TensorHolder<uint8_t>(tensor_labels);
     }
