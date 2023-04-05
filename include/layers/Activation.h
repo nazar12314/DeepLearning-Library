@@ -75,7 +75,6 @@ namespace activations {
         }
 
     };
-
     template<class T>
     TensorHolder<T> sigmoid(const TensorHolder<T> &input, std::vector<T> &) {
         constexpr size_t Dim = 2;
@@ -93,8 +92,8 @@ namespace activations {
         const Tensor<T, Dim> &minus_input_tensor = -input_tensor;
         Tensor<T, Dim> output_tensor = input_tensor.constant(1) / (input_tensor.constant(1) + minus_input_tensor.exp());
 
-        output_tensor = output_tensor * (output_tensor.constant(1) - output_tensor);
-        return TensorHolder<T>(output_tensor);
+        Tensor<T, Dim> out = output_tensor * (output_tensor.constant(1) - output_tensor);
+        return TensorHolder<T>(out);
     }
 
     template<class T>
@@ -103,6 +102,51 @@ namespace activations {
         std::vector<T> params{};
     public:
         explicit Sigmoid(const std::string & name) : Activation<T>(name, sigmoid<T>, sigmoid_prime<T>) {}
+
+        TensorHolder<T> forward(const TensorHolder<T> &inputs) override {
+            return this->activation(inputs, params);
+        }
+
+        TensorHolder<T> backward(const TensorHolder<T> &out_gradient, Optimizer<T> & optimizer) override {
+            return this->activation_prime(out_gradient, params);
+        }
+
+    };
+
+    template<class T>
+    TensorHolder<T> softmax(const TensorHolder<T> &input, std::vector<T> &) {
+        constexpr size_t Dim = 2;
+
+        Tensor<T, Dim> input_tensor = input.template get<Dim>();
+        input_tensor = input_tensor.exp();
+        const Tensor<T, 0> &input_tensor_sum = input_tensor.sum();
+        input_tensor = input_tensor / input_tensor.constant(input_tensor_sum(0));
+        return TensorHolder<T>(input_tensor);
+    }
+
+    template<class T>
+    TensorHolder<T> softmax_prime(const TensorHolder<T> &input, std::vector<T> &) {
+        constexpr size_t Dim = 2;
+
+        const Tensor<T, Dim> &input_tensor = input.template get<Dim>();
+
+        Tensor<T, Dim> softmax_gradient(input_tensor.dimensions());
+
+        for (int i = 0; i < softmax_gradient.dimension(0); ++i) {
+            for (int j = 0; j < softmax_gradient.dimension(1); ++j) {
+                softmax_gradient(i, j) = input_tensor(i) * ((i == j) ? 1.0 : 0.0) - input_tensor(i) * input_tensor(j);
+            }
+        }
+
+        return TensorHolder<T>(softmax_gradient);
+    }
+
+    template<class T>
+    class Softmax : public Activation<T> {
+    private:
+        std::vector<T> params{};
+    public:
+        explicit Softmax(const std::string & name) : Activation<T>(name, softmax<T>, softmax_prime<T>) {}
 
         TensorHolder<T> forward(const TensorHolder<T> &inputs) override {
             return this->activation(inputs, params);
