@@ -21,66 +21,56 @@ public:
         mnist::binarize_dataset(dataset);
     }
 
-    TensorHolder<T> get_training_images() {
-        const size_t num_images = dataset.training_images.size();
-        const size_t image_size = dataset.training_images[0].size();
+    TensorHolder<T> get_training_labels() {
+        Eigen::TensorMap<Eigen::Tensor<uint8_t, 3>> labels(
+                dataset.training_labels.data(),
+                dataset.training_labels.size(),
+                1,
+                1
+        );
 
-        Eigen::TensorMap<Eigen::Tensor<uint8_t , 2>> images(
-                dataset.training_images[0].data(),
-                num_images,
-                image_size
-                );
+        Tensor<T, 3> labels_tensor = labels.cast<T>();
 
-        Tensor<T, 2> images_tensor = images.cast<T>();
-
-        return TensorHolder<T>(images_tensor);
+        return TensorHolder<T>(labels_tensor);
     }
 
-    TensorHolder<uint8_t> get_training_labels() {
-        Eigen::TensorMap<Eigen::Tensor<uint8_t, 1>> labels(
-                dataset.training_labels.data(),
-                dataset.training_labels.size()
-                );
+    TensorHolder<T> get_test_labels() {
+        Eigen::TensorMap<Eigen::Tensor<uint8_t, 3>> labels(
+                dataset.test_labels.data(),
+                dataset.test_labels.size(),
+                1,
+                1
+        );
 
-        constexpr size_t data_size = 60000;
+        Tensor<T, 3> labels_tensor = labels.cast<T>();
 
-        Eigen::Tensor<uint8_t, 2> tensor_labels = labels.reshape(
-                Eigen::array<Eigen::Index,
-                2>({data_size, 1})
-                );
+        return TensorHolder<T>(labels_tensor);
+    }
 
-        return TensorHolder<uint8_t>(tensor_labels);
+    TensorHolder<T> get_training_images() {
+        Eigen::TensorMap<Eigen::Tensor<uint8_t , 3>> images(
+                dataset.training_images[0].data(),
+                dataset.training_images.size(),
+                dataset.training_images[0].size(),
+                1
+        );
+
+        Tensor<T, 3> images_tensor = images.cast<T>();
+
+        return TensorHolder<T>(images_tensor);
     }
 
     TensorHolder<T> get_test_images() {
-        const size_t num_images = dataset.test_images.size();
-        const size_t image_size = dataset.test_images[0].size();
-
-        Eigen::TensorMap<Eigen::Tensor<uint8_t, 2>> images(
+        Eigen::TensorMap<Eigen::Tensor<uint8_t, 3>> images(
                 dataset.test_images[0].data(),
-                num_images,
-                image_size
+                dataset.test_images.size(),
+                dataset.test_images[0].size(),
+                1
         );
 
-        Tensor<T, 2> images_tensor = images.cast<T>();
+        Tensor<T, 3> images_tensor = images.cast<T>();
 
         return TensorHolder<T>(images_tensor);
-    }
-
-    TensorHolder<uint8_t> get_test_labels() {
-        Eigen::TensorMap<Eigen::Tensor<uint8_t, 1>> labels(
-                dataset.test_labels.data(),
-                dataset.test_labels.size()
-        );
-
-        constexpr size_t data_size = 10000;
-
-        Eigen::Tensor<uint8_t, 2> tensor_labels = labels.reshape(
-                Eigen::array<Eigen::Index,
-                        2>({data_size, 1})
-        );
-
-        return TensorHolder<uint8_t>(tensor_labels);
     }
 };
 
