@@ -36,17 +36,10 @@ protected:
 namespace loss_functions {
     template<class T>
     Tensor<T, 0> mse_func(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) {
-//        std::cout << "HERE" << std::endl;
         constexpr size_t Dim = 2;
-//        std::cout << pred_output.size() << std::endl;
-//        std::cout << true_output.size() << std::endl;
         const Tensor<T, Dim> &pred_tensor = pred_output.template get<Dim>();
         const Tensor<T, Dim> &true_tensor = true_output.template get<Dim>();
-//        std::cout << pred_tensor.dimension(0) << " " << pred_tensor.dimension(1) << std::endl;
-//        std::cout << true_tensor.dimension(0) << " " << true_tensor.dimension(1) << std::endl;
-//        std::cout << "HERE2" << std::endl;
         const Tensor<T, 0> error = (pred_tensor - true_tensor).pow(2).mean();
-//        std::cout << "HERE3" << std::endl;
         return error;
     }
 
@@ -71,7 +64,7 @@ namespace loss_functions {
         constexpr size_t Dim = 2;
         const Tensor<T, Dim> &pred_tensor = pred_output.template get<Dim>();
         const Tensor<T, Dim> &true_tensor = true_output.template get<Dim>();
-        const T epsilon = 1e-15;
+        const T epsilon = 1e-7;
         const Tensor<double, 0> error = (true_tensor*((pred_tensor+pred_tensor.constant(epsilon)).log()) +
                                 ((true_tensor.constant(1.0) - true_tensor) * ((pred_tensor.constant(1.0) - pred_tensor + pred_tensor.constant(epsilon)).log())))
                                 .mean();
@@ -83,8 +76,8 @@ namespace loss_functions {
         constexpr size_t Dim = 2;
         const Tensor<T, Dim> &pred_tensor = pred_output.template get<Dim>();
         const Tensor<T, Dim> &true_tensor = true_output.template get<Dim>();
-        const T epsilon = 1e-15;
-        const Tensor<T, Dim> error = -(true_tensor/pred_tensor+pred_tensor.constant(epsilon)) + ((pred_tensor.constant(1.0)-true_tensor)/(pred_tensor.constant(1.0)-pred_tensor+pred_tensor.constant(epsilon)));
+        const T epsilon = 1e-7;
+        const Tensor<T, Dim> error = -(true_tensor/(pred_tensor+pred_tensor.constant(epsilon))) + ((pred_tensor.constant(1.0)-true_tensor)/(pred_tensor.constant(1.0)-pred_tensor+pred_tensor.constant(epsilon)));
         return TensorHolder<T>(error);
     }
 

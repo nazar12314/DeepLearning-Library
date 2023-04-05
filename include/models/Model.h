@@ -45,13 +45,15 @@ public:
         const Tensor<T, 3>& labels_unpacked = labels.template get<3>();
         for (int epoch = 0; epoch < epochs; ++epoch) {
             double error = 0;
-            for (int i=0; i < inputs_unpacked.dimension(0); ++i){
+            size_t input_size = inputs_unpacked.dimension(0);
+            for (size_t i=0; i < input_size; ++i){
                 TensorHolder<T> instance{Tensor<T, 2>{inputs_unpacked.chip(i, 0)}};
                 TensorHolder<T> instance_label{Tensor<T, 2>{labels_unpacked.chip(i, 0)}};
                 TensorHolder<T> output = predict(instance);
-                error += loss->calculate_loss(output, instance_label)(0);
+                double loss_ = loss->calculate_loss(output, instance_label)(0);
+                error += loss_;
                 TensorHolder<T> grads = loss->calculate_grads(output, instance_label);
-
+                std::cout << i << " / " << input_size << " | loss: " << loss_ << " | mingrad: " << grads.template get<2>().minimum() << " | maxgrad: " << grads.template get<2>().maximum() << std::endl;
                 for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
                     grads = (*it) -> backward(grads, *optimizer);
                 }

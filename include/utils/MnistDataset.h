@@ -17,24 +17,29 @@ class MnistDataset {
     mnist::MNIST_dataset<std::vector, std::vector<uint8_t>, uint8_t> dataset =
             mnist::read_dataset<std::vector, std::vector, uint8_t, uint8_t>(MNIST_DATA_LOCATION);
 public:
-    MnistDataset() {
-        mnist::binarize_dataset(dataset);
-    }
+//    MnistDataset() {
+//        mnist::binarize_dataset(dataset);
+//    }
 
     TensorHolder<T> get_training_labels() {
-        Eigen::TensorMap<Eigen::Tensor<uint8_t, 3>> labels(
+        Eigen::TensorMap<Eigen::Tensor<uint8_t, 1>> labels(
                 dataset.training_labels.data(),
-                dataset.training_labels.size(),
-                1,
-                1
+                dataset.training_labels.size()
         );
 
-        Tensor<T, 3> labels_tensor = labels.cast<T>();
+        Tensor<T, 1> labels_tensor = labels.cast<T>();
+        size_t numSamples = labels_tensor.size();
 
-        return TensorHolder<T>(labels_tensor);
+        Tensor<T, 3> oneHotEncoded(numSamples, 10, 1);
+        for (int i = 0; i < numSamples; i++) {
+            int val = labels_tensor(i);
+            oneHotEncoded(i, val-1, 0) = 1;
+        }
+        return TensorHolder<T>(oneHotEncoded);
     }
 
     TensorHolder<T> get_test_labels() {
+        // TO IMPLEMENT!!!
         Eigen::TensorMap<Eigen::Tensor<uint8_t, 3>> labels(
                 dataset.test_labels.data(),
                 dataset.test_labels.size(),
@@ -43,7 +48,6 @@ public:
         );
 
         Tensor<T, 3> labels_tensor = labels.cast<T>();
-
         return TensorHolder<T>(labels_tensor);
     }
 
@@ -54,13 +58,13 @@ public:
                 dataset.training_images[0].size(),
                 1
         );
-
         Tensor<T, 3> images_tensor = images.cast<T>();
-
+        images_tensor /= images_tensor.constant(255.0);
         return TensorHolder<T>(images_tensor);
     }
 
     TensorHolder<T> get_test_images() {
+        // TO IMPLEMENT!!!
         Eigen::TensorMap<Eigen::Tensor<uint8_t, 3>> images(
                 dataset.test_images[0].data(),
                 dataset.test_images.size(),
@@ -69,7 +73,6 @@ public:
         );
 
         Tensor<T, 3> images_tensor = images.cast<T>();
-
         return TensorHolder<T>(images_tensor);
     }
 };
