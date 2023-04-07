@@ -1,28 +1,29 @@
 #include <iostream>
-#include <utils/TensorHolder.h>
+#include "mnist/mnist_reader.hpp"
+#include "mnist/mnist_utils.hpp"
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
-#include "layers/Dense.h"
-#include "utils/Optimizer.h"
-#include <chrono>
-#include "layers/Dense.h"
-#include "utils/Initializer.h"
+#include "utils/MnistDataset.h"
 #include "models/Model.h"
+#include "utils/Optimizer.h"
+#include "utils/Loss.h"
+#include "layers/Dense.h"
+#include "layers/Activation.h"
 
-using namespace Eigen;
+int main(int argc, char* argv[]) {
 
-int main() {
-    initializers::RandomNormal<double> ci (10);
-    Model<double> ml;
+    MnistDataset<double> mnst;
+    TensorHolder<double> training_labels = mnst.get_training_labels();
+    TensorHolder<double> training_data = mnst.get_training_images();
+    initializers::GlorotNormal<double> initializer;
+    initializer.set_seed(42);
 
-    Tensor<double, 2> ts (10, 1);
-    ts.setRandom();
+    Model<double> model("model", new optimizers::SGD<double>(0.001), new loss_functions::BinaryCrossEntropy<double>());
+    model.addLayer(new DenseLayer<double>(784, 300, "dense 1", initializer));
+    model.addLayer(new activations::ReLU<double>("relu 1"));
+    model.addLayer(new DenseLayer<double>(300, 10, "dense 2", initializer));
+    model.addLayer(new activations::Softmax<double>("softmax"));
+    model.fit(training_data, training_labels, 1);
 
-    TensorHolder<double> th (ts);
-
-    ml.addLayer(new DenseLayer<double> (10, 5, "Dense 1", ci));
-    ml.addLayer(new DenseLayer<double> (5, 15, "Dense 2", ci));
-
-    std::cout << ml.predict(th).get<2>();
 
     return 0;
 }

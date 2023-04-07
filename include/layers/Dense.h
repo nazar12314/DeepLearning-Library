@@ -44,7 +44,7 @@ public:
         return TensorHolder(output_tensor);
     };
 
-    TensorHolder<T> backward(const TensorHolder<T> & out_gradient, Optimizer<T>& optimizer) override {
+    TensorHolder<T> backward(const TensorHolder<T> & out_gradient, Optimizer<T> & optimizer) override {
         Eigen::array<Eigen::IndexPair<int>, 1> contract_dims = { Eigen::IndexPair<int>(1, 0) };
         Tensor<T, 2>& weights_tensor = weights.template get<2>();
         Tensor<T, 2>& biases_tensor = biases.template get<2>();
