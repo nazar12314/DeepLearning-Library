@@ -13,54 +13,75 @@
 #include "utils/Loss.h"
 
 template <class T>
+using layer_variant_ptr = std::variant<Layer<T, 2>*, Layer<T, 3>*>;
+
+template <class T>
+using tensor_variant_ref = std::variant<Tensor<T, 2>&, Tensor<T, 3>&>;
+
+template <class T>
+using tensor_variant = std::variant<Tensor<T, 2>, Tensor<T, 3>>;
+
+template <class T>
 class Model {
     std::string name;
-    std::list<Layer<T>*> layers;
+    std::list<layer_variant_ptr<T>> layers;
     Optimizer<T>* optimizer;
     Loss<T>* loss;
 
 public:
     Model(const std::string& name_, const Optimizer<T>* optimizer_, const Loss<T>* loss_):
         name(name_),
-        optimizer((Optimizer<T> *) optimizer_),
+        optimizer((Optimizer<T>*) optimizer_),
         loss((Loss<T> *) loss_)
     {};
 
-    void addLayer(Layer<T>* layer) {
+    void addLayer(layer_variant_ptr<T> layer) {
         layers.push_back(layer);
     };
 
-    TensorHolder<T> predict(const TensorHolder<T>& input) {
-        TensorHolder<T> output = input;
+    tensor_variant<T> predict(tensor_variant_ref<T> input) {
+        tensor_variant<T> output = input;
 
         for (auto& layer : layers) {
-            output = layer -> forward(output);
+            std::visit([&layer](auto&& arg) {
+                using W = std::decay<decltype(arg)>;
+
+                if constexpr (std::is_same_v<W, Tensor<T, 2>>) {
+                    output = layer -> forward(arg);
+                }
+                else if constexpr (std::is_same_v<W, Tensor<T, 3>>) {
+                    output = layer -> forward(arg);
+                }
+                else {
+                    throw std::runtime_error("No such dimension!");
+                }
+            }, output);
         }
 
         return output;
     }
 
-    void fit(const TensorHolder<T>& inputs, const TensorHolder<T>& labels, const size_t epochs) {
-        const Tensor<T, 3>& inputs_unpacked = inputs.template get<3>();
-        const Tensor<T, 3>& labels_unpacked = labels.template get<3>();
-        for (int epoch = 0; epoch < epochs; ++epoch) {
-            double error = 0;
-            size_t input_size = inputs_unpacked.dimension(0);
-            for (size_t i=0; i < input_size; ++i){
-                TensorHolder<T> instance{Tensor<T, 2>{inputs_unpacked.chip(i, 0)}};
-                TensorHolder<T> instance_label{Tensor<T, 2>{labels_unpacked.chip(i, 0)}};
-                TensorHolder<T> output = predict(instance);
-                double loss_ = loss->calculate_loss(output, instance_label)(0);
-                error += loss_;
-                TensorHolder<T> grads = loss->calculate_grads(output, instance_label);
-                std::cout << i << " / " << input_size << " | loss: " << loss_ << " | mingrad: " << grads.template get<2>().minimum() << " | maxgrad: " << grads.template get<2>().maximum() << std::endl;
-                for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
-                    grads = (*it) -> backward(grads, *optimizer);
-                }
-            }
-            std::cout << "Epoch: " << epoch << "; Loss: " << error/epochs << std::endl;
-        }
-    }
+//    void fit(const TensorHolder<T>& inputs, const TensorHolder<T>& labels, const size_t epochs) {
+//        const Tensor<T, 3>& inputs_unpacked = inputs.template get<3>();
+//        const Tensor<T, 3>& labels_unpacked = labels.template get<3>();
+//        for (int epoch = 0; epoch < epochs; ++epoch) {
+//            double error = 0;
+//            size_t input_size = inputs_unpacked.dimension(0);
+//            for (size_t i = 0; i < input_size; ++i){
+//                TensorHolder<T> instance{Tensor<T, 2>{inputs_unpacked.chip(i, 0)}};
+//                TensorHolder<T> instance_label{Tensor<T, 2>{labels_unpacked.chip(i, 0)}};
+//                TensorHolder<T> output = predict(instance);
+//                double loss_ = loss->calculate_loss(output, instance_label)(0);
+//                error += loss_;
+//                TensorHolder<T> grads = loss->calculate_grads(output, instance_label);
+//                std::cout << i << " / " << input_size << " | loss: " << loss_ << " | mingrad: " << grads.template get<2>().minimum() << " | maxgrad: " << grads.template get<2>().maximum() << std::endl;
+//                for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
+//                    grads = (*it) -> backward(grads, *optimizer);
+//                }
+//            }
+//            std::cout << "Epoch: " << epoch << "; Loss: " << error / epochs << std::endl;
+//        }
+//    }
 };
 
 

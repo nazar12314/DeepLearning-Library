@@ -15,43 +15,31 @@ using Eigen::Tensor;
 template<class T>
 class Optimizer {
 protected:
-//    Func optimization_step;
-    std::function<TensorHolder<T>(const TensorHolder<T> &, std::vector<T> &)> optimization_step;
 public:
-    explicit Optimizer(std::function<TensorHolder<T>(const TensorHolder<T> &, std::vector<T> &)> optimizationStep)
-            : optimization_step(optimizationStep) {}
-    explicit Optimizer(const Optimizer<T>* opt):
-        optimization_step{opt->optimization_step}
-    {};
+    explicit Optimizer() = default;
 
-    virtual TensorHolder<T> apply_optimization(const TensorHolder<T> &gradients) = 0;
+    virtual Tensor<T, 2> apply_optimization(const Tensor<T, 2> &gradients) = 0;
+
+    virtual Tensor<T, 3> apply_optimization(const Tensor<T, 3> &gradients) = 0;
+
+
 };
 
 namespace optimizers {
     template<class T>
-    TensorHolder<T> sgd_step(const TensorHolder<T> &gradients, std::vector<T> &params) {
-        // params: learning rate
-        T learning_rate = params[0];
-        if (gradients.size() == 2) {
-            const Tensor<T, 2> &grads = gradients.template get<2>();
-            Tensor<T, 2> grads_multiplied = grads * grads.constant(learning_rate);
-            return TensorHolder<T>(grads_multiplied);
-        }
-        const Tensor<T, 3> &grads = gradients.template get<3>();
-        Tensor<T, 3> grads_multiplied = grads * grads.constant(learning_rate);
-        return TensorHolder<T>(grads_multiplied);
-    };
-
-    template<class T>
     class SGD : public Optimizer<T> {
-        std::vector<T> params;
+        T learning_rate;
     public:
-        explicit SGD(T learning_date_) : Optimizer<T>(sgd_step<T>){
-            params.template emplace_back(learning_date_);
+        explicit SGD(T learning_rate_) : Optimizer<T>(), learning_rate(learning_rate_){}
+
+        Tensor<T, 2> apply_optimization(const Tensor<T, 2> &gradients) override {
+            Tensor<T, 2> grads_multiplied = gradients * gradients.constant(learning_rate);
+            return grads_multiplied;
         }
 
-        TensorHolder<T> apply_optimization(const TensorHolder<T> &gradients) override {
-            return this->optimization_step(gradients, params);
+        Tensor<T, 3> apply_optimization(const Tensor<T, 3> &gradients) override {
+            Tensor<T, 3> grads_multiplied = gradients * gradients.constant(learning_rate);
+            return grads_multiplied;
         }
     };
 }

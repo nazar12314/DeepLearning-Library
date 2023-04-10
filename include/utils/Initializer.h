@@ -18,7 +18,9 @@ protected:
 
 public:
 
-    virtual TensorHolder<T> get_weights(size_t n_in, size_t n_hidden) = 0;
+    virtual Tensor<T, 2> get_weights_2d(size_t n_in, size_t n_hidden) = 0;
+
+    virtual Tensor<T, 3> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) = 0;
 
     virtual ~Initializer() = default;
 
@@ -42,14 +44,24 @@ namespace initializers {
             sd(sd_) {
         };
 
-        TensorHolder<T> get_weights(size_t n_in, size_t n_hidden) override {
+        Tensor<T, 2> get_weights_2d(size_t n_in, size_t n_hidden) override {
             Tensor<T, 2> weights (n_hidden, n_in);
             srand(this -> seed);
             weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
 
             weights = weights.constant(sd) * weights + weights.constant(mean);
 
-            return TensorHolder<T>(weights);
+            return weights;
+        };
+
+        Tensor<T, 3> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) override {
+            Tensor<T, 3> weights (n_hidden1, n_hidden2, n_in);
+            srand(this -> seed);
+            weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
+
+            weights = weights.constant(sd) * weights + weights.constant(mean);
+
+            return weights;
         };
     };
 
@@ -61,12 +73,20 @@ namespace initializers {
         explicit Constant(size_t constant_):
             constant(constant_){};
 
-        TensorHolder<T> get_weights(size_t n_in, size_t n_hidden) override {
+        Tensor<T, 2> get_weights_2d(size_t n_in, size_t n_hidden) override {
             Tensor<T, 2> weights(n_hidden, n_in);
 
             weights.setConstant(constant);
 
-            return TensorHolder<T>(weights);
+            return weights;
+        };
+
+        Tensor<T, 3> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) override {
+            Tensor<T, 3> weights(n_hidden1, n_hidden2, n_in);
+
+            weights.setConstant(constant);
+
+            return weights;
         };
     };
 
@@ -80,7 +100,7 @@ namespace initializers {
                 a(a_),
                 b(b_){};
 
-        TensorHolder<T> get_weights(size_t n_in, size_t n_hidden) override {
+        Tensor<T, 2> get_weights_2d(size_t n_in, size_t n_hidden) override {
             Tensor<T, 2> weights(n_hidden, n_in);
 
             srand(this -> seed);
@@ -98,7 +118,28 @@ namespace initializers {
                     +
                     weights.constant(a);
 
-            return TensorHolder<T>(weights);
+            return weights;
+        };
+
+        Tensor<T, 3> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) override {
+            Tensor<T, 3> weights(n_hidden1, n_hidden2, n_in);
+
+            srand(this -> seed);
+            weights.template setRandom<Eigen::internal::UniformRandomGenerator<double>>();
+
+            Tensor<double, 0> min_w = weights.minimum();
+            Tensor<double, 0> max_w = weights.maximum();
+
+            weights =
+                    (weights - weights.constant(min_w(0)))
+                    /
+                    weights.constant(max_w(0) - min_w(0))
+                    *
+                    weights.constant(b - a)
+                    +
+                    weights.constant(a);
+
+            return weights;
         };
     };
 
@@ -106,14 +147,24 @@ namespace initializers {
     class GlorotNormal: public Initializer<T> {
 
     public:
-        TensorHolder<T> get_weights(size_t n_in, size_t n_hidden) override {
+        Tensor<T, 2> get_weights_2d(size_t n_in, size_t n_hidden) override {
             Tensor<T, 2> weights(n_hidden, n_in);
 
             srand(this -> seed);
             weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
 
             weights *= weights.constant(2.0 / (n_in + n_hidden));
-            return TensorHolder<T>(weights);
+            return weights;
+        };
+
+        Tensor<T, 3> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) override {
+            Tensor<T, 3> weights(n_hidden1, n_hidden2, n_in);
+
+            srand(this -> seed);
+            weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
+
+            weights *= weights.constant(2.0 / (n_in + n_hidden1 + n_hidden2));
+            return weights;
         };
     };
 }

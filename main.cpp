@@ -1,29 +1,32 @@
 #include <iostream>
-#include "mnist/mnist_reader.hpp"
-#include "mnist/mnist_utils.hpp"
-#include "eigen3/unsupported/Eigen/CXX11/Tensor"
-#include "utils/MnistDataset.h"
+#include <chrono>
+#include <Eigen/Core>
+#include <unsupported/Eigen/CXX11/Tensor>
 #include "models/Model.h"
-#include "utils/Optimizer.h"
-#include "utils/Loss.h"
+#include "utils/Initializer.h"
 #include "layers/Dense.h"
 #include "layers/Activation.h"
+#include "utils/Optimizer.h"
 
-int main(int argc, char* argv[]) {
+int main() {
+//     Define the matrix and tensor sizes
 
-    MnistDataset<double> mnst;
-    TensorHolder<double> training_labels = mnst.get_training_labels();
-    TensorHolder<double> training_data = mnst.get_training_images();
+    Tensor<double, 2> ts(3, 3);
+
+    ts.setValues({
+                         {1, 2, 3},
+                         {3, 3, 3},
+                         {1, 4, 2}
+    });
+
     initializers::GlorotNormal<double> initializer;
     initializer.set_seed(42);
 
-    Model<double> model("model", new optimizers::SGD<double>(0.001), new loss_functions::BinaryCrossEntropy<double>());
-    model.addLayer(new DenseLayer<double>(784, 300, "dense 1", initializer));
-    model.addLayer(new activations::ReLU<double>("relu 1"));
-    model.addLayer(new DenseLayer<double>(300, 10, "dense 2", initializer));
-    model.addLayer(new activations::Softmax<double>("softmax"));
-    model.fit(training_data, training_labels, 1);
-
+    Model<double> model("model", new optimizers::SGD<double>(0.001), new loss_functions::MSE<double>());
+    model.addLayer(new DenseLayer<double>(784, 20, "dense 1", initializer));
+    model.addLayer(new activations::ReLU<double, 2>());
+    model.addLayer(new DenseLayer<double>(20, 10, "dense 2", initializer));
+    model.addLayer(new activations::ReLU<double, 2>());
 
     return 0;
 }
