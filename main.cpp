@@ -12,7 +12,7 @@ int main() {
 //     Define the matrix and tensor sizes
 
     Tensor<double, 2> ts(3, 1);
-    ts.setRandom();
+    ts.setConstant(1);
 
     initializers::GlorotNormal<double> initializer;
     initializer.set_seed(42);
