@@ -8,6 +8,7 @@
 #include <string>
 #include <list>
 #include <vector>
+#include <variant>
 #include "layers/Layer.h"
 #include "utils/Optimizer.h"
 #include "utils/Loss.h"
@@ -39,22 +40,27 @@ public:
         layers.push_back(layer);
     };
 
-    tensor_variant<T> predict(tensor_variant_ref<T> input) {
+    tensor_variant<T> predict(const tensor_variant<T>& input) {
         tensor_variant<T> output = input;
 
         for (auto& layer : layers) {
-            std::visit([&layer](auto&& arg) {
-                using W = std::decay<decltype(arg)>;
+            std::visit([&layer, &output](auto&& arg) {
+//                using W = std::decay<decltype(arg)>;
 
-                if constexpr (std::is_same_v<W, Tensor<T, 2>>) {
-                    output = layer -> forward(arg);
-                }
-                else if constexpr (std::is_same_v<W, Tensor<T, 3>>) {
-                    output = layer -> forward(arg);
-                }
-                else {
-                    throw std::runtime_error("No such dimension!");
-                }
+//                if constexpr (std::is_same_v<W, Tensor<T, 2>> || std::is_same_v<W, Tensor<T, 3>>) {
+                std::visit([&output, &arg](auto&& arg_layer){
+//                    using L = std::decay<decltype(arg_layer)>;
+//                    if constexpr (std::is_same_v<L, Layer<T, 2>> || std::is_same_v<L, Layer<T, 3>>){
+                    output = arg_layer -> forward(arg);
+//                    }
+//                    else {
+//                        throw std::runtime_error("Layer ban!");
+//                    }
+                }, layer);
+//                }
+//                else {
+//                    throw std::runtime_error("No such dimension!");
+//                }
             }, output);
         }
 
