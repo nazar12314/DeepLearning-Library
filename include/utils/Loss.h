@@ -63,8 +63,8 @@ namespace loss_functions {
         Tensor<T, 0> calculate_loss(const Eigen::Tensor<T, 2> &pred_output, const Eigen::Tensor<T, 2> &true_output) override{
             const T epsilon = 1e-7;
             const Tensor<T, 0> error = (true_output*((pred_output+pred_output.constant(epsilon)).log()) +
-                                        ((true_output.constant(1.0) - true_output) * ((pred_output.constant(1.0) - pred_output + pred_output.constant(epsilon)).log())))
-                    .mean();
+                                             ((true_output.constant(1.0) - true_output) * ((pred_output.constant(1.0) - pred_output + pred_output.constant(epsilon)).log())))
+                                                     .mean();
             return -error;
         }
 
@@ -77,7 +77,7 @@ namespace loss_functions {
         Tensor<T, 0> calculate_loss(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) override{
             const T epsilon = 1e-7;
             const Tensor<T, 0> error = (true_output*((pred_output+pred_output.constant(epsilon)).log()) +
-                                        ((true_output.constant(1.0) - true_output) * ((pred_output.constant(1.0) - pred_output + pred_output.constant(epsilon)).log())))
+                                             ((true_output.constant(1.0) - true_output) * ((pred_output.constant(1.0) - pred_output + pred_output.constant(epsilon)).log())))
                     .mean();
             return -error;
         }
