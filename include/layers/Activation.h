@@ -47,6 +47,23 @@ namespace activations {
         }
     };
 
+    template<class T, size_t Dim>
+    class Softmax : public Activation<T, Dim> {
+    public:
+        Softmax() : Activation<T, Dim>() {}
+
+        Tensor<T, Dim> forward(const Tensor<T, Dim> &inputs) override {
+            Tensor<T, Dim> exp_inputs = inputs.exp();
+            const Tensor<T, 0> & input_tensor_sum = exp_inputs.sum();
+            return exp_inputs / inputs.constant(input_tensor_sum(0));
+        }
+
+        Tensor<T, Dim> backward(const Tensor<T, Dim> &out_gradient, Optimizer<T> & optimizer) override {
+            return out_gradient;
+        }
+
+    };
+
 }
 
 
