@@ -37,7 +37,15 @@ public:
     {};
 
     void addLayer(layer_variant_ptr<T> layer) {
-        layers.push_back(layer);
+        std::visit([&](auto&& l) {
+            using LayerType = std::decay_t<decltype(l)>;
+            if constexpr (std::is_same_v<LayerType, Layer<T, 2>*> ||
+                          std::is_same_v<LayerType, Layer<T, 3>*>) {
+                layers.push_back(layer);
+            } else {
+                throw std::invalid_argument("Invalid layer type");
+            }
+        }, layer);
     };
 
     tensor_variant<T> predict(const tensor_variant<T>& input) {
@@ -45,10 +53,10 @@ public:
 
         for (auto& layer : layers) {
             std::visit([&layer, &output](auto&& arg) {
-                using W = std::remove_cv_t<std::remove_reference_t<decltype(arg)>>;
+                using W = std::decay_t<decltype(arg)>;
                 if constexpr (std::is_same_v<W, Tensor<T, 2>> || std::is_same_v<W, Tensor<T, 3>>) {
                     std::visit([&output, &arg](auto&& arg_layer){
-                    using L = std::remove_cv_t<std::remove_reference_t<decltype(arg_layer)>>;
+                    using L = std::decay_t<decltype(arg_layer)>;
 //                    std::cout << typeid(L).name() << std::endl;
                     if constexpr (std::is_same_v<L, Layer<T, 2>*> || std::is_same_v<L, Layer<T, 3>*>){
                         output = arg_layer -> forward(arg);
