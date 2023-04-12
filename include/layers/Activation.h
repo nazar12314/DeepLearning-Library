@@ -12,7 +12,7 @@
 using Eigen::Tensor;
 
 template<class T, size_t Dim>
-class Activation : Layer<T, Dim> {
+class Activation : public Layer<T, Dim> {
 public:
     Activation() : Layer<T, Dim>("", false) {}
 
@@ -27,11 +27,6 @@ public:
     virtual Tensor<T, Dim> forward(const Tensor<T, Dim> &inputs) = 0;
 
     virtual Tensor<T, Dim> backward(const Tensor<T, Dim> &out_gradient, Optimizer<T> &optimizer) = 0;
-
-protected:
-    virtual Tensor<T, Dim> activation(const Tensor<T, Dim> &input, const std::vector<T> &) = 0;
-
-    virtual Tensor<T, Dim> activation_prime(const Tensor<T, Dim> &input, const std::vector<T> &) = 0;
 };
 
 
@@ -40,23 +35,31 @@ namespace activations {
     template<class T, size_t Dim>
     class ReLU : public Activation<T, Dim> {
     public:
-        ReLU() : Activation<T, Dim>() {}
+        ReLU() : Activation<T, Dim>(){}
 
         Tensor<T, Dim> forward(const Tensor<T, Dim> &inputs) override {
-            return this->activation(inputs, std::vector<T>());
+            return inputs.cwiseMax(0.0);
         }
 
         Tensor<T, Dim> backward(const Tensor<T, Dim> &out_gradient, Optimizer<T> &optimizer) override {
-            return this->activation_prime(out_gradient, std::vector<T>());
-        }
-
-        Tensor<T, Dim> activation(const Tensor<T, Dim> &input, const std::vector<T> &) override {
-            return input.cwiseMax(0.0);
-        }
-
-        Tensor<T, Dim> activation_prime(const Tensor<T, Dim> &input, const std::vector<T> &) override {
             auto relu_derivative = [](T x) { return x > static_cast<T>(0) ? static_cast<T>(1) : static_cast<T>(0); };
-            return input.unaryExpr(relu_derivative);
+            return out_gradient.unaryExpr(relu_derivative);
+        }
+    };
+
+    template<class T, size_t Dim>
+    class Softmax : public Activation<T, Dim> {
+    public:
+        Softmax() : Activation<T, Dim>() {}
+
+        Tensor<T, Dim> forward(const Tensor<T, Dim> &inputs) override {
+            Tensor<T, Dim> exp_inputs = inputs.exp();
+            const Tensor<T, 0> & input_tensor_sum = exp_inputs.sum();
+            return exp_inputs / inputs.constant(input_tensor_sum(0));
+        }
+
+        Tensor<T, Dim> backward(const Tensor<T, Dim> &out_gradient, Optimizer<T> & optimizer) override {
+            return out_gradient;
         }
 
     };

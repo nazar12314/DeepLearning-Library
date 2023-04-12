@@ -7,84 +7,86 @@
 
 #include <iostream>
 #include "eigen3/unsupported/Eigen/CXX11/Tensor"
-#include "TensorHolder.h"
+//#include "TensorHolder.h"
 
 using Eigen::Tensor;
 
 template<class T>
-class Loss{
+class Loss {
 public:
-    Loss(std::function<Tensor<T, 0>(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output)> error_func_,
-         std::function<TensorHolder<T>(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output)> error_prime_func_)
-            : error_func(error_func_), error_prime_func(error_prime_func_) {};
+    explicit Loss() = default;
 
-    explicit Loss(const Loss<T>* loss): error_func{loss->error_func}, error_prime_func{loss->error_prime_func}{}
+    virtual Tensor<T, 0> calculate_loss(const Eigen::Tensor<T, 2> &pred_output, const Eigen::Tensor<T, 2> &true_output) = 0;
 
-    Tensor<T, 0> calculate_loss(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) {
-        return this->error_func(pred_output, true_output);
-    };
+    virtual Tensor<T, 2> calculate_grads(const Eigen::Tensor<T, 2> &pred_output, const Eigen::Tensor<T, 2> &true_output) = 0;
 
-    TensorHolder<T> calculate_grads(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) {
-        return this->error_prime_func(pred_output, true_output);
-    };
+    virtual Tensor<T, 0> calculate_loss(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) = 0;
 
-protected:
-    std::function<Tensor<T, 0>(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output)> error_func;
-    std::function<TensorHolder<T>(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output)> error_prime_func;
+    virtual Tensor<T, 3> calculate_grads(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) = 0;
+
 };
 
 namespace loss_functions {
     template<class T>
-    Tensor<T, 0> mse_func(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) {
-        constexpr size_t Dim = 2;
-        const Tensor<T, Dim> &pred_tensor = pred_output.template get<Dim>();
-        const Tensor<T, Dim> &true_tensor = true_output.template get<Dim>();
-        const Tensor<T, 0> error = (pred_tensor - true_tensor).pow(2).mean();
-        return error;
-    }
-
-    template<class T>
-    TensorHolder<T> mse_prime_func(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) {
-        constexpr size_t Dim = 2;
-        const Tensor<T, Dim> &pred_tensor = pred_output.template get<Dim>();
-        const Tensor<T, Dim> &true_tensor = true_output.template get<Dim>();
-        Tensor<T, Dim> differ = (pred_tensor-true_tensor);
-        Tensor<T, Dim> error = differ*differ.constant(2.0f/differ.dimension(0));
-        return TensorHolder<T>(error);
-    }
-
-    template<class T>
     class MSE : public Loss<T> {
     public:
-        MSE() : Loss<T>(mse_func<T>, mse_prime_func<T>) {}
+        MSE() : Loss<T>(){}
+
+        Tensor<T, 0> calculate_loss(const Eigen::Tensor<T, 2> &pred_output, const Eigen::Tensor<T, 2> &true_output) override{
+            const Tensor<T, 0> error = (pred_output - true_output).pow(2).mean();
+            return error;
+        }
+
+        Tensor<T, 2> calculate_grads(const Eigen::Tensor<T, 2> &pred_output, const Eigen::Tensor<T, 2> &true_output) override{
+            Tensor<T, 2> differ = (pred_output-true_output);
+            const Tensor<T, 2> error = differ*differ.constant(2.0f/differ.dimension(0));
+            return error;
+        }
+
+        Tensor<T, 0> calculate_loss(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) override{
+            const Tensor<T, 0> error = (pred_output - true_output).pow(2).mean();
+            return error;
+        }
+
+        Tensor<T, 3> calculate_grads(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) override{
+            Tensor<T, 3> differ = (pred_output-true_output);
+            const Tensor<T, 3> error = differ*differ.constant(2.0f/differ.dimension(0));
+            return error;
+        }
     };
-
-    template<class T>
-    Tensor<T, 0> binary_cross_entropy_func(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) {
-        constexpr size_t Dim = 2;
-        const Tensor<T, Dim> &pred_tensor = pred_output.template get<Dim>();
-        const Tensor<T, Dim> &true_tensor = true_output.template get<Dim>();
-        const T epsilon = 1e-7;
-        const Tensor<double, 0> error = (true_tensor*((pred_tensor+pred_tensor.constant(epsilon)).log()) +
-                                ((true_tensor.constant(1.0) - true_tensor) * ((pred_tensor.constant(1.0) - pred_tensor + pred_tensor.constant(epsilon)).log())))
-                                .mean();
-        return -error;
-    }
-
-    template<class T>
-    TensorHolder<T> binary_cross_entropy_prime_func(const TensorHolder<T> &pred_output, const TensorHolder<T> &true_output) {
-        constexpr size_t Dim = 2;
-        const Tensor<T, Dim> &pred_tensor = pred_output.template get<Dim>();
-        const Tensor<T, Dim> &true_tensor = true_output.template get<Dim>();
-        const T epsilon = 1e-7;
-        const Tensor<T, Dim> error = -(true_tensor/(pred_tensor+pred_tensor.constant(epsilon))) + ((pred_tensor.constant(1.0)-true_tensor)/(pred_tensor.constant(1.0)-pred_tensor+pred_tensor.constant(epsilon)));
-        return TensorHolder<T>(error);
-    }
 
     template<class T>
     class BinaryCrossEntropy : public Loss<T> {
     public:
-        BinaryCrossEntropy() : Loss<T>(binary_cross_entropy_func<T>, binary_cross_entropy_prime_func<T>) {}
+        BinaryCrossEntropy() : Loss<T>(){}
+
+        Tensor<T, 0> calculate_loss(const Eigen::Tensor<T, 2> &pred_output, const Eigen::Tensor<T, 2> &true_output) override{
+            const T epsilon = 1e-7;
+            const Tensor<T, 0> error = (true_output*((pred_output+pred_output.constant(epsilon)).log()) +
+                                             ((true_output.constant(1.0) - true_output) * ((pred_output.constant(1.0) - pred_output + pred_output.constant(epsilon)).log())))
+                                                     .mean();
+            return -error;
+        }
+
+        Tensor<T, 2> calculate_grads(const Eigen::Tensor<T, 2> &pred_output, const Eigen::Tensor<T, 2> &true_output) override{
+            const T epsilon = 1e-7;
+            const Tensor<T, 2> error = -(true_output/(pred_output+pred_output.constant(epsilon))) + ((pred_output.constant(1.0)-true_output)/(pred_output.constant(1.0)-pred_output+pred_output.constant(epsilon)));
+            return error;
+        }
+
+        Tensor<T, 0> calculate_loss(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) override{
+            const T epsilon = 1e-7;
+            const Tensor<T, 0> error = (true_output*((pred_output+pred_output.constant(epsilon)).log()) +
+                                             ((true_output.constant(1.0) - true_output) * ((pred_output.constant(1.0) - pred_output + pred_output.constant(epsilon)).log())))
+                    .mean();
+            return -error;
+        }
+
+        Tensor<T, 3> calculate_grads(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) override{
+            const T epsilon = 1e-7;
+            const Tensor<T, 3> error = -(true_output/(pred_output+pred_output.constant(epsilon))) + ((pred_output.constant(1.0)-true_output)/(pred_output.constant(1.0)-pred_output+pred_output.constant(epsilon)));
+            return error;
+        }
     };
 }
 
