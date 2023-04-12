@@ -43,25 +43,27 @@ public:
         return output_tensor;
     };
 
-    Tensor<T, Dim> backward(const Tensor<T, Dim> & out_gradient, Optimizer<T> & optimizer) override {
-        Eigen::array<Eigen::IndexPair<int>, 1> contract_dims = { Eigen::IndexPair<int>(1, 0) };
+    Tensor<T, 3> backward(const Tensor<T, 3> &out_gradient, Optimizer<T> &optimizer) override {
+        Eigen::array<Eigen::IndexPair<int>, 1> contract_dims = {Eigen::IndexPair<int>(1, 0)};
 
-        Tensor<T, Dim> weights_gradient = out_gradient.contract(X.shuffle(Eigen::array<int, Dim>{1, 0}), contract_dims);
-        weights -= optimizer.apply_optimization(weights_gradient);
-        biases -= optimizer.apply_optimization(out_gradient);
+        Tensor<T, 3> weights_gradient = out_gradient.contract(X.shuffle(Eigen::array<int, 3>{1, 0}), contract_dims);
+        weights -= optimizer.apply_optimization(weights_gradient).mean(Eigen::array<int, 1>{0});
+        biases -= optimizer.apply_optimization(out_gradient).mean(Eigen::array<int, 1>{0});
 
-        Tensor<T, Dim> output_tensor = weights.shuffle(Eigen::array<int, Dim>{1, 0}).contract(
-                out_gradient,
-                contract_dims);
+        Tensor<T, 3> output_tensor = weights.shuffle(Eigen::array<int, 3>{1, 0}).contract(out_gradient, contract_dims);
 
         return output_tensor;
     };
 
-    void set_weights(const Tensor<T, Dim> & weights_) override {
+    Tensor<T, 4> backward(const Tensor<T, 4> &out_gradient, Optimizer<T> &optimizer) override {
+        throw std::invalid_argument("Incompatible tensor shapes");
+    };
+
+    void set_weights(const Tensor<T, 2> &weights_) override {
         weights = std::move(weights_);
     };
 
-    const Tensor<T, Dim> &get_weights() override { return weights; };
+    const Tensor<T, 3> get_weights() override { return weights.reshape(Eigen::array<size_t, 3>{n_hidden, n_in, 1}); };
 
 };
 
