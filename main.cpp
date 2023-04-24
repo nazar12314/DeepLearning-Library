@@ -1,16 +1,11 @@
 #include <iostream>
-#include <chrono>
 #include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "models/Model.h"
 #include "utils/Initializer.h"
 #include "layers/Dense.h"
-#include "layers/Activation.h"
 #include "utils/Optimizer.h"
-#include <tbb/flow_graph.h>
-
-using namespace tbb::flow;
-
+#include "layers/Activation.h"
 
 int main() {
 
@@ -30,16 +25,15 @@ int main() {
     auto input = model.addLayer(layer);
     auto hidden = model.addLayer(layer2);
     auto hidden2 = model.addLayer(layer3);
+//    auto activatoin = model.addLayer(relu);
     connectLayers(input, hidden);
     connectLayers(hidden, hidden2);
+//    connectLayers(hidden2, activatoin);
 
     model.setInput(input);
     model.setOut(hidden2);
 
-    for (int i=0; i<5; ++i){
-        model.test(data, data);
-    }
-
+    model.fit(data, data, 10);
 
 
     return 0;
