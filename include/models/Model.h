@@ -83,7 +83,11 @@ public:
 
     void fit(const Tensor<T, InpDim>& inputs, const Tensor<T, OutDim>& labels, const size_t epochs){
         for (size_t epoch = 0; epoch < epochs; ++epoch){
-
+            Tensor<T, OutDim> predicted = predict(inputs);
+            std::cout << "Loss: " << loss->calculate_loss(predicted, labels) << std::endl;
+            Tensor<T, OutDim> grads = loss->calculate_grads(predicted, inputs);
+            modelOutNode.try_put(grads);
+            flowGraph.wait_for_all();
         }
     }
 
