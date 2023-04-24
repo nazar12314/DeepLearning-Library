@@ -19,9 +19,9 @@ class Layer {
 public:
     Layer(const std::string & name, bool trainable): name(name), trainable(trainable) {};
 
-    virtual Tensor<T, Dim> forward(const Tensor<T, Dim> & inputs) = 0;
+    virtual Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs) = 0;
 
-    virtual Tensor<T, Dim> backward(const Tensor<T, Dim> & out_gradient, Optimizer<T>& optimizer) = 0;
+    virtual Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> & out_gradient, Optimizer<T>& optimizer) = 0;
 
     virtual void set_weights(const Tensor<T, Dim> & weights_) = 0;
 

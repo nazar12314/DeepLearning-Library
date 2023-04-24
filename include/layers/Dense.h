@@ -18,7 +18,7 @@ class DenseLayer : public Layer<T, Dim> {
     size_t n_hidden;
     Tensor<T, Dim> weights;
     Tensor<T, Dim> biases;
-    Tensor<T, Dim> X;
+    Tensor<T, Dim+1> X;
 
 public:
     DenseLayer(size_t n_in_, size_t n_hidden_, const std::string& name, Initializer<T>& initializer, bool trainable = true) :
@@ -28,33 +28,36 @@ public:
             weights{initializer.get_weights_2d(n_in_, n_hidden_)},
             biases{initializer.get_weights_2d(1, n_hidden_)} {};
 
-    Tensor<T, Dim> forward(const Tensor<T, Dim> & inputs) override {
+    Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs) override {
         X = inputs;
 
-        if (weights.dimension(1) != X.dimension(0)) {
-            throw std::invalid_argument("Incompatible tensor shapes");
-        }
+//        if (weights.dimension(1) != X.dimension(0)) {
+//            throw std::invalid_argument("Incompatible tensor shapes");
+//        }
 
-        Tensor<T, Dim> output_tensor = weights.contract(
-                X,
+        Tensor<T, Dim+1> output = inputs.reshape(Eigen::array<size_t , 2>{size_t(inputs.dimension(0)), n_in}).contract(
+                weights.shuffle(Eigen::array<int, 2>{1, 0}),
                 Eigen::array<Eigen::IndexPair<int>, 1> {Eigen::IndexPair<int>(1, 0)}
-                ) + biases;
+                ) + biases.broadcast(Eigen::array<size_t, 2>{1, size_t(inputs.dimension(0))}).shuffle(Eigen::array<int, 2>{1, 0});
 
-        return output_tensor;
+        return output.reshape(Eigen::array<size_t , 3>{size_t(inputs.dimension(0)), n_hidden, 1});
     };
 
-    Tensor<T, Dim> backward(const Tensor<T, Dim> & out_gradient, Optimizer<T> & optimizer) override {
+    Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> & out_gradient, Optimizer<T> & optimizer) override {
         Eigen::array<Eigen::IndexPair<int>, 1> contract_dims = { Eigen::IndexPair<int>(1, 0) };
-
-        Tensor<T, Dim> weights_gradient = out_gradient.contract(X.shuffle(Eigen::array<int, Dim>{1, 0}), contract_dims);
-        weights -= optimizer.apply_optimization(weights_gradient);
-        biases -= optimizer.apply_optimization(out_gradient);
-
-        Tensor<T, Dim> output_tensor = weights.shuffle(Eigen::array<int, Dim>{1, 0}).contract(
-                out_gradient,
-                contract_dims);
-
-        return output_tensor;
+        for (Eigen::Index i = 0; i < X.dimension(0); ++i) {
+            Tensor<T, Dim> weights_gradient = out_gradient.chip(i, 0).contract(
+                    X.chip(i, 0).shuffle(Eigen::array<int, Dim>{1, 0}),
+                    contract_dims) / double(X.dimension(0));
+            weights -= optimizer.apply_optimization(weights_gradient);
+            biases -= optimizer.apply_optimization(Tensor<T, Dim>{out_gradient.chip(i, 0)});
+        }
+        Tensor<T, Dim+1> output(X.dimension(0), X.dimension(1), X.dimension(2));
+        output.setZero();
+        for (Eigen::Index i = 0; i < X.dimension(0); ++i) {
+            output.chip(i, 0) = weights.shuffle(Eigen::array<int, 2>{1, 0}).contract(out_gradient.chip(i, 0), contract_dims);
+        }
+        return output;
     };
 
     void set_weights(const Tensor<T, Dim> & weights_) override {

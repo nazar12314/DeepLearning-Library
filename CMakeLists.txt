@@ -42,6 +42,11 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE MNIST_DATA_LOCATION="${MNIST_
 find_package (Eigen3 3.3 REQUIRED NO_MODULE)
 target_link_libraries (neuralib Eigen3::Eigen)
 
+find_package(TBB REQUIRED)
+target_include_directories(${PROJECT_NAME} PRIVATE ${TBB_INCLUDE_DIRS})
+target_link_libraries(${PROJECT_NAME}  ${TBB_LIBRARIES} -ltbb)
+#add_compile_definitions(__TBB_DYNAMIC_LOAD_ENABLED=0)
+
 INSTALL(PROGRAMS
 		$<TARGET_FILE:${PROJECT_NAME}>
 		DESTINATION bin)

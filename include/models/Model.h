@@ -12,66 +12,79 @@
 #include "layers/Layer.h"
 #include "utils/Optimizer.h"
 #include "utils/Loss.h"
+#include <tbb/flow_graph.h>
 
-template <class T>
-using layer_variant_ptr = std::variant<Layer<T, 2>*, Layer<T, 3>*>;
+using namespace tbb::flow;
 
-template <class T>
-using tensor_variant = std::variant<Tensor<T, 2>, Tensor<T, 3>>;
+// pair of function_nodes, which are forward and backward
+template<class T, size_t Dim>
+using layer_node = std::pair<function_node<Tensor<T, Dim>, Tensor<T, Dim>>, function_node<Tensor<T, Dim>, Tensor<T, Dim>>>;
 
-template <class T>
-using tensor_variant_ref = std::variant<Tensor<T, 2>&, Tensor<T, 3>&>;
-
-template <class T>
+template <class T, size_t InpDim, size_t OutDim>
 class Model {
     std::string name;
-    std::list<layer_variant_ptr<T>> layers;
     Optimizer<T>* optimizer;
     Loss<T>* loss;
+    graph flowGraph;
+    broadcast_node<Tensor<T, InpDim>> modelInputNode;
+    broadcast_node<Tensor<T, OutDim>> modelOutNode;
+    Tensor<T, OutDim> modelOutput;
+    function_node<Tensor<T, OutDim>> saveOutNode;
 
 public:
     Model(const std::string& name_, const Optimizer<T>* optimizer_, const Loss<T>* loss_):
-        name(name_),
-        optimizer((Optimizer<T>*) optimizer_),
-        loss((Loss<T> *) loss_)
+            name(name_),
+            optimizer((Optimizer<T>*) optimizer_),
+            loss((Loss<T> *) loss_),
+            modelInputNode(flowGraph),
+            modelOutNode(flowGraph),
+            saveOutNode(flowGraph, 1, [&](const Tensor<T, OutDim>& output){
+                modelOutput = output;
+            })
     {};
 
-    void addLayer(layer_variant_ptr<T> layer) {
-        std::visit([&](auto&& l) {
-            using LayerType = std::decay_t<decltype(l)>;
-            if constexpr (std::is_same_v<LayerType, Layer<T, 2>*> ||
-                          std::is_same_v<LayerType, Layer<T, 3>*>) {
-                layers.push_back(layer);
-            } else {
-                throw std::invalid_argument("Invalid layer type");
-            }
-        }, layer);
-    };
+    void setInput(layer_node<T, InpDim>& node){
+        make_edge(modelInputNode, node.first);
+    }
 
-    tensor_variant<T> predict(const tensor_variant<T>& input) {
-        tensor_variant<T> output = input;
+    void setOut(layer_node<T, OutDim>& node){
+        make_edge(node.first, saveOutNode);
+        make_edge(modelOutNode, node.second);
+    }
 
-        for (auto& layer : layers) {
-            std::visit([&layer, &output](auto&& arg) {
-                using W = std::decay_t<decltype(arg)>;
-                if constexpr (std::is_same_v<W, Tensor<T, 2>> || std::is_same_v<W, Tensor<T, 3>>) {
-                    std::visit([&output, &arg](auto&& arg_layer){
-                    using L = std::decay_t<decltype(arg_layer)>;
-//                    std::cout << typeid(L).name() << std::endl;
-                    if constexpr (std::is_same_v<L, Layer<T, 2>*> || std::is_same_v<L, Layer<T, 3>*>){
-                        output = arg_layer -> forward(arg);
-                    }
-                    else {
-                        throw std::runtime_error("Layer ban!");
-                    }
-                }, layer);
-                } else {
-                    throw std::runtime_error("No such dimension!");
-                }
-            }, output);
+    template<size_t Dim>
+    auto addLayer(Layer<T, Dim>& layer){
+        auto forward_func = [&layer](const Tensor<T, Dim+1>& inputs) -> Tensor<T, Dim+1> {
+            return layer.forward(inputs);
+        };
+        auto backward_func = [&layer, this](const Tensor<T, Dim+1>& grads) -> Tensor<T, Dim+1> {
+            return layer.backward(grads, *(this->optimizer));
+        };
+
+        auto node_forward = function_node<Tensor<T, Dim+1>, Tensor<T, Dim+1>>(flowGraph, unlimited, forward_func);
+        auto node_backward = function_node<Tensor<T, Dim+1>, Tensor<T, Dim+1>>(flowGraph, unlimited, backward_func);
+        return std::make_pair(std::move(node_forward), std::move(node_backward));
+    }
+
+    auto predict(const Tensor<T, InpDim>& inputs){
+        modelInputNode.try_put(inputs);
+        flowGraph.wait_for_all();
+        return modelOutput;
+    }
+
+    void test(const Tensor<T, InpDim>& inputs, const Tensor<T, OutDim>& labels){
+        Tensor<T, OutDim> predicted = predict(inputs);
+        std::cout << predicted << std::endl;
+        std::cout << loss->calculate_loss(predicted, labels) << std::endl;
+        Tensor<T, OutDim> grads = loss->calculate_grads(predicted, inputs);
+        modelOutNode.try_put(grads);
+        flowGraph.wait_for_all();
+    }
+
+    void fit(const Tensor<T, InpDim>& inputs, const Tensor<T, OutDim>& labels, const size_t epochs){
+        for (size_t epoch = 0; epoch < epochs; ++epoch){
+
         }
-
-        return output;
     }
 
 //    void fit(const Tensor<T, 2>& inputs, const Tensor<T, 2>& labels, const size_t epochs) {
@@ -93,5 +106,10 @@ public:
 //    }
 };
 
+template<class T, int Dim>
+void connectLayers(layer_node<T, Dim>& start, layer_node<T, Dim>& end){
+    make_edge(start.first, end.first);
+    make_edge(end.second, start.second);
+}
 
 #endif //NEURALIB_MODEL_H
