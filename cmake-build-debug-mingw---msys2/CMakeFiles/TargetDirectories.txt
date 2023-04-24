@@ -1,0 +1,7 @@
+E:/UCU/ACS/Project/DeepLearning-Library/cmake-build-debug-mingw---msys2/CMakeFiles/neuralib.dir
+E:/UCU/ACS/Project/DeepLearning-Library/cmake-build-debug-mingw---msys2/CMakeFiles/edit_cache.dir
+E:/UCU/ACS/Project/DeepLearning-Library/cmake-build-debug-mingw---msys2/CMakeFiles/rebuild_cache.dir
+E:/UCU/ACS/Project/DeepLearning-Library/cmake-build-debug-mingw---msys2/CMakeFiles/list_install_components.dir
+E:/UCU/ACS/Project/DeepLearning-Library/cmake-build-debug-mingw---msys2/CMakeFiles/install.dir
+E:/UCU/ACS/Project/DeepLearning-Library/cmake-build-debug-mingw---msys2/CMakeFiles/install/local.dir
+E:/UCU/ACS/Project/DeepLearning-Library/cmake-build-debug-mingw---msys2/CMakeFiles/install/strip.dir

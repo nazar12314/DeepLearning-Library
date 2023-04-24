@@ -1,0 +1,24 @@
+"C:\Program Files\JetBrains\CLion 2022.2.3\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - MinGW Makefiles" -S E:\UCU\ACS\Project\DeepLearning-Library -B E:\UCU\ACS\Project\DeepLearning-Library\cmake-build-debug-mingw---msys2
+CMake Warning at C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/FindBoost.cmake:1384 (message):
+  New Boost version may have incorrect or missing dependencies and imported
+  targets
+Call Stack (most recent call first):
+  C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/FindBoost.cmake:1507 (_Boost_COMPONENT_DEPENDENCIES)
+  C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/FindBoost.cmake:2118 (_Boost_MISSING_DEPENDENCIES)
+  CMakeLists.txt:29 (find_package)
+
+
+CMake Warning at C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/FindBoost.cmake:1384 (message):
+  New Boost version may have incorrect or missing dependencies and imported
+  targets
+Call Stack (most recent call first):
+  C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/FindBoost.cmake:1507 (_Boost_COMPONENT_DEPENDENCIES)
+  C:/Program Files/JetBrains/CLion 2022.2.3/bin/cmake/win/share/cmake-3.23/Modules/FindBoost.cmake:2118 (_Boost_MISSING_DEPENDENCIES)
+  CMakeLists.txt:29 (find_package)
+
+
+
+- UCU.APPS.CS: Consider enabling PVS-Studio in CMakeLists.txt by 'set(ENABLE_PVS_STUDIO ON)' flag or use Windows PVS Studio GUI.
+-- Configuring done
+-- Generating done
+-- Build files have been written to: E:/UCU/ACS/Project/DeepLearning-Library/cmake-build-debug-mingw---msys2
