@@ -19,7 +19,7 @@ if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif ()
 
-add_executable(${PROJECT_NAME} main.cpp src/layers/Layer.cpp include/layers/Layer.h include/layers/Layer.h src/layers/Layer.cpp src/layers/Dense.cpp include/layers/Dense.h src/utils/Initializer.cpp include/utils/Initializer.h src/layers/Activation.cpp include/layers/Activation.h src/utils/Optimizer.cpp include/utils/Optimizer.h src/models/Model.cpp include/models/Model.h src/utils/Loss.cpp include/utils/Loss.h src/utils/TensorHolder.cpp include/utils/TensorHolder.h include/utils/MnistDataset.h)
+add_executable(${PROJECT_NAME} main.cpp src/layers/Layer.cpp include/layers/Layer.h include/layers/Layer.h src/layers/Layer.cpp src/layers/Dense.cpp include/layers/Dense.h src/utils/Initializer.cpp include/utils/Initializer.h src/layers/Activation.cpp include/layers/Activation.h src/utils/Optimizer.cpp include/utils/Optimizer.h src/models/Model.cpp include/models/Model.h src/utils/Loss.cpp include/utils/Loss.h include/utils/TensorHolder.h include/utils/MnistDataset.h)
 
 target_compile_options(${PROJECT_NAME} PUBLIC -O3)
 #
@@ -40,13 +40,18 @@ include_directories(${MNIST_INCLUDE_DIR})
 target_compile_features(${PROJECT_NAME} PRIVATE cxx_range_for)
 target_compile_definitions(${PROJECT_NAME} PRIVATE MNIST_DATA_LOCATION="${MNIST_DATA_DIR}")
 
-find_package (Eigen3 3.3 REQUIRED NO_MODULE)
-target_link_libraries (neuralib Eigen3::Eigen)
+find_package (Eigen3 REQUIRED)
+target_link_libraries (${PROJECT_NAME} Eigen3::Eigen)
 
-find_package(TBB REQUIRED)
-target_include_directories(${PROJECT_NAME} PRIVATE ${TBB_INCLUDE_DIRS})
-target_link_libraries(${PROJECT_NAME}  ${TBB_LIBRARIES} -ltbb)
-#add_compile_definitions(__TBB_DYNAMIC_LOAD_ENABLED=0)
+if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
+	find_package(TBB REQUIRED)
+	target_include_directories(${PROJECT_NAME} PRIVATE ${TBB_INCLUDE_DIRS})
+	target_link_libraries(${PROJECT_NAME} TBB::tbb)
+else()
+	find_package(TBB REQUIRED)
+	target_include_directories(${PROJECT_NAME} PRIVATE ${TBB_INCLUDE_DIRS})
+	target_link_libraries(${PROJECT_NAME} ${TBB_LIBRARIES} -ltbb)
+endif ()
 
 INSTALL(PROGRAMS
 		$<TARGET_FILE:${PROJECT_NAME}>
