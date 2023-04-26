@@ -5,7 +5,7 @@
 #ifndef NEURALIB_MNISTDATASET_H
 #define NEURALIB_MNISTDATASET_H
 
-#include "eigen3/unsupported/Eigen/CXX11/Tensor"
+#include "unsupported/Eigen/CXX11/Tensor"
 #include "utils/TensorHolder.h"
 #include "mnist/mnist_reader.hpp"
 #include "mnist/mnist_utils.hpp"
@@ -21,7 +21,7 @@ public:
 //        mnist::binarize_dataset(dataset);
 //    }
 
-    TensorHolder<T> get_training_labels() {
+    Tensor<T, 3> get_training_labels() {
         Eigen::TensorMap<Eigen::Tensor<uint8_t, 1>> labels(
                 dataset.training_labels.data(),
                 dataset.training_labels.size()
@@ -35,10 +35,10 @@ public:
             int val = labels_tensor(i);
             oneHotEncoded(i, val-1, 0) = 1;
         }
-        return TensorHolder<T>(oneHotEncoded);
+        return oneHotEncoded;
     }
 
-    TensorHolder<T> get_test_labels() {
+    Tensor<T, 3> get_test_labels() {
         // TO IMPLEMENT!!!
         Eigen::TensorMap<Eigen::Tensor<uint8_t, 3>> labels(
                 dataset.test_labels.data(),
@@ -48,10 +48,10 @@ public:
         );
 
         Tensor<T, 3> labels_tensor = labels.cast<T>();
-        return TensorHolder<T>(labels_tensor);
+        return labels_tensor;
     }
 
-    TensorHolder<T> get_training_images() {
+    Tensor<T, 3> get_training_images() {
         Eigen::TensorMap<Eigen::Tensor<uint8_t , 3>> images(
                 dataset.training_images[0].data(),
                 dataset.training_images.size(),
@@ -60,7 +60,7 @@ public:
         );
         Tensor<T, 3> images_tensor = images.cast<T>();
         images_tensor /= images_tensor.constant(255.0);
-        return TensorHolder<T>(images_tensor);
+        return images_tensor;
     }
 
     TensorHolder<T> get_test_images() {

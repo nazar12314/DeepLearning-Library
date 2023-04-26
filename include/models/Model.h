@@ -72,20 +72,34 @@ public:
         return modelOutput;
     }
 
+    void backward(const Tensor<T, OutDim>& grads){
+        const size_t batch_size = 600;
+        Eigen::array<size_t, 3> batch_shape{batch_size,
+                                            size_t(grads.dimension(1)),
+                                            1};
+        for (size_t i=0; i<grads.dimension(0); i+=batch_size){
+            Tensor<T, OutDim> cut = grads.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape);
+//            std::cout << cut.dimension(0) << " " << cut.dimension(1) << " " << cut.dimension(2) << std::endl;
+            modelOutNode.try_put(cut);
+        }
+//        modelOutNode.try_put(grads);
+        flowGraph.wait_for_all();
+    }
+
     void test(const Tensor<T, InpDim>& inputs, const Tensor<T, OutDim>& labels){
         Tensor<T, OutDim> predicted = predict(inputs);
-        std::cout << predicted << std::endl;
         std::cout << loss->calculate_loss(predicted, labels) << std::endl;
-        Tensor<T, OutDim> grads = loss->calculate_grads(predicted, inputs);
-        modelOutNode.try_put(grads);
-        flowGraph.wait_for_all();
     }
 
     void fit(const Tensor<T, InpDim>& inputs, const Tensor<T, OutDim>& labels, const size_t epochs){
         for (size_t epoch = 0; epoch < epochs; ++epoch){
+//            std::cout << "Forward:" << std::endl;
             Tensor<T, OutDim> predicted = predict(inputs);
-            std::cout << "Loss: " << loss->calculate_loss(predicted, labels) << std::endl;
+//            std::cout << "Loss: " << loss->calculate_loss(predicted, labels) << std::endl;
+//            std::cout << "Grads:" << std::endl;
             Tensor<T, OutDim> grads = loss->calculate_grads(predicted, inputs);
+//            std::cout << "Backward: " << std::endl;
+//            backward(grads);
             modelOutNode.try_put(grads);
             flowGraph.wait_for_all();
         }
