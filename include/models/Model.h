@@ -79,10 +79,8 @@ public:
                                             1};
         for (size_t i=0; i<grads.dimension(0); i+=batch_size){
             Tensor<T, OutDim> cut = grads.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape);
-//            std::cout << cut.dimension(0) << " " << cut.dimension(1) << " " << cut.dimension(2) << std::endl;
             modelOutNode.try_put(cut);
         }
-//        modelOutNode.try_put(grads);
         flowGraph.wait_for_all();
     }
 
@@ -93,35 +91,14 @@ public:
 
     void fit(const Tensor<T, InpDim>& inputs, const Tensor<T, OutDim>& labels, const size_t epochs){
         for (size_t epoch = 0; epoch < epochs; ++epoch){
-//            std::cout << "Forward:" << std::endl;
             Tensor<T, OutDim> predicted = predict(inputs);
 //            std::cout << "Loss: " << loss->calculate_loss(predicted, labels) << std::endl;
-//            std::cout << "Grads:" << std::endl;
             Tensor<T, OutDim> grads = loss->calculate_grads(predicted, inputs);
-//            std::cout << "Backward: " << std::endl;
 //            backward(grads);
             modelOutNode.try_put(grads);
             flowGraph.wait_for_all();
         }
     }
-
-//    void fit(const Tensor<T, 2>& inputs, const Tensor<T, 2>& labels, const size_t epochs) {
-//        for (int epoch = 0; epoch < epochs; ++epoch) {
-//            double error = 0;
-//            size_t input_size = inputs.dimension(0);
-//            for (size_t i = 0; i < input_size; ++i){
-//                TensorHolder<T> output = predict(Tensor<T, 2>{inputs.chip(i, 0)});
-//                double loss_ = loss->calculate_loss(output, Tensor<T, 2>{labels.chip(i, 0)})(0);
-//                error += loss_;
-//                TensorHolder<T> grads = loss->calculate_grads(output, Tensor<T, 2>{labels.chip(i, 0)});
-////                std::cout << i << " / " << input_size << " | loss: " << loss_ << " | mingrad: " << grads.template get<2>().minimum() << " | maxgrad: " << grads.template get<2>().maximum() << std::endl;
-//                for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
-//                    grads = (*it) -> backward(grads, *optimizer);
-//                }
-//            }
-//            std::cout << "Epoch: " << epoch << "; Loss: " << error / epochs << std::endl;
-//        }
-//    }
 };
 
 template<class T, int Dim>

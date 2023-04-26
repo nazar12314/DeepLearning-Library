@@ -25,18 +25,21 @@ int main() {
     DenseLayer<double> layer3 (50, 10, "dense 2", initializer);
     activations::ReLU<double, 2> relu;
     activations::ReLU<double, 2> relu2;
+    activations::Softmax<double, 2> soft;
     auto input = model.addLayer(layer);
     auto hidden = model.addLayer(layer2);
     auto hidden2 = model.addLayer(layer3);
     auto relu_ = model.addLayer(relu);
     auto relu__ = model.addLayer(relu2);
+    auto soft_ = model.addLayer(soft);
     connectLayers(input, relu_);
     connectLayers(relu_, hidden);
     connectLayers(hidden, relu__);
     connectLayers(relu__, hidden2);
+    connectLayers(hidden2, soft_);
 
     model.setInput(input);
-    model.setOut(hidden2);
+    model.setOut(soft_);
 
     std::cout << "Start:" << std::endl;
 
@@ -52,7 +55,6 @@ int main() {
         for (size_t i=0; i<training_data.dimension(0); i+=batch_size){
             Tensor<double, 3> X = training_data.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape);
             Tensor<double, 3> y = training_labels.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape_y);
-//        std::cout << y.dimension(0) << " " << y.dimension(1) << " " << y.dimension(2) << std::endl;
             model.fit(X, y, 1);
         }
         model.test(training_data, training_labels);

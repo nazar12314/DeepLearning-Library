@@ -58,7 +58,6 @@ public:
             biases -= optimizer.apply_optimization(Tensor<T, Dim>{out_gradient.chip(i, 0) / double(X.dimension(0))});
         }
 
-
 //        Tensor<T, Dim> weights_gradient = (out_gradient.broadcast(
 //                Eigen::array<size_t , 3>{1, 1, size_t(out_gradient.dimension(1))}
 //                ).reshape(reshape_size) * X.template broadcast(Eigen::array<size_t, 3>{1, 1, size_t(X.dimension(1))})
