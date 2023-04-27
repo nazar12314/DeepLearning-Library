@@ -18,9 +18,10 @@ int main() {
     initializer.set_seed(42);
 
 
-    Model<double, 3, 3> model("model", new optimizers::SGD<double>(0.1), new loss_functions::MSE<double>());
+    Model<double, 3, 3> model("model", new optimizers::SGD<double>(0.01), new loss_functions::BinaryCrossEntropy<double>());
 
     DenseLayer<double> layer (748, 100, "dense 1", initializer);
+//    std::cout << layer.get_weights() << std::endl;
     DenseLayer<double> layer2 (100, 50, "dense 2", initializer);
     DenseLayer<double> layer3 (50, 10, "dense 2", initializer);
     activations::ReLU<double, 2> relu;
@@ -63,6 +64,7 @@ int main() {
         }
         model.test(training_data, training_labels);
     }
+
 
 //    Tensor<double, 3> data(4, 3, 1);
 //    data.setValues({

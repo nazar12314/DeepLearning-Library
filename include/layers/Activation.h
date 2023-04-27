@@ -38,8 +38,8 @@ namespace activations {
         }
 
         Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer) override {
-            auto relu_derivative = [](T x) { return x > static_cast<T>(0) ? static_cast<T>(1) : static_cast<T>(0); };
-            return out_gradient.unaryExpr(relu_derivative);
+//            auto relu_derivative = [](T x) { return x > static_cast<T>(0) ? static_cast<T>(1) : static_cast<T>(0); };
+            return out_gradient.cwiseMax(0.0);
         }
     };
 
