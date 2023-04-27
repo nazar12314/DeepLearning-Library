@@ -6,7 +6,6 @@
 #define NEURALIB_MNISTDATASET_H
 
 #include "unsupported/Eigen/CXX11/Tensor"
-#include "utils/TensorHolder.h"
 #include "mnist/mnist_reader.hpp"
 #include "mnist/mnist_utils.hpp"
 
@@ -63,7 +62,7 @@ public:
         return images_tensor;
     }
 
-    TensorHolder<T> get_test_images() {
+    Tensor<T, 3> get_test_images() {
         // TO IMPLEMENT!!!
         Eigen::TensorMap<Eigen::Tensor<uint8_t, 3>> images(
                 dataset.test_images[0].data(),

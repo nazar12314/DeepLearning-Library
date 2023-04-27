@@ -6,7 +6,7 @@
 #define NEURALIB_LOSS_H
 
 #include <iostream>
-#include "eigen3/unsupported/Eigen/CXX11/Tensor"
+#include "unsupported/Eigen/CXX11/Tensor"
 //#include "TensorHolder.h"
 
 using Eigen::Tensor;
@@ -50,7 +50,7 @@ namespace loss_functions {
 
         Tensor<T, 3> calculate_grads(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) override{
             Tensor<T, 3> differ = (pred_output-true_output);
-            const Tensor<T, 3> error = differ*differ.constant(2.0f/differ.dimension(0));
+            const Tensor<T, 3> error = differ*differ.constant(2.0f/differ.dimension(1));
             return error;
         }
     };

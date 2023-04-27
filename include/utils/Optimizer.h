@@ -5,8 +5,7 @@
 #ifndef NEURALIB_OPTIMIZER_H
 #define NEURALIB_OPTIMIZER_H
 
-#include "eigen3/unsupported/Eigen/CXX11/Tensor"
-#include "utils/TensorHolder.h"
+#include "unsupported/Eigen/CXX11/Tensor"
 #include <iostream>
 
 using Eigen::Tensor;

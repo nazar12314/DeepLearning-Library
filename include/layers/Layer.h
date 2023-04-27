@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <string>
-#include "eigen3/unsupported/Eigen/CXX11/Tensor"
+#include <unsupported/Eigen/CXX11/Tensor>
 #include "utils/Optimizer.h"
 
 using Eigen::Tensor;

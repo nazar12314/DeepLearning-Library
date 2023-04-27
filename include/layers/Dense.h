@@ -31,10 +31,6 @@ public:
     Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs) override {
         X = inputs;
 
-//        if (weights.dimension(1) != X.dimension(0)) {
-//            throw std::invalid_argument("Incompatible tensor shapes");
-//        }
-
         Tensor<T, Dim> output = inputs.reshape(Eigen::array<size_t , 2>{size_t(inputs.dimension(0)), n_in}).contract(
                 weights.shuffle(Eigen::array<int, 2>{1, 0}),
                 Eigen::array<Eigen::IndexPair<int>, 1> {Eigen::IndexPair<int>(1, 0)}
@@ -85,6 +81,8 @@ public:
     };
 
     const Tensor<T, Dim> &get_weights() override { return weights; };
+
+    const Tensor<T, Dim> &get_biases() { return biases; };
 
 };
 

@@ -93,7 +93,8 @@ public:
         for (size_t epoch = 0; epoch < epochs; ++epoch){
             Tensor<T, OutDim> predicted = predict(inputs);
 //            std::cout << "Loss: " << loss->calculate_loss(predicted, labels) << std::endl;
-            Tensor<T, OutDim> grads = loss->calculate_grads(predicted, inputs);
+            Tensor<T, OutDim> grads = loss->calculate_grads(predicted, labels);
+//            std::cout << grads << std::endl;
 //            backward(grads);
             modelOutNode.try_put(grads);
             flowGraph.wait_for_all();

@@ -51,17 +51,19 @@ namespace activations {
 
         Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs) override {
             Tensor<T, Dim+1> exp_inputs = inputs.exp();
-            Tensor<T, 0> input_tensor_sum = exp_inputs.sum();
+
+            Tensor<T, Dim+1> input_tensor_sum = exp_inputs
+                    .sum(Eigen::array<long, 1> {1})
+                    .broadcast(Eigen::array<size_t , Dim+1> { 1, size_t(inputs.dimension(1)), 1 })
+                    .reshape(Eigen::array<size_t , Dim+1> { size_t(inputs.dimension(0)), size_t(inputs.dimension(1)), 1 });
 
             Tensor<T, Dim+1> tmp_output = (exp_inputs / inputs.constant(input_tensor_sum(0)));
 
-            size_t output_size = tmp_output.size();
-//            Eigen::DSizes<long, Dim+1> output_dims = tmp_output.dimensions();
+            size_t output_size = tmp_output.dimension(1);
 
             Eigen::array<size_t , 3> new_shape {size_t(tmp_output.dimension(0)),
                                                 size_t(tmp_output.dimension(1)),
-                                                size_t(tmp_output.dimension(2))};
-//            Eigen::TensorMap<Eigen::Tensor<T, Dim+1>> reshaped_output(tmp_output.data(), new_shape);
+                                                size_t(tmp_output.dimension(1))};
 
             Eigen::array<size_t , Dim+1> broadcast_shape { 1, 1, output_size };
 
@@ -79,7 +81,7 @@ namespace activations {
 
             Eigen::TensorMap<const Tensor<T, Dim+1>> t(m.data(), 1, output.dimension(1), output.dimension(1));
 
-            Tensor<T, Dim+1> identity = t.broadcast(Eigen::array<size_t , 3>({size_t(output.dimension(1)), 1, 1}));
+            Tensor<T, Dim+1> identity = t.broadcast(Eigen::array<size_t , 3>({size_t(output.dimension(0)), 1, 1}));
 
             Eigen::Tensor<T, Dim+1> result = output * (identity - transposed);
 
@@ -87,7 +89,9 @@ namespace activations {
 
             result *= broad_grads.shuffle(Eigen::array<int, 3>{0, 2, 1});
 
-            return result.sum(Eigen::array<T, 1>{2}).reshape(Eigen::array<long, 3>{output.dimension(0), output.dimension(2), 1});
+            Tensor<double, 3> res = result.sum(Eigen::array<long, 1>{2}).reshape(Eigen::array<long, 3>{output.dimension(0), output.dimension(2), 1});
+
+            return res;
         }
     };
 }
