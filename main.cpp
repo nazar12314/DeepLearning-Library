@@ -6,8 +6,6 @@
 #include "layers/Dense.h"
 #include "utils/Optimizer.h"
 #include "layers/Activation.h"
-#include "utils/MnistDataset.h"
-#include "Dataset.h"
 #include <iostream>
 #include <fstream>
 #include <sstream>

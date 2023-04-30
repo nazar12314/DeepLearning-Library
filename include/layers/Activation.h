@@ -38,8 +38,23 @@ namespace activations {
         }
 
         Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer) override {
-//            auto relu_derivative = [](T x) { return x > static_cast<T>(0) ? static_cast<T>(1) : static_cast<T>(0); };
             return out_gradient.cwiseMax(0.0);
+        }
+    };
+
+    template<class T, size_t Dim>
+    class Sigmoid : public Activation<T, Dim> {
+        Tensor<T, Dim + 1> inputs;
+    public:
+        Sigmoid() : Activation<T, Dim>(){}
+
+        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_) override {
+            inputs = inputs_.sigmoid();
+            return inputs;
+        }
+
+        Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer) override {
+            return (inputs * (inputs.constant(1) - inputs)) * out_gradient;
         }
     };
 
