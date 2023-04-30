@@ -86,7 +86,7 @@ public:
 
     void test(const Tensor<T, InpDim>& inputs, const Tensor<T, OutDim>& labels){
         Tensor<T, OutDim> predicted = predict(inputs);
-        std::cout << loss->calculate_loss(predicted, labels) << std::endl;
+        std::cout << "\nLoss: " << loss->calculate_loss(predicted, labels) << std::endl;
         double num_equal_examples = 0;
         for (int i = 0; i < predicted.dimension(0); ++i) {
             Tensor<bool, 0> equal = ((predicted.chip(i, 0).argmax() == labels.chip(i, 0).argmax()));

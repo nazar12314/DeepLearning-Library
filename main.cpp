@@ -7,39 +7,82 @@
 #include "utils/Optimizer.h"
 #include "layers/Activation.h"
 #include "utils/MnistDataset.h"
+#include "Dataset.h"
+#include <iostream>
+#include <fstream>
+#include <sstream>
+
+template <size_t ROWS, size_t COLS, size_t CHNALLES>
+Tensor<double, 3> read_csv(const std::string& filename){
+    Tensor<double, 3> data(ROWS, COLS, CHNALLES);
+
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::logic_error("Cannot open file of labels");
+    }
+    std::string line;
+    int row = 0;
+    while (getline(file, line)) {
+        std::stringstream ss(line);
+        std::string cell;
+        int col = 0;
+        while (getline(ss, cell, ',')) {
+            float value = stof(cell);
+            data(row, col, 0) = value;
+            col++;
+        }
+        row++;
+    }
+
+    return data;
+}
+
 
 int main() {
 
-    MnistDataset<double> mnst;
-    Tensor<double, 3> training_labels = mnst.get_training_labels();
-    Tensor<double, 3> training_data = mnst.get_training_images();
+    std::string X_path = "../mnist/mnist_train_data.csv";
+    std::string y_path = "../mnist/mnist_train_labels.csv";
 
+    auto X_train = read_csv<60000, 784, 1>(X_path);
+    auto y_train = read_csv<60000, 10, 1>(y_path);
+    X_train /= X_train.constant(255);
+
+//
+////    MnistDataset<double> mnst;
+////    Tensor<double, 3> training_labels = mnst.get_training_labels();
+////    Tensor<double, 3> training_data = mnst.get_training_images();
+////
     initializers::GlorotNormal<double> initializer;
     initializer.set_seed(42);
-
-
-    Model<double, 3, 3> model("model", new optimizers::SGD<double>(0.01), new loss_functions::BinaryCrossEntropy<double>());
-
-    DenseLayer<double> layer (748, 100, "dense 1", initializer);
-//    std::cout << layer.get_weights() << std::endl;
-    DenseLayer<double> layer2 (100, 50, "dense 2", initializer);
-    DenseLayer<double> layer3 (50, 10, "dense 2", initializer);
+//
+//
+    Model<double, 3, 3> model("model", new optimizers::SGD<double>(0.05), new loss_functions::BinaryCrossEntropy<double>());
+//
+    DenseLayer<double> layer (748, 300, "dense 1", initializer);
+    DenseLayer<double> layer2 (300, 200, "dense 2", initializer);
+    DenseLayer<double> layer3 (200, 100, "dense 3", initializer);
+    DenseLayer<double> layer4 (100, 10, "dense 4", initializer);
     activations::ReLU<double, 2> relu;
     activations::ReLU<double, 2> relu2;
+    activations::ReLU<double, 2> relu3;
     activations::Softmax<double, 2> soft;
 
     auto input = model.addLayer(layer);
     auto hidden = model.addLayer(layer2);
     auto hidden2 = model.addLayer(layer3);
+    auto hidden3 = model.addLayer(layer4);
     auto relu_ = model.addLayer(relu);
     auto relu_2 = model.addLayer(relu2);
+    auto relu_3 = model.addLayer(relu3);
     auto soft_ = model.addLayer(soft);
 
     connectLayers(input, relu_);
     connectLayers(relu_, hidden);
     connectLayers(hidden, relu_2);
     connectLayers(relu_2, hidden2);
-    connectLayers(hidden2, soft_);
+    connectLayers(hidden2, relu_3);
+    connectLayers(relu_3, hidden3);
+    connectLayers(hidden3, soft_);
 
     model.setInput(input);
     model.setOut(soft_);
@@ -48,21 +91,21 @@ int main() {
 
     const size_t batch_size = 64;
     Eigen::array<size_t, 3> batch_shape{batch_size,
-                                        size_t(training_data.dimension(1)),
+                                        size_t(X_train.dimension(1)),
                                         1};
     Eigen::array<size_t, 3> batch_shape_y{batch_size,
-                                        size_t(training_labels.dimension(1)),
+                                        size_t(y_train.dimension(1)),
                                         1};
-    model.test(training_data, training_labels);
+    model.test(X_train, y_train);
 
-    for (int j=0; j<5; ++j){
-        for (size_t i=0; i<training_data.dimension(0); i+=batch_size){
-            Tensor<double, 3> X = training_data.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape);
-            Tensor<double, 3> y = training_labels.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape_y);
+    for (int j=0; j<10; ++j){
+        for (size_t i=0; i<X_train.dimension(0); i+=batch_size){
+            Tensor<double, 3> X = X_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape);
+            Tensor<double, 3> y = y_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape_y);
 
             model.fit(X, y, 1);
         }
-        model.test(training_data, training_labels);
+        model.test(X_train, y_train);
     }
 
 
@@ -74,6 +117,24 @@ int main() {
 //                           {{10}, {11}, {12}}
 //    });
 //
+//    Tensor<double, 2>W(5, 3);
+//    W.setValues({
+//                        {1, 2, 3},
+//                        {4, 5, 6},
+//                        {7, 8, 9},
+//                        {10, 11, 12},
+//                        {13, 14, 15}
+//    });
+//    Tensor<double, 2>B(5, 1);
+//    B.setValues({
+//                        {101}, {102}, {103}, {104}, {105}
+//    });
+//    Tensor<double, 3> res = W.contract(data, Eigen::array<Eigen::IndexPair<int>, 1> {Eigen::IndexPair<int>(1, 1)}).shuffle(Eigen::array<int, 3>{1, 0, 2});
+//    std::cout << res.dimension(0) << " " << res.dimension(1) << " " << res.dimension(2) << std::endl;
+//    Tensor<double, 3> a = B.shuffle(Eigen::array<int, 2>{1, 0}).broadcast(Eigen::array<size_t, 3>{4, 1, 1});
+//    std::cout << a.dimension(0) << " " <<  a.dimension(1) << " "  << a.dimension(2) << std::endl;
+//    std::cout << res + a;
+//    std::cout << res + B.broadcast(Eigen::array<size_t, 3>{4, 1, 1});
 //    Tensor<double, 3> coeffs(4, 3, 1);
 //
 //    coeffs.setConstant(10);

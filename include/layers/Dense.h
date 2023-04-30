@@ -26,11 +26,17 @@ public:
             n_in(n_in_),
             n_hidden(n_hidden_),
             weights{initializer.get_weights_2d(n_in_, n_hidden_)},
-            biases{initializer.get_weights_2d(1, n_hidden_)} {};
+            biases{initializer.get_weights_2d(1, n_hidden_)} {
+        biases.setConstant(0);
+    };
 
     Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs) override {
+//        if (inputs.dimension(1) != 28*28) {
+//            std::cout << inputs << std::endl;
+//            std::cout << biases << std::endl<< std::endl;
+//        }
         X = inputs;
-//        std::cout << X << std::endl;
+
 
         Tensor<T, Dim> output = inputs.reshape(Eigen::array<size_t , 2>{size_t(inputs.dimension(0)), n_in}).contract(
                 weights.shuffle(Eigen::array<int, 2>{1, 0}),
@@ -38,9 +44,19 @@ public:
                 ) + biases.broadcast(Eigen::array<size_t, 2>{1, size_t(inputs.dimension(0))}).shuffle(Eigen::array<int, 2>{1, 0});
 
         return output.reshape(Eigen::array<size_t , 3>{size_t(inputs.dimension(0)), n_hidden, 1});
+//        return weights
+//            .contract(inputs, Eigen::array<Eigen::IndexPair<int>, 1> {Eigen::IndexPair<int>(1, 1)})
+//            .shuffle(Eigen::array<int, 3>{1, 0, 2})
+//            +
+//            biases
+//            .shuffle(Eigen::array<int, 2>{1, 0})
+//            .broadcast(Eigen::array<size_t, 3>{size_t(inputs.dimension(0)), 1, 1});
     };
 
     Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> & out_gradient, Optimizer<T> & optimizer) override {
+//        std::cout << "[" << n_in << ", " << n_hidden << "]: " << out_gradient.mean() << " ";
+//        if (n_hidden == 10)
+//            std::cout << out_gradient << std::endl << std::endl;
 //        std::cout << "start of backward" << " " << out_gradient.dimension(0) << " " << out_gradient.dimension(1) << " " << out_gradient.dimension(2) << std::endl;
         Eigen::array<size_t, 3> reshape_size{size_t(out_gradient.dimension(0)),
                                              size_t(out_gradient.dimension(1)),

@@ -152,7 +152,7 @@ namespace initializers {
             srand(this -> seed);
             weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
 
-            weights *= weights.constant(2.0 / (n_in + n_hidden));
+            weights *= weights.constant(2.0 / (n_in + n_hidden)).sqrt();
             return weights;
         };
 
