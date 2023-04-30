@@ -30,15 +30,18 @@ namespace activations {
 
     template<class T, size_t Dim>
     class ReLU : public Activation<T, Dim> {
+        Tensor<T, Dim + 1> inputs;
     public:
         ReLU() : Activation<T, Dim>(){}
 
-        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs) override {
-            return inputs.cwiseMax(0.0);
+        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_) override {
+            inputs = inputs_;
+            return inputs_.cwiseMax(0.0);
         }
 
         Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer) override {
-            return out_gradient.cwiseMax(0.0);
+            auto relu_derivative = [](T x) { return x > static_cast<T>(0) ? static_cast<T>(1) : static_cast<T>(0); };
+            return out_gradient * inputs.unaryExpr(relu_derivative);
         }
     };
 
@@ -72,7 +75,7 @@ namespace activations {
                     .broadcast(Eigen::array<size_t , Dim+1> { 1, size_t(inputs.dimension(1)), 1 })
                     .reshape(Eigen::array<size_t , Dim+1> { size_t(inputs.dimension(0)), size_t(inputs.dimension(1)), 1 });
 
-            Tensor<T, Dim+1> tmp_output = (exp_inputs / inputs.constant(input_tensor_sum(0)));
+            Tensor<T, Dim+1> tmp_output = (exp_inputs / input_tensor_sum);
 
             size_t output_size = tmp_output.dimension(1);
 
@@ -85,6 +88,11 @@ namespace activations {
             output = tmp_output
                     .broadcast(broadcast_shape)
                     .template reshape(new_shape);
+//            if (Tensor<double, 0>{tmp_output.maximum()}(0) <= 0){
+//                std::cout << "Inp: " << inputs << std::endl;
+//                std::cout << tmp_output << "\n\n";
+////                std::cout << tmp_output.maximum() << std::endl;
+//            }
 
             return tmp_output;
         }

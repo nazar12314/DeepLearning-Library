@@ -47,6 +47,8 @@ namespace loss_functions {
 
         Tensor<T, 0> calculate_loss(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) override{
             const T epsilon = 1e-7;
+//            std::cout << (true_output*((pred_output+pred_output.constant(epsilon)).log()) +
+//                          ((true_output.constant(1.0) - true_output) * ((pred_output.constant(1.0) - pred_output + pred_output.constant(epsilon)).log()))) << std::endl;
             const Tensor<T, 0> error = (true_output*((pred_output+pred_output.constant(epsilon)).log()) +
                                              ((true_output.constant(1.0) - true_output) * ((pred_output.constant(1.0) - pred_output + pred_output.constant(epsilon)).log())))
                     .mean();
@@ -54,6 +56,7 @@ namespace loss_functions {
         }
 
         Tensor<T, 3> calculate_grads(const Eigen::Tensor<T, 3> &pred_output, const Eigen::Tensor<T, 3> &true_output) override{
+//            std::cout << pred_output << std::endl << std::endl;
             const T epsilon = 1e-7;
             const Tensor<T, 3> error = -(true_output/(pred_output+pred_output.constant(epsilon))) + ((pred_output.constant(1.0)-true_output)/(pred_output.constant(1.0)-pred_output+pred_output.constant(epsilon)));
             return error;

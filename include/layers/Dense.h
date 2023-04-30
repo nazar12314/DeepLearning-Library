@@ -31,12 +31,11 @@ public:
     };
 
     Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs) override {
-//        if (inputs.dimension(1) != 28*28) {
+//        if (inputs.dimension(1) == 50) {
 //            std::cout << inputs << std::endl;
 //            std::cout << biases << std::endl<< std::endl;
 //        }
         X = inputs;
-
 
         Tensor<T, Dim> output = inputs.reshape(Eigen::array<size_t , 2>{size_t(inputs.dimension(0)), n_in}).contract(
                 weights.shuffle(Eigen::array<int, 2>{1, 0}),

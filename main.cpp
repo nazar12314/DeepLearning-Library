@@ -56,30 +56,30 @@ int main() {
 //
     Model<double, 3, 3> model("model", new optimizers::SGD<double>(0.05), new loss_functions::BinaryCrossEntropy<double>());
 //
-    DenseLayer<double> layer (748, 300, "dense 1", initializer);
-    DenseLayer<double> layer2 (300, 200, "dense 2", initializer);
-    DenseLayer<double> layer3 (200, 100, "dense 3", initializer);
-    DenseLayer<double> layer4 (100, 10, "dense 4", initializer);
-    activations::ReLU<double, 2> relu;
-    activations::ReLU<double, 2> relu2;
-    activations::ReLU<double, 2> relu3;
+    DenseLayer<double> layer (748, 100, "dense 1", initializer);
+    DenseLayer<double> layer2 (100, 50, "dense 2", initializer);
+    DenseLayer<double> layer3 (50, 25, "dense 3", initializer);
+    DenseLayer<double> layer4 (25, 10, "dense 4", initializer);
+    activations::Sigmoid<double, 2> sigmoid;
+    activations::Sigmoid<double, 2> sigmoid2;
+    activations::Sigmoid<double, 2> sigmoid3;
     activations::Softmax<double, 2> soft;
 
     auto input = model.addLayer(layer);
     auto hidden = model.addLayer(layer2);
     auto hidden2 = model.addLayer(layer3);
     auto hidden3 = model.addLayer(layer4);
-    auto relu_ = model.addLayer(relu);
-    auto relu_2 = model.addLayer(relu2);
-    auto relu_3 = model.addLayer(relu3);
+    auto sigmoid_ = model.addLayer(sigmoid);
+    auto sigmoid_2 = model.addLayer(sigmoid2);
+    auto sigmoid_3 = model.addLayer(sigmoid3);
     auto soft_ = model.addLayer(soft);
 
-    connectLayers(input, relu_);
-    connectLayers(relu_, hidden);
-    connectLayers(hidden, relu_2);
-    connectLayers(relu_2, hidden2);
-    connectLayers(hidden2, relu_3);
-    connectLayers(relu_3, hidden3);
+    connectLayers(input, sigmoid_);
+    connectLayers(sigmoid_, hidden);
+    connectLayers(hidden, sigmoid_2);
+    connectLayers(sigmoid_2, hidden2);
+    connectLayers(hidden2, sigmoid_3);
+    connectLayers(sigmoid_3, hidden3);
     connectLayers(hidden3, soft_);
 
     model.setInput(input);
@@ -94,9 +94,9 @@ int main() {
     Eigen::array<size_t, 3> batch_shape_y{batch_size,
                                         size_t(y_train.dimension(1)),
                                         1};
-    model.test(X_train, y_train);
+//    model.test(X_train, y_train);
 
-    for (int j=0; j<10; ++j){
+    for (int j=0; j<20; ++j){
         for (size_t i=0; i<X_train.dimension(0); i+=batch_size){
             Tensor<double, 3> X = X_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape);
             Tensor<double, 3> y = y_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape_y);
