@@ -19,7 +19,7 @@ class Layer {
 public:
     Layer(const std::string & name, bool trainable): name(name), trainable(trainable) {};
 
-    virtual Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs) = 0;
+    virtual Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs, bool train = true) = 0;
 
     virtual Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> & out_gradient, Optimizer<T>& optimizer) = 0;
 

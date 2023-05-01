@@ -40,9 +40,14 @@ int main() {
 
     std::string X_path = "../mnist/mnist_train_data.csv";
     std::string y_path = "../mnist/mnist_train_labels.csv";
+    std::string X_test_path = "../mnist/mnist_test_data.csv";
+    std::string y_test_path = "../mnist/mnist_test_labels.csv";
 
     auto X_train = read_csv<60000, 784, 1>(X_path);
     auto y_train = read_csv<60000, 10, 1>(y_path);
+    auto X_test = read_csv<10000, 784, 1>(X_test_path);
+    auto y_test = read_csv<10000, 10, 1>(y_test_path);
+
     X_train /= X_train.constant(255);
 
 //
@@ -87,24 +92,30 @@ int main() {
 
     std::cout << "Start:" << std::endl;
 
-    const size_t batch_size = 64;
-    Eigen::array<size_t, 3> batch_shape{batch_size,
-                                        size_t(X_train.dimension(1)),
-                                        1};
-    Eigen::array<size_t, 3> batch_shape_y{batch_size,
-                                        size_t(y_train.dimension(1)),
-                                        1};
+//    const size_t batch_size = 64;
+//    Eigen::array<size_t, 3> batch_shape{batch_size,
+//                                        size_t(X_train.dimension(1)),
+//                                        1};
+//    Eigen::array<size_t, 3> batch_shape_y{batch_size,
+//                                        size_t(y_train.dimension(1)),
+//                                        1};
 //    model.test(X_train, y_train);
 
-    for (int j=0; j<20; ++j){
-        for (size_t i=0; i<X_train.dimension(0); i+=batch_size){
-            Tensor<double, 3> X = X_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape);
-            Tensor<double, 3> y = y_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape_y);
+    model.fit(X_train, y_train, 10, 1000, 5);
+    model.test(X_train, y_train);
 
-            model.fit(X, y, 1);
-        }
-        model.test(X_train, y_train);
-    }
+//    for (int j=0; j<20; ++j){
+//        for (size_t i=0; i<X_train.dimension(0); i+=batch_size){
+//            Tensor<double, 3> X = X_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape);
+//            Tensor<double, 3> y = y_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape_y);
+//
+//            model.fit(X, y, 1);
+//        }
+//        std::cout << "Train:\n";
+//        model.test(X_train, y_train);
+//        std::cout << "Test:\n";
+//        model.test(X_test, y_test);
+//    }
 
 
 //    Tensor<double, 3> data(4, 3, 1);

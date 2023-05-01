@@ -8,6 +8,7 @@
 #include <exception>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "Layer.h"
+#include <tbb/concurrent_queue.h>
 
 using Eigen::Tensor;
 
@@ -31,16 +32,18 @@ namespace activations {
     template<class T, size_t Dim>
     class ReLU : public Activation<T, Dim> {
         Tensor<T, Dim + 1> inputs;
+        tbb::concurrent_queue<Tensor<T, Dim+1>> input_queue;
     public:
         ReLU() : Activation<T, Dim>(){}
 
-        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_) override {
-            inputs = inputs_;
+        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_, bool train = true) override {
+            input_queue.push(inputs_);
             return inputs_.cwiseMax(0.0);
         }
 
         Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer) override {
             auto relu_derivative = [](T x) { return x > static_cast<T>(0) ? static_cast<T>(1) : static_cast<T>(0); };
+            while(!input_queue.try_pop(inputs));
             return out_gradient * inputs.unaryExpr(relu_derivative);
         }
     };
@@ -48,15 +51,18 @@ namespace activations {
     template<class T, size_t Dim>
     class Sigmoid : public Activation<T, Dim> {
         Tensor<T, Dim + 1> inputs;
+        tbb::concurrent_queue<Tensor<T, Dim+1>> input_queue;
     public:
         Sigmoid() : Activation<T, Dim>(){}
 
-        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_) override {
-            inputs = inputs_.sigmoid();
-            return inputs;
+        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_, bool train = true) override {
+//            inputs = inputs_.sigmoid();
+            input_queue.push(inputs_.sigmoid());
+            return inputs_.sigmoid();
         }
 
         Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer) override {
+            while (!input_queue.try_pop(inputs));
             return (inputs * (inputs.constant(1) - inputs)) * out_gradient;
         }
     };
@@ -65,9 +71,10 @@ namespace activations {
     class Softmax : public Activation<T, Dim> {
     public:
         Tensor<T, Dim+1> output;
+        tbb::concurrent_queue<Tensor<T, Dim+1>> out_queue;
         Softmax() : Activation<T, Dim>() {}
 
-        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs) override {
+        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs, bool train = true) override {
             Tensor<T, Dim+1> exp_inputs = inputs.exp();
 
             Tensor<T, Dim+1> input_tensor_sum = exp_inputs
@@ -85,9 +92,9 @@ namespace activations {
 
             Eigen::array<size_t , Dim+1> broadcast_shape { 1, 1, output_size };
 
-            output = tmp_output
+            out_queue.push(tmp_output
                     .broadcast(broadcast_shape)
-                    .template reshape(new_shape);
+                    .template reshape(new_shape));
 //            if (Tensor<double, 0>{tmp_output.maximum()}(0) <= 0){
 //                std::cout << "Inp: " << inputs << std::endl;
 //                std::cout << tmp_output << "\n\n";
@@ -98,6 +105,7 @@ namespace activations {
         }
 
         Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> & optimizer) override {
+            while (!out_queue.try_pop(output));
             Eigen::Tensor<T, Dim+1> transposed = output.shuffle(Eigen::array<int, 3>{0, 2, 1});
 
             Eigen::MatrixXd m = Eigen::MatrixXd::Identity(output.dimension(1), output.dimension(1));
