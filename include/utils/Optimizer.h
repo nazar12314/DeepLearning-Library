@@ -33,9 +33,6 @@ namespace optimizers {
 
         Tensor<T, 2> apply_optimization(const Tensor<T, 2> &gradients) override {
             Tensor<T, 2> grads_multiplied = gradients * gradients.constant(learning_rate);
-//            if (grads_multiplied.dimension(0) == 10)
-//                std::cout << grads_multiplied << std::endl << std::endl;
-//            std::cout << grads_multiplied.dimension(0) << " " << grads_multiplied.dimension(1) << std::endl << std::endl;
             return grads_multiplied;
         }
 
