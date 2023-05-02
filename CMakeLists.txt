@@ -19,7 +19,7 @@ if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif ()
 
-add_executable(${PROJECT_NAME} main.cpp src/layers/Layer.cpp include/layers/Layer.h include/layers/Layer.h src/layers/Layer.cpp src/layers/Dense.cpp include/layers/Dense.h src/utils/Initializer.cpp include/utils/Initializer.h src/layers/Activation.cpp include/layers/Activation.h src/utils/Optimizer.cpp include/utils/Optimizer.h src/models/Model.cpp include/models/Model.h src/utils/Loss.cpp include/utils/Loss.h include/utils/Dataset.h include/layers/concurrent_hash_map.cpp include/layers/concurrent_hash_map.h)
+add_executable(${PROJECT_NAME} main.cpp src/layers/Layer.cpp include/layers/Layer.h include/layers/Layer.h src/layers/Layer.cpp src/layers/Dense.cpp include/layers/Dense.h src/utils/Initializer.cpp include/utils/Initializer.h src/layers/Activation.cpp include/layers/Activation.h src/utils/Optimizer.cpp include/utils/Optimizer.h src/models/Model.cpp include/models/Model.h src/utils/Loss.cpp include/utils/Loss.h include/utils/Dataset.h)
 
 target_compile_options(${PROJECT_NAME} PUBLIC -O3)
 #
