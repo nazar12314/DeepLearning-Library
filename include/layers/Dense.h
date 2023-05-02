@@ -10,6 +10,8 @@
 #include "Layer.h"
 #include "utils/Optimizer.h"
 #include <tbb/concurrent_queue.h>
+#include <map>
+
 
 using Eigen::Tensor;
 
@@ -19,8 +21,10 @@ class DenseLayer : public Layer<T, Dim> {
     size_t n_hidden;
     Tensor<T, Dim> weights;
     Tensor<T, Dim> biases;
-    Tensor<T, Dim+1> X;
-    tbb::concurrent_queue<Tensor<T, Dim+1>> input_queue;
+//    Tensor<T, Dim+1> X;
+//    tbb::concurrent_queue<Tensor<T, Dim+1>> input_queue;
+    std::map<int, Tensor<T, Dim+1>> inputQueue;
+//    tbb::concurrent_hash_map<int, Tensor<T, Dim+1>> inputQueue;
 
 public:
     DenseLayer(size_t n_in_, size_t n_hidden_, const std::string& name, Initializer<T>& initializer, bool trainable = true) :
@@ -32,14 +36,19 @@ public:
         biases.setConstant(0);
     };
 
-    Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs, bool train = true) override {
-//        if (inputs.dimension(1) == 50) {
-//            std::cout << inputs << std::endl;
-//            std::cout << biases << std::endl<< std::endl;
-//        }
+    Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs, int minibatchInd = 1, bool train = true) override {
+//        std::cout << "[" << n_in << ", " << n_hidden << std::endl;
 //        X = inputs;
+//        if (train){
+//            input_queue.push(inputs);
+//        }
         if (train){
-            input_queue.push(inputs);
+            if (inputQueue.find(minibatchInd) != inputQueue.end()){
+                inputQueue[minibatchInd] = inputs;
+            }
+            else{
+                inputQueue.template emplace(minibatchInd, inputs);
+            }
         }
 
 //        Tensor<T, Dim> output = inputs.reshape(Eigen::array<size_t , 2>{size_t(inputs.dimension(0)), n_in}).contract(
@@ -57,7 +66,7 @@ public:
             .broadcast(Eigen::array<size_t, 3>{size_t(inputs.dimension(0)), 1, 1});
     };
 
-    Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> & out_gradient, Optimizer<T> & optimizer) override {
+    Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> & out_gradient, Optimizer<T> & optimizer, int minibatchInd = 1) override {
 //        std::cout << "[" << n_in << ", " << n_hidden << "]: " << out_gradient.mean() << std::endl;
 //        if (n_hidden == 10)
 //            std::cout << out_gradient << std::endl << std::endl;
@@ -67,14 +76,14 @@ public:
                                              size_t(out_gradient.dimension(1))};
 
         Eigen::array<Eigen::IndexPair<int>, 1> contract_dims = { Eigen::IndexPair<int>(1, 0) };
-        while(!input_queue.try_pop(X));
+//        while(!input_queue.try_pop(X));
 
-        for (Eigen::Index i = 0; i < X.dimension(0); ++i) {
+        for (Eigen::Index i = 0; i < inputQueue[minibatchInd].dimension(0); ++i) {
             Tensor<T, Dim> weights_gradient = out_gradient.chip(i, 0).contract(
-                    X.chip(i, 0).shuffle(Eigen::array<int, Dim>{1, 0}),
-                    contract_dims) / double(X.dimension(0));
+                    inputQueue[minibatchInd].chip(i, 0).shuffle(Eigen::array<int, Dim>{1, 0}),
+                    contract_dims) / double(inputQueue[minibatchInd].dimension(0));
             weights -= optimizer.apply_optimization(weights_gradient);
-            biases -= optimizer.apply_optimization(Tensor<T, Dim>{out_gradient.chip(i, 0) / double(X.dimension(0))});
+            biases -= optimizer.apply_optimization(Tensor<T, Dim>{out_gradient.chip(i, 0) / double(inputQueue[minibatchInd].dimension(0))});
         }
 
 //        Tensor<T, Dim> weights_gradient = (out_gradient.broadcast(

@@ -24,9 +24,9 @@ using namespace tbb::flow;
 
 template <typename T, size_t Dim>
 struct NodeTriplet {
-    tbb::flow::function_node<Tensor<T, Dim+1>, Tensor<T, Dim+1>> forward;
-    tbb::flow::function_node<Tensor<T, Dim+1>, Tensor<T, Dim+1>> test;
-    tbb::flow::function_node<Tensor<T, Dim+1>, Tensor<T, Dim+1>> backward;
+    function_node<std::pair<Tensor<T, Dim+1>, int>, std::pair<Tensor<T, Dim+1>, int>> forward;
+    function_node<Tensor<T, Dim+1>, Tensor<T, Dim+1>> test;
+    function_node<std::pair<Tensor<T, Dim+1>, int>, std::pair<Tensor<T, Dim+1>, int>> backward;
 };
 
 template <class T, size_t InpDim, size_t OutDim>
@@ -35,14 +35,14 @@ class Model {
     Optimizer<T>* optimizer;
     Loss<T>* loss;
     graph flowGraph;
-    broadcast_node<Tensor<T, InpDim>> modelInputNode;
+    broadcast_node<std::pair<Tensor<T, InpDim>, int>> modelInputNode;
     broadcast_node<Tensor<T, InpDim>> modelTestNode;
-    broadcast_node<Tensor<T, OutDim>> modelOutNode;
+    broadcast_node<std::pair<Tensor<T, OutDim>, int>> modelOutNode;
     Tensor<T, OutDim> modelOutput;
-    Tensor<T, OutDim> prediction;
+    std::pair<Tensor<T, OutDim>, int> prediction;
     function_node<Tensor<T, OutDim>> saveOutNode;
-    function_node<Tensor<T, OutDim>> pushOutNode;
-    tbb::concurrent_queue<Tensor<T, OutDim>> out_queue;
+    function_node<std::pair<Tensor<T, OutDim>, int>> pushOutNode;
+    tbb::concurrent_queue<std::pair<Tensor<T, OutDim>, int>> out_queue;
 
 
 public:
@@ -56,7 +56,7 @@ public:
             saveOutNode(flowGraph, 1, [&](const Tensor<T, OutDim>& output){
                 modelOutput = output;
             }),
-            pushOutNode(flowGraph, 1, [&](const Tensor<T, OutDim>& output){
+            pushOutNode(flowGraph, 1, [&](std::pair<Tensor<T, OutDim>, int> output){
                 out_queue.push(std::move(output));
             })
     {};
@@ -74,19 +74,19 @@ public:
 
     template<size_t Dim>
     NodeTriplet<T, Dim> addLayer(Layer<T, Dim>& layer){
-        auto forward_func = [&layer](const Tensor<T, Dim+1>& inputs) -> Tensor<T, Dim+1> {
-            return layer.forward(inputs);
+        auto forward_func = [&layer](std::pair<Tensor<T, Dim+1>, int> inputs) -> std::pair<Tensor<T, Dim+1>, int> {
+            return std::make_pair(std::move(layer.forward(inputs.first, inputs.second)), inputs.second);
         };
         auto test_func = [&layer](const Tensor<T, Dim+1>& inputs) -> Tensor<T, Dim+1> {
             return layer.forward(inputs, false);
         };
-        auto backward_func = [&layer, this](const Tensor<T, Dim+1>& grads) -> Tensor<T, Dim+1> {
-            return layer.backward(grads, *(this->optimizer));
+        auto backward_func = [&layer, this](std::pair<Tensor<T, Dim+1>, int> grads) -> std::pair<Tensor<T, Dim+1>, int> {
+            return std::make_pair(std::move(layer.backward(grads.first, *(this->optimizer), grads.second)), grads.second);
         };
 
-        auto node_forward = function_node<Tensor<T, Dim+1>, Tensor<T, Dim+1>>(flowGraph, serial, forward_func);
+        auto node_forward = function_node<std::pair<Tensor<T, Dim+1>, int>, std::pair<Tensor<T, Dim+1>, int>>(flowGraph, unlimited, forward_func);
         auto node_test = function_node<Tensor<T, Dim+1>, Tensor<T, Dim+1>>(flowGraph, unlimited, test_func);
-        auto node_backward = function_node<Tensor<T, Dim+1>, Tensor<T, Dim+1>>(flowGraph, serial, backward_func);
+        auto node_backward = function_node<std::pair<Tensor<T, Dim+1>, int>, std::pair<Tensor<T, Dim+1>, int>>(flowGraph, unlimited, backward_func);
 
         return NodeTriplet<T, Dim>{node_forward, node_test, node_backward};
     }
@@ -96,7 +96,7 @@ public:
         Eigen::array<size_t , 3> mini_batch_shape{minibatch_size, size_t(inputs.dimension(1)), 1};
 
         for (size_t i=0; i<n_minibathes; i++){
-            modelInputNode.try_put(inputs.slice(Eigen::array<size_t , 3>({i*minibatch_size, 0, 0}), mini_batch_shape));
+            modelInputNode.try_put(std::make_pair(std::move(inputs.slice(Eigen::array<size_t , 3>({i*minibatch_size, 0, 0}), mini_batch_shape)), int(i)));
         }
 //        modelInputNode.try_put(inputs);
         flowGraph.wait_for_all();
@@ -114,9 +114,9 @@ public:
 //            std::cout << "before pop\n";
             out_queue.try_pop(prediction);
 //            std::cout << "before grads\n";
-            Tensor<T, OutDim> grads = loss->calculate_grads(prediction, labels.slice(Eigen::array<size_t , 3>({i*minibatch_size, 0, 0}), mini_batch_shape));
+            Tensor<T, OutDim> grads = loss->calculate_grads(prediction.first, labels.slice(Eigen::array<size_t , 3>({i*minibatch_size, 0, 0}), mini_batch_shape));
 //            std::cout << "before put\n";
-            modelOutNode.try_put(grads);
+            modelOutNode.try_put(std::make_pair(std::move(grads), prediction.second));
         }
 //        std::cout << "after loop\n";
         flowGraph.wait_for_all();

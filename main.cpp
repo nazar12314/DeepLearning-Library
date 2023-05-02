@@ -6,9 +6,10 @@
 #include "layers/Dense.h"
 #include "utils/Optimizer.h"
 #include "layers/Activation.h"
-#include <iostream>
+
 #include <fstream>
 #include <sstream>
+#include <map>
 
 template <size_t ROWS, size_t COLS, size_t CHNALLES>
 Tensor<double, 3> read_csv(const std::string& filename){
@@ -50,11 +51,6 @@ int main() {
 
     X_train /= X_train.constant(255);
 
-//
-////    MnistDataset<double> mnst;
-////    Tensor<double, 3> training_labels = mnst.get_training_labels();
-////    Tensor<double, 3> training_data = mnst.get_training_images();
-////
     initializers::GlorotNormal<double> initializer;
     initializer.set_seed(42);
 //
@@ -92,30 +88,10 @@ int main() {
 
     std::cout << "Start:" << std::endl;
 
-//    const size_t batch_size = 64;
-//    Eigen::array<size_t, 3> batch_shape{batch_size,
-//                                        size_t(X_train.dimension(1)),
-//                                        1};
-//    Eigen::array<size_t, 3> batch_shape_y{batch_size,
-//                                        size_t(y_train.dimension(1)),
-//                                        1};
 //    model.test(X_train, y_train);
 
-    model.fit(X_train, y_train, 10, 1000, 5);
+    model.fit(X_train, y_train, 10, 200, 4);
     model.test(X_train, y_train);
-
-//    for (int j=0; j<20; ++j){
-//        for (size_t i=0; i<X_train.dimension(0); i+=batch_size){
-//            Tensor<double, 3> X = X_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape);
-//            Tensor<double, 3> y = y_train.slice(Eigen::array<size_t , 3>({i, 0, 0}), batch_shape_y);
-//
-//            model.fit(X, y, 1);
-//        }
-//        std::cout << "Train:\n";
-//        model.test(X_train, y_train);
-//        std::cout << "Test:\n";
-//        model.test(X_test, y_test);
-//    }
 
 
 //    Tensor<double, 3> data(4, 3, 1);

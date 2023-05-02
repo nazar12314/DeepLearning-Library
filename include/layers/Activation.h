@@ -36,12 +36,12 @@ namespace activations {
     public:
         ReLU() : Activation<T, Dim>(){}
 
-        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_, bool train = true) override {
+        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_, int minibatchInd = 1, bool train = true) override {
             input_queue.push(inputs_);
             return inputs_.cwiseMax(0.0);
         }
 
-        Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer) override {
+        Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer, int minibatchInd = 1) override {
             auto relu_derivative = [](T x) { return x > static_cast<T>(0) ? static_cast<T>(1) : static_cast<T>(0); };
             while(!input_queue.try_pop(inputs));
             return out_gradient * inputs.unaryExpr(relu_derivative);
@@ -55,13 +55,13 @@ namespace activations {
     public:
         Sigmoid() : Activation<T, Dim>(){}
 
-        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_, bool train = true) override {
+        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs_, int minibatchInd = 1, bool train = true) override {
 //            inputs = inputs_.sigmoid();
             input_queue.push(inputs_.sigmoid());
             return inputs_.sigmoid();
         }
 
-        Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer) override {
+        Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> &optimizer, int minibatchInd = 1) override {
             while (!input_queue.try_pop(inputs));
             return (inputs * (inputs.constant(1) - inputs)) * out_gradient;
         }
@@ -74,7 +74,7 @@ namespace activations {
         tbb::concurrent_queue<Tensor<T, Dim+1>> out_queue;
         Softmax() : Activation<T, Dim>() {}
 
-        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs, bool train = true) override {
+        Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> &inputs, int minibatchInd = 1, bool train = true) override {
             Tensor<T, Dim+1> exp_inputs = inputs.exp();
 
             Tensor<T, Dim+1> input_tensor_sum = exp_inputs
@@ -104,7 +104,7 @@ namespace activations {
             return tmp_output;
         }
 
-        Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> & optimizer) override {
+        Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> &out_gradient, Optimizer<T> & optimizer, int minibatchInd = 1) override {
             while (!out_queue.try_pop(output));
             Eigen::Tensor<T, Dim+1> transposed = output.shuffle(Eigen::array<int, 3>{0, 2, 1});
 
