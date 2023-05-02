@@ -6,6 +6,7 @@
 #include "layers/Dense.h"
 #include "utils/Optimizer.h"
 #include "layers/Activation.h"
+#include "utils/Dataset.h"
 
 #include <fstream>
 #include <sstream>
@@ -41,13 +42,14 @@ int main() {
 
     std::string X_path = "../mnist/mnist_train_data.csv";
     std::string y_path = "../mnist/mnist_train_labels.csv";
-//    std::string X_test_path = "../mnist/mnist_test_data.csv";
-//    std::string y_test_path = "../mnist/mnist_test_labels.csv";
 
-    auto X_train = read_csv<60000, 784, 1>(X_path);
+//    Dataset<double, double, 3, 3> dataset({784, 1}, {10, 1});
+//    dataset.read_from_files(X_path, y_path);
+//    dataset.X_train /= dataset.X_train.constant(255.0);
+//    std::cout << dataset.X_train.dimension(0) << " " << dataset.X_train.dimension(1) << " " << dataset.X_train.dimension(2) << "\n";
+
+auto X_train = read_csv<60000, 784, 1>(X_path);
     auto y_train = read_csv<60000, 10, 1>(y_path);
-//    auto X_test = read_csv<10000, 784, 1>(X_test_path);
-//    auto y_test = read_csv<10000, 10, 1>(y_test_path);
 
     X_train /= X_train.constant(255);
 
@@ -88,8 +90,6 @@ int main() {
     std::cout << "Start:" << std::endl;
 
     model.fit(X_train, y_train, 10, 200, 4);
-    model.test(X_train, y_train);
-
 
     return 0;
 }
