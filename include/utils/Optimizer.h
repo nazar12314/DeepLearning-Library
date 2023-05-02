@@ -5,8 +5,7 @@
 #ifndef NEURALIB_OPTIMIZER_H
 #define NEURALIB_OPTIMIZER_H
 
-#include "eigen3/unsupported/Eigen/CXX11/Tensor"
-#include "utils/TensorHolder.h"
+#include "unsupported/Eigen/CXX11/Tensor"
 #include <iostream>
 
 using Eigen::Tensor;
@@ -39,7 +38,7 @@ namespace optimizers {
 
         Tensor<T, 3> apply_optimization(const Tensor<T, 3> &gradients) override {
             Tensor<T, 3> grads_multiplied = gradients * gradients.constant(learning_rate);
-            return grads_multiplied;
+            return gradients * gradients.constant(learning_rate);
         }
     };
 }

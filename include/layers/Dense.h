@@ -5,63 +5,83 @@
 #ifndef NEURALIB_DENSE_H
 #define NEURALIB_DENSE_H
 
-#include "eigen3/unsupported/Eigen/CXX11/Tensor"
+#include "unsupported/Eigen/CXX11/Tensor"
 #include "utils/Initializer.h"
 #include "Layer.h"
 #include "utils/Optimizer.h"
+#include <tbb/concurrent_queue.h>
+#include <tbb/concurrent_unordered_map.h>
+#include <map>
+
 
 using Eigen::Tensor;
 
-template<class T, size_t Dim=2>
+template<class T, size_t Dim = 2>
 class DenseLayer : public Layer<T, Dim> {
     size_t n_in;
     size_t n_hidden;
     Tensor<T, Dim> weights;
     Tensor<T, Dim> biases;
-    Tensor<T, Dim> X;
+    tbb::concurrent_unordered_map<int, Tensor<T, Dim + 1>> input_hash_map;
 
 public:
-    DenseLayer(size_t n_in_, size_t n_hidden_, const std::string& name, Initializer<T>& initializer, bool trainable = true) :
-            Layer<T, Dim>(name, trainable),
-            n_in(n_in_),
-            n_hidden(n_hidden_),
-            weights{initializer.get_weights_2d(n_in_, n_hidden_)},
-            biases{initializer.get_weights_2d(1, n_hidden_)} {};
+    DenseLayer(size_t n_in_, size_t n_hidden_, const std::string &name, Initializer<T> &initializer,
+               bool trainable = true) : Layer<T, Dim>(name, trainable), n_in(n_in_), n_hidden(n_hidden_),
+                                        weights{initializer.get_weights_2d(n_in_, n_hidden_)},
+                                        biases{initializer.get_weights_2d(1, n_hidden_)} {
+        biases.setConstant(0);
+    };
 
-    Tensor<T, Dim> forward(const Tensor<T, Dim> & inputs) override {
-        X = inputs;
+    Tensor<T, Dim + 1> forward(const Tensor<T, Dim + 1> &inputs, int minibatchInd = 1, bool train = true) override {
 
-        if (weights.dimension(1) != X.dimension(0)) {
-            throw std::invalid_argument("Incompatible tensor shapes");
+        if (train) {
+            auto it = input_hash_map.find(minibatchInd);
+            if (it != input_hash_map.end()) {
+                input_hash_map[minibatchInd] = inputs;
+            }
+            else {
+                input_hash_map.emplace(minibatchInd, inputs);
+            }
         }
 
-        Tensor<T, Dim> output_tensor = weights.contract(
-                X,
-                Eigen::array<Eigen::IndexPair<int>, 1> {Eigen::IndexPair<int>(1, 0)}
-                ) + biases;
+        Tensor<T, Dim> output = inputs.reshape(Eigen::array<size_t, 2>{size_t(inputs.dimension(0)), n_in}).contract(
+                weights.shuffle(Eigen::array<int, 2>{1, 0}),
+                Eigen::array<Eigen::IndexPair<int>, 1>{Eigen::IndexPair<int>(1, 0)}) +
+                                biases.broadcast(Eigen::array<size_t, 2>{1, size_t(inputs.dimension(0))}).shuffle(
+                                        Eigen::array<int, 2>{1, 0});
 
-        return output_tensor;
+        return output.reshape(Eigen::array<size_t, 3>{size_t(inputs.dimension(0)), n_hidden, 1});
     };
 
-    Tensor<T, Dim> backward(const Tensor<T, Dim> & out_gradient, Optimizer<T> & optimizer) override {
-        Eigen::array<Eigen::IndexPair<int>, 1> contract_dims = { Eigen::IndexPair<int>(1, 0) };
+    Tensor<T, Dim + 1>
+    backward(const Tensor<T, Dim + 1> &out_gradient, Optimizer<T> &optimizer, int minibatchInd = 1) override {
+        Eigen::array<size_t, 3> reshape_size{size_t(out_gradient.dimension(0)), size_t(out_gradient.dimension(1)),
+                                             size_t(out_gradient.dimension(1))};
 
-        Tensor<T, Dim> weights_gradient = out_gradient.contract(X.shuffle(Eigen::array<int, Dim>{1, 0}), contract_dims);
-        weights -= optimizer.apply_optimization(weights_gradient);
-        biases -= optimizer.apply_optimization(out_gradient);
+        Eigen::array<Eigen::IndexPair<int>, 1> contract_dims = {Eigen::IndexPair<int>(1, 0)};
 
-        Tensor<T, Dim> output_tensor = weights.shuffle(Eigen::array<int, Dim>{1, 0}).contract(
-                out_gradient,
-                contract_dims);
-
-        return output_tensor;
+        for (Eigen::Index i = 0; i < input_hash_map[minibatchInd].dimension(0); ++i) {
+            Tensor<T, Dim> weights_gradient =
+                    out_gradient.chip(i, 0).contract(input_hash_map[minibatchInd].chip(i, 0).shuffle(Eigen::array<int, Dim>{1, 0}),
+                                                     contract_dims) / double(input_hash_map[minibatchInd].dimension(0));
+            weights -= optimizer.apply_optimization(weights_gradient);
+            biases -= optimizer.apply_optimization(
+                    Tensor<T, Dim>{out_gradient.chip(i, 0) / double(input_hash_map[minibatchInd].dimension(0))});
+        }
+        Tensor<T, Dim + 1> out = out_gradient.template contract(weights.shuffle(Eigen::array<int, 2>{1, 0}),
+                                                                Eigen::array<Eigen::IndexPair<int>, 1>{
+                                                                        Eigen::IndexPair<int>(1, 1)}).reshape(
+                Eigen::array<size_t, 3>({size_t(out_gradient.dimension(0)), size_t(weights.dimension(1)), 1}));
+        return out;
     };
 
-    void set_weights(const Tensor<T, Dim> & weights_) override {
+    void set_weights(const Tensor<T, Dim> &weights_) override {
         weights = std::move(weights_);
     };
 
     const Tensor<T, Dim> &get_weights() override { return weights; };
+
+    const Tensor<T, Dim> &get_biases() { return biases; };
 
 };
 

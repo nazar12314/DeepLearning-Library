@@ -5,8 +5,7 @@
 #ifndef NEURALIB_INITIALIZER_H
 #define NEURALIB_INITIALIZER_H
 
-#include "utils/TensorHolder.h"
-#include "eigen3/unsupported/Eigen/CXX11/Tensor"
+#include "unsupported/Eigen/CXX11/Tensor"
 #include <random>
 
 using Eigen::Tensor;
@@ -153,7 +152,7 @@ namespace initializers {
             srand(this -> seed);
             weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
 
-            weights *= weights.constant(2.0 / (n_in + n_hidden));
+            weights *= weights.constant(2.0 / (n_in + n_hidden)).sqrt();
             return weights;
         };
 

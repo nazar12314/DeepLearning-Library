@@ -12,86 +12,144 @@
 #include "layers/Layer.h"
 #include "utils/Optimizer.h"
 #include "utils/Loss.h"
+#include <tbb/flow_graph.h>
+#include <chrono>
+#include <tbb/concurrent_queue.h>
 
-template <class T>
-using layer_variant_ptr = std::variant<Layer<T, 2>*, Layer<T, 3>*>;
+using namespace tbb::flow;
 
-template <class T>
-using tensor_variant = std::variant<Tensor<T, 2>, Tensor<T, 3>>;
-
-template <class T>
-using tensor_variant_ref = std::variant<Tensor<T, 2>&, Tensor<T, 3>&>;
-
-template <class T>
-class Model {
-    std::string name;
-    std::list<layer_variant_ptr<T>> layers;
-    Optimizer<T>* optimizer;
-    Loss<T>* loss;
-
-public:
-    Model(const std::string& name_, const Optimizer<T>* optimizer_, const Loss<T>* loss_):
-        name(name_),
-        optimizer((Optimizer<T>*) optimizer_),
-        loss((Loss<T> *) loss_)
-    {};
-
-    void addLayer(layer_variant_ptr<T> layer) {
-        std::visit([&](auto&& l) {
-            using LayerType = std::decay_t<decltype(l)>;
-            if constexpr (std::is_same_v<LayerType, Layer<T, 2>*> ||
-                          std::is_same_v<LayerType, Layer<T, 3>*>) {
-                layers.push_back(layer);
-            } else {
-                throw std::invalid_argument("Invalid layer type");
-            }
-        }, layer);
-    };
-
-    tensor_variant<T> predict(const tensor_variant<T>& input) {
-        tensor_variant<T> output = input;
-
-        for (auto& layer : layers) {
-            std::visit([&layer, &output](auto&& arg) {
-                using W = std::decay_t<decltype(arg)>;
-                if constexpr (std::is_same_v<W, Tensor<T, 2>> || std::is_same_v<W, Tensor<T, 3>>) {
-                    std::visit([&output, &arg](auto&& arg_layer){
-                    using L = std::decay_t<decltype(arg_layer)>;
-//                    std::cout << typeid(L).name() << std::endl;
-                    if constexpr (std::is_same_v<L, Layer<T, 2>*> || std::is_same_v<L, Layer<T, 3>*>){
-                        output = arg_layer -> forward(arg);
-                    }
-                    else {
-                        throw std::runtime_error("Layer ban!");
-                    }
-                }, layer);
-                } else {
-                    throw std::runtime_error("No such dimension!");
-                }
-            }, output);
-        }
-
-        return output;
-    }
-
-//    void fit(const Tensor<T, 2>& inputs, const Tensor<T, 2>& labels, const size_t epochs) {
-//        for (int epoch = 0; epoch < epochs; ++epoch) {
-//            double error = 0;
-//            size_t input_size = inputs.dimension(0);
-//            for (size_t i = 0; i < input_size; ++i){
-//                TensorHolder<T> output = predict(Tensor<T, 2>{inputs.chip(i, 0)});
-//                double loss_ = loss->calculate_loss(output, Tensor<T, 2>{labels.chip(i, 0)})(0);
-//                error += loss_;
-//                TensorHolder<T> grads = loss->calculate_grads(output, Tensor<T, 2>{labels.chip(i, 0)});
-////                std::cout << i << " / " << input_size << " | loss: " << loss_ << " | mingrad: " << grads.template get<2>().minimum() << " | maxgrad: " << grads.template get<2>().maximum() << std::endl;
-//                for (auto it = layers.rbegin(); it != layers.rend(); ++it) {
-//                    grads = (*it) -> backward(grads, *optimizer);
-//                }
-//            }
-//            std::cout << "Epoch: " << epoch << "; Loss: " << error / epochs << std::endl;
-//        }
-//    }
+template<typename T, size_t Dim>
+struct NodeTriplet {
+    function_node<std::pair<Tensor<T, Dim + 1>, int>, std::pair<Tensor<T, Dim + 1>, int>> forward;
+    function_node<Tensor<T, Dim + 1>, Tensor<T, Dim + 1>> test;
+    function_node<std::pair<Tensor<T, Dim + 1>, int>, std::pair<Tensor<T, Dim + 1>, int>> backward;
 };
 
+template<class T, size_t InpDim, size_t OutDim>
+class Model {
+    std::string name;
+    Optimizer<T> *optimizer;
+    Loss<T> *loss;
+    graph flowGraph;
+    broadcast_node<std::pair<Tensor<T, InpDim>, int>> modelInputNode;
+    broadcast_node<Tensor<T, InpDim>> modelTestNode;
+    broadcast_node<std::pair<Tensor<T, OutDim>, int>> modelOutNode;
+    Tensor<T, OutDim> modelOutput;
+    std::pair<Tensor<T, OutDim>, int> prediction;
+    function_node<Tensor<T, OutDim>> saveOutNode;
+    function_node<std::pair<Tensor<T, OutDim>, int>> pushOutNode;
+    tbb::concurrent_queue<std::pair<Tensor<T, OutDim>, int>> out_queue;
+
+
+public:
+    Model(const std::string &name_, const Optimizer<T> *optimizer_, const Loss<T> *loss_) :
+        name(name_),
+        optimizer((Optimizer<T> *) optimizer_),
+        loss((Loss<T> *) loss_),
+        modelInputNode(flowGraph),
+        modelTestNode(flowGraph),
+        modelOutNode(flowGraph),
+        saveOutNode(flowGraph, 1, [&](const Tensor<T, OutDim> &output) {
+                        modelOutput = output;
+        }),
+        pushOutNode(flowGraph, 1, [&](std::pair<Tensor<T, OutDim>, int> output) {
+            out_queue.push(std::move(output));
+        }) {};
+
+    void setInput(NodeTriplet<T, InpDim - 1> &node) {
+        make_edge(modelInputNode, node.forward);
+        make_edge(modelTestNode, node.test);
+    }
+
+    void setOut(NodeTriplet<T, OutDim - 1> &node) {
+        make_edge(node.forward, pushOutNode);
+        make_edge(node.test, saveOutNode);
+        make_edge(modelOutNode, node.backward);
+    }
+
+    template<size_t Dim>
+    NodeTriplet<T, Dim> addLayer(Layer<T, Dim> &layer) {
+        auto forward_func = [&layer](std::pair<Tensor<T, Dim + 1>, int> inputs) -> std::pair<Tensor<T, Dim + 1>, int> {
+            return std::make_pair(std::move(layer.forward(inputs.first, inputs.second)), inputs.second);
+        };
+        auto test_func = [&layer](const Tensor<T, Dim + 1> &inputs) -> Tensor<T, Dim + 1> {
+            return layer.forward(inputs, false);
+        };
+        auto backward_func = [&layer, this](std::pair<Tensor<T, Dim + 1>, int> grads) -> std::pair<Tensor<T, Dim + 1>, int> {
+            return std::make_pair(std::move(layer.backward(grads.first, *(this->optimizer), grads.second)), grads.second);
+        };
+
+        auto node_forward = function_node < std::pair<Tensor<T, Dim + 1>, int>, std::pair<Tensor<T, Dim + 1>, int>> (flowGraph, unlimited, forward_func);
+        auto node_test = function_node < Tensor<T, Dim + 1>, Tensor<T, Dim + 1>> (flowGraph, unlimited, test_func);
+        auto node_backward = function_node < std::pair<Tensor < T, Dim + 1>, int > , std::pair<Tensor < T, Dim + 1>, int >> (flowGraph, unlimited, backward_func);
+
+        return NodeTriplet<T, Dim>{node_forward, node_test, node_backward};
+    }
+
+    auto predict(const Tensor<T, InpDim> &inputs, const int n_minibathes, bool train = true) {
+        size_t minibatch_size = inputs.dimension(0) / n_minibathes;
+        Eigen::array<size_t, 3> mini_batch_shape{minibatch_size, size_t(inputs.dimension(1)), 1};
+
+        for (size_t i = 0; i < n_minibathes; i++) {
+            modelInputNode.try_put(std::make_pair(
+                    std::move(inputs.slice(Eigen::array<size_t, 3>({i * minibatch_size, 0, 0}), mini_batch_shape)),
+                    int(i)));
+        }
+        flowGraph.wait_for_all();
+    }
+
+    void backward(const Tensor<T, OutDim> &labels, const int n_minibathes = 1) {
+        size_t minibatch_size = labels.dimension(0) / n_minibathes;
+        Eigen::array<size_t, 3> mini_batch_shape{minibatch_size, size_t(labels.dimension(1)), 1};
+        for (size_t i = 0; i < n_minibathes; i++) {
+            out_queue.try_pop(prediction);
+            Tensor<T, OutDim> grads = loss->calculate_grads(prediction.first, labels.slice(
+                    Eigen::array<size_t, 3>({i * minibatch_size, 0, 0}), mini_batch_shape));
+            modelOutNode.try_put(std::make_pair(std::move(grads), prediction.second));
+        }
+        flowGraph.wait_for_all();
+    }
+
+    void test(const Tensor<T, InpDim> &inputs, const Tensor<T, OutDim> &labels) {
+        modelTestNode.try_put(inputs);
+        flowGraph.wait_for_all();
+        std::cout << "Loss: " << loss->calculate_loss(modelOutput, labels) << std::endl;
+        double num_equal_examples = 0;
+        for (int i = 0; i < modelOutput.dimension(0); ++i) {
+            Tensor<bool, 0> equal = ((modelOutput.chip(i, 0).argmax() == labels.chip(i, 0).argmax()));
+            if (equal(0)) {
+                num_equal_examples++;
+            }
+        }
+        std::cout << "Accuracy: " << num_equal_examples << " / " << labels.dimension(0) << " : "
+                  << num_equal_examples / labels.dimension(0) * 100 << "%" << std::endl;
+    }
+
+
+    void fit(const Tensor<T, InpDim> &inputs, const Tensor<T, OutDim> &labels, const size_t epochs, const int batch_size,
+        const int n_minibathes) {
+        Eigen::array<int, 3> batch_shape{batch_size, int(inputs.dimension(1)), 1};
+        Eigen::array<int, 3> batch_shape_y{batch_size, int(labels.dimension(1)), 1};
+        for (size_t epoch = 0; epoch < epochs; ++epoch) {
+            auto start_time = std::chrono::high_resolution_clock::now();
+            for (int i = 0; i < inputs.dimension(0); i += batch_size) {
+                predict(inputs.slice(Eigen::array<int, 3>({i, 0, 0}), batch_shape), n_minibathes);
+                backward(labels.slice(Eigen::array<int, 3>({i, 0, 0}), batch_shape_y), n_minibathes);
+            }
+            auto end_time = std::chrono::high_resolution_clock::now();
+            auto duration = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time);
+            std::cout << "Epoch: " << epoch << " | Time: " << duration.count() << std::endl;
+            flowGraph.wait_for_all();
+            test(inputs, labels);
+        }
+    }
+};
+
+template<class T, size_t Dim1, size_t Dim2>
+void connectLayers(NodeTriplet<T, Dim1> &start, NodeTriplet<T, Dim2> &end) {
+    make_edge(start.forward, end.forward);
+    make_edge(start.test, end.test);
+    make_edge(end.backward, start.backward);
+}
 
 #endif //NEURALIB_MODEL_H

@@ -1,2 +1,5 @@
 cmake-build-debug
 .idea
+/cmake-build-debug-mingw---msys2/
+/cmake-build-debug-wsl/
+/mnist
