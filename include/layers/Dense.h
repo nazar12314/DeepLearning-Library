@@ -12,6 +12,7 @@
 #include <tbb/concurrent_queue.h>
 #include <tbb/concurrent_unordered_map.h>
 #include <map>
+#include <mutex>
 
 
 using Eigen::Tensor;
@@ -23,12 +24,14 @@ class DenseLayer : public Layer<T, Dim> {
     Tensor<T, Dim> weights;
     Tensor<T, Dim> biases;
     tbb::concurrent_unordered_map<int, Tensor<T, Dim + 1>> input_hash_map;
+    std::mutex mutex;
 
 public:
     DenseLayer(size_t n_in_, size_t n_hidden_, const std::string &name, Initializer<T> &initializer,
                bool trainable = true) : Layer<T, Dim>(name, trainable), n_in(n_in_), n_hidden(n_hidden_),
                                         weights{initializer.get_weights_2d(n_in_, n_hidden_)},
-                                        biases{initializer.get_weights_2d(1, n_hidden_)} {
+                                        biases{initializer.get_weights_2d(1, n_hidden_)},
+                                        mutex{}{
         biases.setConstant(0);
     };
 
@@ -64,9 +67,13 @@ public:
             Tensor<T, Dim> weights_gradient =
                     out_gradient.chip(i, 0).contract(input_hash_map[minibatchInd].chip(i, 0).shuffle(Eigen::array<int, Dim>{1, 0}),
                                                      contract_dims) / double(input_hash_map[minibatchInd].dimension(0));
-            weights -= optimizer.apply_optimization(weights_gradient);
-            biases -= optimizer.apply_optimization(
+            const Tensor<T, 2>& weights_substr = optimizer.apply_optimization(weights_gradient);
+            const Tensor<T, 2>& bias_subsrt = optimizer.apply_optimization(
                     Tensor<T, Dim>{out_gradient.chip(i, 0) / double(input_hash_map[minibatchInd].dimension(0))});
+            mutex.lock();
+            weights -= weights_substr;
+            biases -= bias_subsrt;
+            mutex.unlock();
         }
         Tensor<T, Dim + 1> out = out_gradient.template contract(weights.shuffle(Eigen::array<int, 2>{1, 0}),
                                                                 Eigen::array<Eigen::IndexPair<int>, 1>{
