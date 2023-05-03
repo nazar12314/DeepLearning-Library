@@ -565,6 +565,6 @@ function (pvs_studio_add_target)
                       WORKING_DIRECTORY "${CMAKE_BINARY_DIR}" 
                       DEPENDS ${PVS_STUDIO_DEPENDS} "${PVS_STUDIO_LOG}")
 
-    # A workaround to add implicit dependencies of source files from include directories
+    # A workaround to add implicit dependencies of source files from tqdm-include directories
     set_target_properties("${PVS_STUDIO_TARGET}" PROPERTIES INCLUDE_DIRECTORIES "${inc_path}")
 endfunction ()

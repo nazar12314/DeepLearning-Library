@@ -39,7 +39,7 @@ class Model {
     function_node<Tensor<T, OutDim, Eigen::RowMajor>> saveOutNode;
     function_node<std::pair<Tensor<T, OutDim, Eigen::RowMajor>, int>> pushOutNode;
     tbb::concurrent_queue<std::pair<Tensor<T, OutDim, Eigen::RowMajor>, int>> out_queue;
-    
+
 public:
     Model(const std::string &name_, const Optimizer<T> *optimizer_, const Loss<T> *loss_) :
         name(name_),
@@ -74,18 +74,14 @@ public:
         auto test_func = [&layer](const Tensor<T, Dim+1, Eigen::RowMajor> &inputs) -> Tensor<T, Dim+1, Eigen::RowMajor> {
             return layer.forward(inputs, false);
         };
-        auto backward_func = [&layer, this](std::pair<Tensor<T, Dim+1, Eigen::RowMajor>, int> grads) -> std::pair<Tensor<T,
-                Dim + 1, Eigen::RowMajor>, int> {
-            return std::make_pair(std::move(layer.backward(grads.first, *(this->optimizer), grads.second)),
-                                  grads.second);
+
+        auto backward_func = [&layer, this](std::pair<Tensor<T, Dim + 1>, int> grads) -> std::pair<Tensor<T, Dim + 1>, int> {
+            return std::make_pair(std::move(layer.backward(grads.first, *(this->optimizer), grads.second)), grads.second);
         };
 
-        auto node_forward = function_node < std::pair<Tensor<T, Dim+1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim+1, Eigen::RowMajor>, int>>
-        (flowGraph, unlimited, forward_func);
-        auto node_test = function_node < Tensor<T, Dim+1, Eigen::RowMajor>, Tensor<T, Dim+1, Eigen::RowMajor>>
-        (flowGraph, unlimited, test_func);
-        auto node_backward = function_node <std::pair<Tensor<T, Dim+1, Eigen::RowMajor>,
-        int> , std::pair<Tensor<T, Dim+1, Eigen::RowMajor>, int >> (flowGraph, unlimited, backward_func);
+        auto node_forward = function_node < std::pair<Tensor<T, Dim + 1>, int>, std::pair<Tensor<T, Dim + 1>, int>> (flowGraph, unlimited, forward_func);
+        auto node_test = function_node < Tensor<T, Dim + 1>, Tensor<T, Dim + 1>> (flowGraph, unlimited, test_func);
+        auto node_backward = function_node < std::pair<Tensor < T, Dim + 1>, int > , std::pair<Tensor < T, Dim + 1>, int >> (flowGraph, unlimited, backward_func);
 
         return NodeTriplet<T, Dim>{node_forward, node_test, node_backward};
     }
@@ -119,19 +115,21 @@ public:
 //        std::cout << "after loop2\n";
     }
 
-    void test(const Tensor<T, InpDim, Eigen::RowMajor> &inputs, const Tensor<T, OutDim, Eigen::RowMajor> &labels) {
+    std::string test(const Tensor<T, InpDim> &inputs, const Tensor<T, OutDim> &labels) {
         modelTestNode.try_put(inputs);
         flowGraph.wait_for_all();
-        std::cout << "Loss: " << loss->calculate_loss(modelOutput, labels) << std::endl;
+        std::stringstream result;
+        result << "Loss: " << loss->calculate_loss(modelOutput, labels);
         double num_equal_examples = 0;
         for (int i = 0; i < modelOutput.dimension(0); ++i) {
-            Tensor<bool, 0, Eigen::RowMajor> equal = ((modelOutput.chip(i, 0).argmax() == labels.chip(i, 0).argmax()));
+            Tensor<bool, 0> equal = ((modelOutput.chip(i, 0).argmax() == labels.chip(i, 0).argmax()));
             if (equal(0)) {
                 num_equal_examples++;
             }
         }
-        std::cout << "Accuracy: " << num_equal_examples << " / " << labels.dimension(0) << " : "
-                  << num_equal_examples / labels.dimension(0) * 100 << "%" << std::endl;
+        result << "  Accuracy: " << num_equal_examples << " / " << labels.dimension(0) << " : "
+                  << num_equal_examples / labels.dimension(0) * 100 << "%";
+        return result.str();
     }
 
     void
