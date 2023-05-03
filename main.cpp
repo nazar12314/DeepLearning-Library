@@ -1,5 +1,4 @@
 #include <iostream>
-#include <Eigen/Core>
 #include <unsupported/Eigen/CXX11/Tensor>
 #include "models/Model.h"
 #include "utils/Initializer.h"
@@ -12,8 +11,8 @@
 #include <map>
 
 template <size_t ROWS, size_t COLS, size_t CHNALLES>
-Tensor<double, 3> read_csv(const std::string& filename){
-    Tensor<double, 3> data(ROWS, COLS, CHNALLES);
+Tensor<double, 3, Eigen::RowMajor> read_csv(const std::string& filename){
+    Tensor<double, 3, Eigen::RowMajor> data(ROWS, COLS, CHNALLES);
 
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -38,16 +37,11 @@ Tensor<double, 3> read_csv(const std::string& filename){
 
 
 int main() {
-
     std::string X_path = "../mnist/mnist_train_data.csv";
     std::string y_path = "../mnist/mnist_train_labels.csv";
-//    std::string X_test_path = "../mnist/mnist_test_data.csv";
-//    std::string y_test_path = "../mnist/mnist_test_labels.csv";
 
     auto X_train = read_csv<60000, 784, 1>(X_path);
     auto y_train = read_csv<60000, 10, 1>(y_path);
-//    auto X_test = read_csv<10000, 784, 1>(X_test_path);
-//    auto y_test = read_csv<10000, 10, 1>(y_test_path);
 
     X_train /= X_train.constant(255);
 
@@ -89,7 +83,6 @@ int main() {
 
     model.fit(X_train, y_train, 10, 200, 4);
     model.test(X_train, y_train);
-
 
     return 0;
 }
