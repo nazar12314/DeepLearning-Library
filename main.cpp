@@ -81,7 +81,7 @@ int main() {
 
     std::cout << "Start:" << std::endl;
 
-    model.fit(X_train, y_train, 10, 200, 4);
+    model.fit(X_train, y_train, 7, 200, 4);
     model.test(X_train, y_train);
 
     return 0;
