@@ -7,7 +7,6 @@
 
 #include <iostream>
 #include "unsupported/Eigen/CXX11/Tensor"
-//#include "TensorHolder.h"
 
 using Eigen::Tensor;
 

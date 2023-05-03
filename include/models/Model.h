@@ -15,6 +15,9 @@
 #include <tbb/flow_graph.h>
 #include <chrono>
 #include <tbb/concurrent_queue.h>
+#include "utils/tqdm.h"
+#include <sstream>
+
 
 using namespace tbb::flow;
 
@@ -110,10 +113,11 @@ public:
         flowGraph.wait_for_all();
     }
 
-    void test(const Tensor<T, InpDim> &inputs, const Tensor<T, OutDim> &labels) {
+    std::string test(const Tensor<T, InpDim> &inputs, const Tensor<T, OutDim> &labels) {
         modelTestNode.try_put(inputs);
         flowGraph.wait_for_all();
-        std::cout << "Loss: " << loss->calculate_loss(modelOutput, labels) << std::endl;
+        std::stringstream result;
+        result << "Loss: " << loss->calculate_loss(modelOutput, labels);
         double num_equal_examples = 0;
         for (int i = 0; i < modelOutput.dimension(0); ++i) {
             Tensor<bool, 0> equal = ((modelOutput.chip(i, 0).argmax() == labels.chip(i, 0).argmax()));
@@ -121,8 +125,9 @@ public:
                 num_equal_examples++;
             }
         }
-        std::cout << "Accuracy: " << num_equal_examples << " / " << labels.dimension(0) << " : "
-                  << num_equal_examples / labels.dimension(0) * 100 << "%" << std::endl;
+        result << "  Accuracy: " << num_equal_examples << " / " << labels.dimension(0) << " : "
+                  << num_equal_examples / labels.dimension(0) * 100 << "%";
+        return result.str();
     }
 
 
@@ -131,16 +136,15 @@ public:
         Eigen::array<int, 3> batch_shape{batch_size, int(inputs.dimension(1)), 1};
         Eigen::array<int, 3> batch_shape_y{batch_size, int(labels.dimension(1)), 1};
         for (size_t epoch = 0; epoch < epochs; ++epoch) {
-            auto start_time = std::chrono::high_resolution_clock::now();
-            for (int i = 0; i < inputs.dimension(0); i += batch_size) {
-                predict(inputs.slice(Eigen::array<int, 3>({i, 0, 0}), batch_shape), n_minibathes);
-                backward(labels.slice(Eigen::array<int, 3>({i, 0, 0}), batch_shape_y), n_minibathes);
+            auto progress_bar = tq::tqdm(tq::range((int) inputs.dimension(0)/ batch_size));
+            progress_bar.set_min_update_time(0.5);
+            progress_bar.set_prefix("Epoch " + std::to_string(epoch));
+            for (int i : progress_bar) {
+                predict(inputs.slice(Eigen::array<int, 3>({i*batch_size, 0, 0}), batch_shape), n_minibathes);
+                backward(labels.slice(Eigen::array<int, 3>({i*batch_size, 0, 0}), batch_shape_y), n_minibathes);
             }
-            auto end_time = std::chrono::high_resolution_clock::now();
-            auto duration = std::chrono::duration_cast<std::chrono::seconds>(end_time - start_time);
-            std::cout << "Epoch: " << epoch << " | Time: " << duration.count() << std::endl;
-            flowGraph.wait_for_all();
-            test(inputs, labels);
+            std::cout << progress_bar.to_string() + " ";
+            std::cout << test(inputs, labels) << std::endl;
         }
     }
 };
