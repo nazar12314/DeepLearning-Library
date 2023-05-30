@@ -50,38 +50,29 @@ int main() {
 
     Model<double, 3, 3> model("model", new optimizers::SGD<double>(0.05), new loss_functions::BinaryCrossEntropy<double>());
 
-    DenseLayer<double> layer (784, 100, "dense 1", initializer);
-    DenseLayer<double> layer2 (100, 50, "dense 2", initializer);
-    DenseLayer<double> layer3 (50, 25, "dense 3", initializer);
-    DenseLayer<double> layer4 (25, 10, "dense 4", initializer);
-    activations::Sigmoid<double, 2> sigmoid;
-    activations::Sigmoid<double, 2> sigmoid2;
-    activations::Sigmoid<double, 2> sigmoid3;
-    activations::Softmax<double, 2> soft;
+    auto input = model.addLayer<DenseLayer<double>>(784, 100, "dense 1", initializer);
+    auto hidden = model.addLayer<DenseLayer<double>>(100, 50, "dense 2", initializer);
+    auto hidden2 = model.addLayer<DenseLayer<double>>(50, 25, "dense 3", initializer);
+    auto hidden3 = model.addLayer<DenseLayer<double>>(25, 10, "dense 3", initializer);
+    auto sigmoid = model.addLayer<activations::Sigmoid<double, 2>>();
+    auto sigmoid_2 = model.addLayer<activations::Sigmoid<double, 2>>();
+    auto sigmoid_3 = model.addLayer<activations::Sigmoid<double, 2>>();
+    auto out = model.addLayer<activations::Softmax<double, 2>>();
 
-    auto input = model.addLayer(layer);
-    auto hidden = model.addLayer(layer2);
-    auto hidden2 = model.addLayer(layer3);
-    auto hidden3 = model.addLayer(layer4);
-    auto sigmoid_ = model.addLayer(sigmoid);
-    auto sigmoid_2 = model.addLayer(sigmoid2);
-    auto sigmoid_3 = model.addLayer(sigmoid3);
-    auto soft_ = model.addLayer(soft);
-
-    connectLayers(input, sigmoid_);
-    connectLayers(sigmoid_, hidden);
+    connectLayers(input, sigmoid);
+    connectLayers(sigmoid, hidden);
     connectLayers(hidden, sigmoid_2);
     connectLayers(sigmoid_2, hidden2);
     connectLayers(hidden2, sigmoid_3);
     connectLayers(sigmoid_3, hidden3);
-    connectLayers(hidden3, soft_);
+    connectLayers(hidden3, out);
 
     model.setInput(input);
-    model.setOut(soft_);
+    model.setOut(out);
+
 
     std::cout << "Start:" << std::endl;
-
-    model.fit(X_train, y_train, 7, 200, 4);
+    model.fit(X_train, y_train, 20, 200, 4);
     model.test(X_train, y_train);
 
     return 0;

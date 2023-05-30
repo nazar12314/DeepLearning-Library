@@ -1,7 +1,9 @@
 #pragma once
 
+#ifdef CUDA_ENABLE
 #include <cuda.h>
 #include <cuda_runtime.h>
+#endif
 
 #define BLOCK_SIZE 32
 

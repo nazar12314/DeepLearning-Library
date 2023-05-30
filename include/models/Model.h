@@ -66,16 +66,20 @@ public:
         make_edge(modelOutNode, node.backward);
     }
 
-    template<size_t Dim>
-    NodeTriplet<T, Dim> addLayer(Layer<T, Dim> &layer) {
-        auto forward_func = [&layer](std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int> inputs) -> std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int> {
-            return std::make_pair(std::move(layer.forward(inputs.first, inputs.second)), inputs.second);
+//    template<size_t Dim>
+    template<typename LayerType, size_t Dim = 2, typename... Args>
+    NodeTriplet<T, Dim> addLayer(Args&&... args) {
+
+        auto layer = new LayerType(std::forward<Args>(args)...);
+
+        auto forward_func = [layer](std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int> inputs) -> std::pair<Tensor<T, Dim+ 1, Eigen::RowMajor>, int> {
+            return std::make_pair(std::move(layer->forward(inputs.first, inputs.second)), inputs.second);
         };
-        auto test_func = [&layer](const Tensor<T, Dim + 1, Eigen::RowMajor> &inputs) -> Tensor<T, Dim + 1, Eigen::RowMajor> {
-            return layer.forward(inputs, false);
+        auto test_func = [layer](const Tensor<T, Dim + 1, Eigen::RowMajor> &inputs) -> Tensor<T, Dim + 1, Eigen::RowMajor> {
+            return layer->forward(inputs, false);
         };
-        auto backward_func = [&layer, this](std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int> grads) -> std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int> {
-            return std::make_pair(std::move(layer.backward(grads.first, *(this->optimizer), grads.second)), grads.second);
+        auto backward_func = [layer, this](std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int> grads) -> std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int> {
+            return std::make_pair(std::move(layer->backward(grads.first, *(this->optimizer), grads.second)), grads.second);
         };
 
         auto node_forward = function_node < std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> (flowGraph, unlimited, forward_func);
