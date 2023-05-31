@@ -17,11 +17,22 @@
 
 using namespace tbb::flow;
 
+template<class T, size_t Dim>
+class SkipLayer;
+
 template<typename T, size_t Dim>
 struct NodeTriplet {
     function_node<std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> forward;
     function_node<Tensor<T, Dim + 1, Eigen::RowMajor>, Tensor<T, Dim + 1, Eigen::RowMajor>> test;
     function_node<std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> backward;
+    std::function<Tensor<double, 3, Eigen::RowMajor>&(int)> get_minibatch;
+};
+
+template<typename T, size_t Dim>
+struct SkipNode{
+    function_node<std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> forward;
+    broadcast_node<std::pair<Tensor<T, Dim+1, Eigen::RowMajor>, int>> backward;
+    broadcast_node<Tensor<T, Dim+1, Eigen::RowMajor>> test;
 };
 
 template<class T, size_t InpDim, size_t OutDim>
@@ -66,11 +77,10 @@ public:
         make_edge(modelOutNode, node.backward);
     }
 
-//    template<size_t Dim>
     template<typename LayerType, size_t Dim = 2, typename... Args>
     NodeTriplet<T, Dim> addLayer(Args&&... args) {
 
-        auto layer = new LayerType(std::forward<Args>(args)...);
+        auto layer = new LayerType(args...);
 
         auto forward_func = [layer](std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int> inputs) -> std::pair<Tensor<T, Dim+ 1, Eigen::RowMajor>, int> {
             return std::make_pair(std::move(layer->forward(inputs.first, inputs.second)), inputs.second);
@@ -82,11 +92,36 @@ public:
             return std::make_pair(std::move(layer->backward(grads.first, *(this->optimizer), grads.second)), grads.second);
         };
 
-        auto node_forward = function_node < std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> (flowGraph, unlimited, forward_func);
-        auto node_test = function_node < Tensor<T, Dim + 1, Eigen::RowMajor>, Tensor<T, Dim + 1, Eigen::RowMajor>> (flowGraph, unlimited, test_func);
-        auto node_backward = function_node < std::pair<Tensor < T, Dim + 1, Eigen::RowMajor>, int > , std::pair<Tensor< T, Dim + 1, Eigen::RowMajor>, int >> (flowGraph, unlimited, backward_func);
+        auto get_minibatch = [layer](int minibatchInd) -> Tensor<T, Dim + 1, Eigen::RowMajor>&{
+            return layer->get_saved_minibatch(minibatchInd);
+        };
 
-        return NodeTriplet<T, Dim>{node_forward, node_test, node_backward};
+        auto node_forward = function_node<std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> (flowGraph, unlimited, forward_func);
+        auto node_test = function_node<Tensor<T, Dim + 1, Eigen::RowMajor>, Tensor<T, Dim + 1, Eigen::RowMajor>> (flowGraph, unlimited, test_func);
+        auto node_backward = function_node<std::pair<Tensor < T, Dim + 1, Eigen::RowMajor>, int > , std::pair<Tensor< T, Dim + 1, Eigen::RowMajor>, int >> (flowGraph, unlimited, backward_func);
+
+        return NodeTriplet<T, Dim>{node_forward, node_test, node_backward, get_minibatch};
+    }
+
+    template<size_t Dim>
+    SkipNode<T, Dim> addSkip(NodeTriplet<T, Dim> &node1, NodeTriplet<T, Dim> &node2){
+        auto skip = new SkipLayer<T, Dim>(node1, node2);
+        auto forward_func = [skip](std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int> inputs) -> std::pair<Tensor<T, Dim+ 1, Eigen::RowMajor>, int> {
+            return std::make_pair(std::move(skip->forward(inputs.first, inputs.second)), inputs.second);
+        };
+
+        auto node_forward = function_node<std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> (flowGraph, unlimited, forward_func);
+        broadcast_node<std::pair<Tensor<T, Dim+1, Eigen::RowMajor>, int>> backwardNode(flowGraph);
+        broadcast_node<Tensor<T, Dim+1, Eigen::RowMajor>> testNode(flowGraph);
+
+        auto node = SkipNode<T, Dim>{node_forward, backwardNode, testNode};
+
+        make_edge(node.backward, node1.backward);
+        make_edge(node.backward, node2.backward);
+        make_edge(node2.forward, node.forward);
+        make_edge(node2.test, node.test);
+
+        return node;
     }
 
     auto predict(const Tensor<T, InpDim, Eigen::RowMajor> &inputs, const int n_minibathes, bool train = true) {
@@ -149,8 +184,27 @@ public:
     }
 };
 
+template<class T, size_t Dim>
+class SkipLayer{
+    NodeTriplet<T, Dim> node1;
+    NodeTriplet<T, Dim> node2;
+public:
+    SkipLayer(NodeTriplet<T, Dim> &node1_, NodeTriplet<T, Dim> &node2_) : node1(node1_), node2(node2_) {}
+
+    Tensor<T, Dim+1, Eigen::RowMajor> forward(const Tensor<T, Dim+1, Eigen::RowMajor> & inputs, int minibatchInd = 1){
+        return inputs + node1.get_minibatch(minibatchInd);
+    }
+};
+
 template<class T, size_t Dim1, size_t Dim2>
-void connectLayers(NodeTriplet<T, Dim1> &start, NodeTriplet<T, Dim2> &end) {
+void connect(NodeTriplet<T, Dim1> &start, NodeTriplet<T, Dim2> &end) {
+    make_edge(start.forward, end.forward);
+    make_edge(start.test, end.test);
+    make_edge(end.backward, start.backward);
+}
+
+template<class T, size_t Dim1, size_t Dim2>
+void connect(SkipNode<T, Dim1> &start, NodeTriplet<T, Dim2> &end){
     make_edge(start.forward, end.forward);
     make_edge(start.test, end.test);
     make_edge(end.backward, start.backward);

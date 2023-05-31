@@ -118,6 +118,16 @@ public:
 
     const Tensor<T, Dim, Eigen::RowMajor> &get_biases() { return biases; };
 
+    Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) override{
+        auto it = input_hash_map.find(minibatchInd);
+        if (it != input_hash_map.end()) {
+            return input_hash_map[minibatchInd];
+        }
+        else {
+            throw std::out_of_range ("Minibatch index is out of range!");
+        }
+    };
+
 };
 
 #endif //NEURALIB_DENSE_H

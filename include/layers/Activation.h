@@ -58,6 +58,16 @@ namespace activations {
             auto relu_derivative = [](T x) { return x > static_cast<T>(0) ? static_cast<T>(1) : static_cast<T>(0); };
             return out_gradient * input_map[minibatchInd].unaryExpr(relu_derivative);
         }
+
+        Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) override{
+            auto it = input_map.find(minibatchInd);
+            if (it != input_map.end()) {
+                return input_map[minibatchInd];
+            }
+            else {
+                throw std::out_of_range ("Minibatch index is out of range!");
+            }
+        };
     };
 
     template<class T, size_t Dim>
@@ -86,6 +96,16 @@ namespace activations {
         backward(const Tensor<T, Dim+1, Eigen::RowMajor> &out_gradient, Optimizer<T> &optimizer, int minibatchInd = 1) override {
             return (input_map[minibatchInd] * (input_map[minibatchInd].constant(1) - input_map[minibatchInd])) * out_gradient;
         }
+
+        Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) override{
+            auto it = input_map.find(minibatchInd);
+            if (it != input_map.end()) {
+                return input_map[minibatchInd];
+            }
+            else {
+                throw std::out_of_range ("Minibatch index is out of range!");
+            }
+        };
     };
 
     template<class T, size_t Dim>
@@ -150,6 +170,10 @@ namespace activations {
 
             return res;
         }
+
+        Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) override{
+            throw std::out_of_range ("Cant call this method from softmax!");
+        };
     };
 }
 

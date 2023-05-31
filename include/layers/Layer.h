@@ -27,6 +27,8 @@ public:
 
     virtual const Tensor<T, Dim, Eigen::RowMajor> &get_weights() = 0;
 
+    virtual Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) = 0;
+
     virtual ~Layer() = default;
 };
 

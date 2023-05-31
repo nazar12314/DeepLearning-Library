@@ -50,30 +50,33 @@ int main() {
 
     Model<double, 3, 3> model("model", new optimizers::SGD<double>(0.05), new loss_functions::BinaryCrossEntropy<double>());
 
-    auto input = model.addLayer<DenseLayer<double>>(784, 100, "dense 1", initializer);
-    auto hidden = model.addLayer<DenseLayer<double>>(100, 50, "dense 2", initializer);
-    auto hidden2 = model.addLayer<DenseLayer<double>>(50, 25, "dense 3", initializer);
-    auto hidden3 = model.addLayer<DenseLayer<double>>(25, 10, "dense 3", initializer);
+    auto input = model.addLayer<DenseLayer<double>>(784, 20, "dense 1", initializer);
+    auto hidden = model.addLayer<DenseLayer<double>>(20, 20, "dense 2", initializer);
+    auto hidden2 = model.addLayer<DenseLayer<double>>(20, 20, "dense 3", initializer);
+    auto hidden3 = model.addLayer<DenseLayer<double>>(20, 10, "dense 3", initializer);
+    auto skip = model.addSkip(hidden, hidden2); // also connects hidden2.forward to skip
     auto sigmoid = model.addLayer<activations::Sigmoid<double, 2>>();
     auto sigmoid_2 = model.addLayer<activations::Sigmoid<double, 2>>();
     auto sigmoid_3 = model.addLayer<activations::Sigmoid<double, 2>>();
     auto out = model.addLayer<activations::Softmax<double, 2>>();
 
-    connectLayers(input, sigmoid);
-    connectLayers(sigmoid, hidden);
-    connectLayers(hidden, sigmoid_2);
-    connectLayers(sigmoid_2, hidden2);
-    connectLayers(hidden2, sigmoid_3);
-    connectLayers(sigmoid_3, hidden3);
-    connectLayers(hidden3, out);
+
+    connect(input, sigmoid);
+    connect(sigmoid, hidden);
+    connect(hidden, sigmoid_2);
+    connect(sigmoid_2, hidden2);
+    // hidden2 automatically connected to skip
+    connect(skip, sigmoid_3);
+    connect(sigmoid_3, hidden3);
+    connect(hidden3, out);
 
     model.setInput(input);
     model.setOut(out);
 
-
     std::cout << "Start:" << std::endl;
-    model.fit(X_train, y_train, 20, 200, 4);
-    model.test(X_train, y_train);
+    model.fit(X_train, y_train, 10, 200, 4);
+//    model.test(X_train, y_train);
+
 
     return 0;
 }
