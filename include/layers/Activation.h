@@ -19,15 +19,14 @@ class Activation : public Layer<T, Dim> {
 public:
     Activation() : Layer<T, Dim>("", false) {}
 
-    void set_weights(const Tensor<T, Dim, Eigen::RowMajor> &weights_) override {
+    void set_weights(const Tensor<T, Dim, Eigen::RowMajor> &weights_) {
         throw std::logic_error("Weights aren't implemented for Activation class");
     }
-    
-    const Tensor<T, Dim, Eigen::RowMajor> &get_weights() override {
+
+    const Tensor<T, Dim, Eigen::RowMajor> &get_weights() {
         throw std::logic_error("Weights aren't implemented for Activation class");
     }
 };
-
 
 namespace activations {
 

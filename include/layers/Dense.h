@@ -7,7 +7,9 @@
 #ifndef NEURALIB_DENSE_H
 #define NEURALIB_DENSE_H
 
+#ifdef CUDA_ENABLE
 #include "utils/cuda/matrix_operations.cuh"
+#endif
 #include "unsupported/Eigen/CXX11/Tensor"
 #include "utils/Initializer.h"
 #include "Layer.h"
@@ -127,7 +129,6 @@ public:
             throw std::out_of_range ("Minibatch index is out of range!");
         }
     };
-
 };
 
 #endif //NEURALIB_DENSE_H

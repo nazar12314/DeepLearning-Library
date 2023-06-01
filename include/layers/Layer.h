@@ -23,9 +23,9 @@ public:
 
     virtual Tensor<T, Dim+1, Eigen::RowMajor> backward(const Tensor<T, Dim+1, Eigen::RowMajor> & out_gradient, Optimizer<T>& optimizer, int minibatchInd = 1) = 0;
 
-    virtual void set_weights(const Tensor<T, Dim, Eigen::RowMajor> & weights_) = 0;
+//    virtual void set_weights(const Tensor<T, Dim, Eigen::RowMajor> & weights_) = 0;
 
-    virtual const Tensor<T, Dim, Eigen::RowMajor> &get_weights() = 0;
+//    virtual const Tensor<T, Dim, Eigen::RowMajor> &get_weights() = 0;
 
     virtual Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) = 0;
 

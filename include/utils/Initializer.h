@@ -16,10 +16,9 @@ protected:
     std::uint32_t seed = std::random_device()();
 
 public:
-
     virtual Tensor<T, 2, Eigen::RowMajor> get_weights_2d(size_t n_in, size_t n_hidden) = 0;
 
-    virtual Tensor<T, 3, Eigen::RowMajor> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) = 0;
+    virtual Tensor<T, 4, Eigen::RowMajor> get_weights_4d(size_t kernel_size, size_t n_in, size_t n_out) = 0;
 
     virtual ~Initializer() = default;
 
@@ -27,6 +26,13 @@ public:
 
     void set_seed(std::uint32_t seed_) {
         seed = seed_;
+    }
+
+    Tensor<T, 3, Eigen::RowMajor> get_biases_3d(size_t n_in, size_t n_out, size_t kernel_depth) {
+        Tensor<T, 3, Eigen::RowMajor> biases (n_in, n_out, kernel_depth);
+        biases.setConstant(0);
+
+        return biases;
     }
 };
 
@@ -53,8 +59,8 @@ namespace initializers {
             return weights;
         };
 
-        Tensor<T, 3, Eigen::RowMajor> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) override {
-            Tensor<T, 3, Eigen::RowMajor> weights (n_hidden1, n_hidden2, n_in);
+        Tensor<T, 4, Eigen::RowMajor> get_weights_4d(size_t kernel_size, size_t n_in, size_t n_out) override {
+            Tensor<T, 4, Eigen::RowMajor> weights (kernel_size, kernel_size, n_in, n_out);
             srand(this -> seed);
             weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
 
@@ -80,8 +86,8 @@ namespace initializers {
             return weights;
         };
 
-        Tensor<T, 3, Eigen::RowMajor> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) override {
-            Tensor<T, 3, Eigen::RowMajor> weights(n_hidden1, n_hidden2, n_in);
+        Tensor<T, 4, Eigen::RowMajor> get_weights_4d(size_t kernel_size, size_t n_in, size_t n_out) override {
+            Tensor<T, 4, Eigen::RowMajor> weights(kernel_size, kernel_size, n_in, n_out);
 
             weights.setConstant(constant);
 
@@ -120,8 +126,8 @@ namespace initializers {
             return weights;
         };
 
-        Tensor<T, 3, Eigen::RowMajor> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) override {
-            Tensor<T, 3, Eigen::RowMajor> weights(n_hidden1, n_hidden2, n_in);
+        Tensor<T, 4, Eigen::RowMajor> get_weights_4d(size_t kernel_size, size_t n_in, size_t n_out) override {
+            Tensor<T, 4, Eigen::RowMajor> weights(kernel_size, kernel_size, n_in, n_out);
 
             srand(this -> seed);
             weights.template setRandom<Eigen::internal::UniformRandomGenerator<double>>();
@@ -156,13 +162,13 @@ namespace initializers {
             return weights;
         };
 
-        Tensor<T, 3, Eigen::RowMajor> get_weights_3d(size_t n_in, size_t n_hidden1, size_t n_hidden2) override {
-            Tensor<T, 3, Eigen::RowMajor> weights(n_hidden1, n_hidden2, n_in);
+        Tensor<T, 4, Eigen::RowMajor> get_weights_4d(size_t kernel_size, size_t n_in, size_t n_out) override {
+            Tensor<T, 4, Eigen::RowMajor> weights(kernel_size, kernel_size, n_in, n_out);
 
             srand(this -> seed);
             weights.template setRandom<Eigen::internal::NormalRandomGenerator<double>>();
 
-            weights *= weights.constant(2.0 / (n_in + n_hidden1 + n_hidden2));
+            weights *= weights.constant(2.0 / (n_in + n_out + kernel_size * 2));
             return weights;
         };
     };
