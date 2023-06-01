@@ -17,11 +17,11 @@ protected:
 public:
     explicit Optimizer() = default;
 
-    virtual Tensor<T, 2, Eigen::RowMajor> apply_optimization(const Tensor<T, 2, Eigen::RowMajor> &gradients) = 0;
+    virtual Tensor<T, 2, Eigen::RowMajor> apply_optimization2d(const Tensor<T, 2, Eigen::RowMajor> &gradients) = 0;
 
-    virtual Tensor<T, 3, Eigen::RowMajor> apply_optimization(const Tensor<T, 3, Eigen::RowMajor> &gradients) = 0;
+    virtual Tensor<T, 3, Eigen::RowMajor> apply_optimization3d(const Tensor<T, 3, Eigen::RowMajor> &gradients) = 0;
 
-
+    virtual Tensor<T, 4, Eigen::RowMajor> apply_optimization4d(const Tensor<T, 4, Eigen::RowMajor> &gradients) = 0;
 };
 
 namespace optimizers {
@@ -31,13 +31,18 @@ namespace optimizers {
     public:
         explicit SGD(T learning_rate_) : Optimizer<T>(), learning_rate(learning_rate_){}
 
-        Tensor<T, 2, Eigen::RowMajor> apply_optimization(const Tensor<T, 2, Eigen::RowMajor> &gradients) override {
+        Tensor<T, 2, Eigen::RowMajor> apply_optimization2d(const Tensor<T, 2, Eigen::RowMajor> &gradients) override {
             Tensor<T, 2, Eigen::RowMajor> grads_multiplied = gradients * gradients.constant(learning_rate);
             return grads_multiplied;
         }
 
-        Tensor<T, 3, Eigen::RowMajor> apply_optimization(const Tensor<T, 3, Eigen::RowMajor> &gradients) override {
+        Tensor<T, 3, Eigen::RowMajor> apply_optimization3d(const Tensor<T, 3, Eigen::RowMajor> &gradients) override {
             Tensor<T, 3, Eigen::RowMajor> grads_multiplied = gradients * gradients.constant(learning_rate);
+            return gradients * gradients.constant(learning_rate);
+        }
+
+        Tensor<T, 4, Eigen::RowMajor> apply_optimization4d(const Tensor<T, 4, Eigen::RowMajor> &gradients) override {
+            Tensor<T, 4, Eigen::RowMajor> grads_multiplied = gradients * gradients.constant(learning_rate);
             return gradients * gradients.constant(learning_rate);
         }
     };

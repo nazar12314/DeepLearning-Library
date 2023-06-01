@@ -94,8 +94,8 @@ public:
             Tensor<T, Dim, Eigen::RowMajor> weights_gradient =
                     A.contract(B.shuffle(Eigen::array<int, Dim>{1, 0}), contract_dims) / double(input_hash_map[minibatchInd].dimension(0));
 #endif
-            const Tensor<T, Dim, Eigen::RowMajor>& weights_substr = optimizer.apply_optimization(weights_gradient);
-            const Tensor<T, Dim, Eigen::RowMajor>& bias_subsrt = optimizer.apply_optimization(
+            const Tensor<T, Dim, Eigen::RowMajor>& weights_substr = optimizer.apply_optimization2d(weights_gradient);
+            const Tensor<T, Dim, Eigen::RowMajor>& bias_subsrt = optimizer.apply_optimization2d(
                     Tensor<T, Dim, Eigen::RowMajor>{out_gradient.chip(i, 0) / double(input_hash_map[minibatchInd].dimension(0))});
 
             mutex.lock();
@@ -112,15 +112,15 @@ public:
         return out;
     };
 
-    void set_weights(const Tensor<T, Dim, Eigen::RowMajor> &weights_) override {
+    void set_weights(const Tensor<T, Dim, Eigen::RowMajor> &weights_) {
         weights = std::move(weights_);
     };
 
-    const Tensor<T, Dim, Eigen::RowMajor> &get_weights() override { return weights; };
+    const Tensor<T, Dim, Eigen::RowMajor> &get_weights() { return weights; };
 
     const Tensor<T, Dim, Eigen::RowMajor> &get_biases() { return biases; };
 
-    Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) override{
+    Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) override {
         auto it = input_hash_map.find(minibatchInd);
         if (it != input_hash_map.end()) {
             return input_hash_map[minibatchInd];

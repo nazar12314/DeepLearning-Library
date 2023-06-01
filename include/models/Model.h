@@ -20,6 +20,9 @@ using namespace tbb::flow;
 template<class T, size_t Dim>
 class SkipLayer;
 
+template<class T>
+class FlattenLayer;
+
 template<typename T, size_t Dim>
 struct NodeTriplet {
     function_node<std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> forward;
@@ -33,6 +36,13 @@ struct SkipNode{
     function_node<std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> forward;
     broadcast_node<std::pair<Tensor<T, Dim+1, Eigen::RowMajor>, int>> backward;
     broadcast_node<Tensor<T, Dim+1, Eigen::RowMajor>> test;
+};
+
+template<typename T>
+struct FlattenNode{
+    function_node<std::pair<Tensor<T,  4, Eigen::RowMajor>, int>, std::pair<Tensor<T, 2, Eigen::RowMajor>, int>> forward;
+    function_node<std::pair<Tensor<T,  2, Eigen::RowMajor>, int>, std::pair<Tensor<T, 4, Eigen::RowMajor>, int>> backward;
+    function_node<Tensor<T, 4, Eigen::RowMajor>, Tensor<T, 2, Eigen::RowMajor>> test;
 };
 
 template<class T, size_t InpDim, size_t OutDim>
@@ -75,6 +85,11 @@ public:
         make_edge(node.forward, pushOutNode);
         make_edge(node.test, saveOutNode);
         make_edge(modelOutNode, node.backward);
+    }
+
+
+    FlattenNode<T> addFlattenLayer(){
+        auto flatten = new FlattenLayer<T>();
     }
 
     template<typename LayerType, size_t Dim = 2, typename... Args>
@@ -194,6 +209,33 @@ public:
     Tensor<T, Dim+1, Eigen::RowMajor> forward(const Tensor<T, Dim+1, Eigen::RowMajor> & inputs, int minibatchInd = 1){
         return inputs + node1.get_minibatch(minibatchInd);
     }
+};
+
+template<class T>
+class FlattenLayer{
+private:
+    int height;
+    int width;
+    int channels;
+public:
+    FlattenLayer() :
+            height(0),
+            width(0),
+            channels(0) {}
+
+    Tensor<T, 2, Eigen::RowMajor> forward(const Tensor<T, 4, Eigen::RowMajor> &inputs, int minibatchInd = 1, bool train = false) {
+        height = inputs.dimension(1);
+        width = inputs.dimension(2);
+        channels = inputs.dimension(3);
+
+        return inputs.reshape(Eigen::array<int, 2>({static_cast<int>(inputs.dimension(0)), height * width * channels}));
+    }
+
+    Tensor<T, 4, Eigen::RowMajor>
+    backward(const Tensor<T, 2, Eigen::RowMajor> &out_gradient, int minibatchInd=1) {
+        return out_gradient.reshape(Eigen::array<int, 4>({static_cast<int>(out_gradient.dimension(0)), height, width, channels}));;
+    }
+
 };
 
 template<class T, size_t Dim1, size_t Dim2>
