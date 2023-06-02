@@ -14,19 +14,49 @@ using Eigen::Tensor;
 
 template<class T, size_t Dim>
 class Layer {
-    std::string name;
     bool trainable;
 public:
+    std::string name;
+
+    /**
+     * Constructor for the Layer class.
+     *
+     * @param name The name of the layer.
+     * @param trainable Flag indicating whether the layer is trainable.
+     */
     Layer(const std::string & name, bool trainable): name(name), trainable(trainable) {};
 
-    virtual Tensor<T, Dim+1> forward(const Tensor<T, Dim+1> & inputs, int minibatchInd = 1, bool train = true) = 0;
+    /**
+     * Perform the forward pass of the layer.
+     *
+     * @param inputs The input tensor.
+     * @param minibatchInd The minibatch index.
+     * @param train Flag indicating whether it's training mode.
+     * @return The output tensor.
+     */
+    virtual Tensor<T, Dim+1, Eigen::RowMajor> forward(const Tensor<T, Dim+1, Eigen::RowMajor> & inputs, int minibatchInd = 1, bool train = true) = 0;
 
-    virtual Tensor<T, Dim+1> backward(const Tensor<T, Dim+1> & out_gradient, Optimizer<T>& optimizer, int minibatchInd = 1) = 0;
+    /**
+     * Perform the backward pass of the layer.
+     *
+     * @param out_gradient The output gradient tensor.
+     * @param optimizer The optimizer for weight and bias updates.
+     * @param minibatchInd The minibatch index.
+     * @return The input gradient tensor.
+     */
+    virtual Tensor<T, Dim+1, Eigen::RowMajor> backward(const Tensor<T, Dim+1, Eigen::RowMajor> & out_gradient, Optimizer<T>& optimizer, int minibatchInd = 1) = 0;
 
-    virtual void set_weights(const Tensor<T, Dim> & weights_) = 0;
+    /**
+     * Get the saved input minibatch tensor for a given minibatch index.
+     *
+     * @param minibatchInd The minibatch index.
+     * @return The input minibatch tensor.
+     */
+    virtual Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) = 0;
 
-    virtual const Tensor<T, Dim> &get_weights() = 0;
-
+    /**
+     * Virtual destructor for the Layer class.
+     */
     virtual ~Layer() = default;
 };
 
