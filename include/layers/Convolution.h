@@ -309,20 +309,4 @@ public:
     }
 };
 
-/**
- * FlattenLayer Class
- *
- * This class represents a flatten layer in a neural network.
- * It reshapes the input data into a 2D tensor for further processing.
- *
- * Template Parameters:
- *   - T: The data type used for the computations (e.g., float, double)
- *   - Dim: The dimensionality of the input data (default: 3)
- *
- * Public Methods:
- *   - forward(...): Performs forward pass computation of the flatten layer.
- *   - backward(...): Performs backward pass computation of the flatten layer.
- */
-
-
 #endif //NEURALIB_CONVOLUTION_H

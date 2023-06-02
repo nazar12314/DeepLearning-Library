@@ -9,7 +9,7 @@ set(ENABLE_ASAN OFF)
 set(ENABLE_TSan OFF)
 set(ENABLE_MSAN OFF)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftree-vectorize -Wno-deprecated-declarations -DNDEBUG -fsanitize=undefined")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ftree-vectorize -Wno-deprecated-declarations -DNDEBUG")
 
 find_program(NVCC nvcc)
 

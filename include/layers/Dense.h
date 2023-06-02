@@ -39,6 +39,14 @@ public:
         biases.setConstant(0);
     };
 
+    /**
+     * Perform the forward pass of the dense layer.
+     *
+     * @param inputs The input tensor.
+     * @param minibatchInd The minibatch index.
+     * @param train Flag indicating whether it's training mode.
+     * @return The output tensor.
+     */
     Tensor<T, Dim+1, Eigen::RowMajor> forward(const Tensor<T, Dim+1, Eigen::RowMajor> &inputs, int minibatchInd = 1, bool train = true) override {
         if (train) {
             auto it = input_hash_map.find(minibatchInd);
@@ -72,6 +80,14 @@ public:
         return output.reshape(Eigen::array<size_t, 3>{size_t(inputs.dimension(0)), n_hidden, 1});
     };
 
+    /**
+     * Perform the backward pass of the dense layer.
+     *
+     * @param out_gradient The output gradient tensor.
+     * @param optimizer The optimizer for weight and bias updates.
+     * @param minibatchInd The minibatch index.
+     * @return The input gradient tensor.
+     */
     Tensor<T, Dim+1, Eigen::RowMajor> backward(const Tensor<T, Dim+1, Eigen::RowMajor> &out_gradient, Optimizer<T> &optimizer, int minibatchInd = 1) override {
         Eigen::array<size_t, 3> reshape_size{size_t(out_gradient.dimension(0)), size_t(out_gradient.dimension(1)),
                                              size_t(out_gradient.dimension(1))};
@@ -112,14 +128,36 @@ public:
         return out;
     };
 
+    /**
+     * Set the weight tensor.
+     *
+     * @param weights_ The weight tensor.
+     */
     void set_weights(const Tensor<T, Dim, Eigen::RowMajor> &weights_) {
         weights = std::move(weights_);
     };
 
+    /**
+     * Get the weight tensor.
+     *
+     * @return The weight tensor.
+     */
     const Tensor<T, Dim, Eigen::RowMajor> &get_weights() { return weights; };
 
+    /**
+     * Get the bias tensor.
+     *
+     * @return The bias tensor.
+     */
     const Tensor<T, Dim, Eigen::RowMajor> &get_biases() { return biases; };
 
+    /**
+     * Get the saved input minibatch tensor for a given minibatch index.
+     *
+     * @param minibatchInd The minibatch index.
+     * @return The input minibatch tensor.
+     * @throw std::out_of_range If the minibatch index is out of range.
+     */
     Tensor<T, Dim+1, Eigen::RowMajor> &get_saved_minibatch(int minibatchInd) override {
         auto it = input_hash_map.find(minibatchInd);
         if (it != input_hash_map.end()) {

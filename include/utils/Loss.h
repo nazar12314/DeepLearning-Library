@@ -15,15 +15,32 @@ class Loss {
 public:
     explicit Loss() = default;
 
+    /**
+     * @brief Calculate the loss value.
+     * @param pred_output The predicted output tensor.
+     * @param true_output The true output tensor.
+     * @return The calculated loss value.
+     */
     virtual Tensor<T, 0, Eigen::RowMajor>
     calculate_loss(const Eigen::Tensor<T, 3, Eigen::RowMajor> &pred_output, const Eigen::Tensor<T, 3, Eigen::RowMajor> &true_output) = 0;
 
+    /**
+     * @brief Calculate the gradients of the loss.
+     * @param pred_output The predicted output tensor.
+     * @param true_output The true output tensor.
+     * @return The calculated gradients of the loss.
+     */
     virtual Tensor<T, 3, Eigen::RowMajor>
     calculate_grads(const Eigen::Tensor<T, 3, Eigen::RowMajor> &pred_output, const Eigen::Tensor<T, 3, Eigen::RowMajor> &true_output) = 0;
 
 };
 
 namespace loss_functions {
+    /**
+     * @class MSE
+     * @brief Mean Squared Error loss function.
+     * @tparam T The data type of the loss values.
+     */
     template<class T>
     class MSE : public Loss<T> {
     public:
@@ -43,6 +60,11 @@ namespace loss_functions {
         }
     };
 
+    /**
+     * @class BinaryCrossEntropy
+     * @brief Binary Cross Entropy loss function.
+     * @tparam T The data type of the loss values.
+     */
     template<class T>
     class BinaryCrossEntropy : public Loss<T> {
     public:
