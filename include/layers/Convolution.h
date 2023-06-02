@@ -41,6 +41,7 @@ class ConvolutionLayer : public Layer<T, Dim> {
     size_t input_depth;
     long kernel_size;
     size_t kernel_depth;
+    std::mutex mutex;
 
     Tensor<T, Dim+1, Eigen::RowMajor> kernels;
     Tensor<T, Dim, Eigen::RowMajor> biases;
@@ -94,18 +95,16 @@ public:
                 input_hash_map.emplace(minibatchInd, inputs);
             }
         }
-
         Tensor<double, 4, Eigen::RowMajor> result (inputs.dimension(0), input_height - kernel_size + 1, input_width - kernel_size + 1, kernel_depth);
+        result.setConstant(0);
         Eigen::array<ptrdiff_t, 2> dims({1, 2});
 
         for (int i = 0; i < kernel_depth; i++) {
-            result.chip(i, 3) = inputs.convolve(kernels.chip(i, 3), dims);
+            result.chip(i, 3) += inputs.convolve(kernels.chip(i, 3), dims);
         }
-
         for (int i = 0; i < inputs.dimension(0); ++i) {
             result.chip(i, 0) += biases;
         }
-
         return result;
     }
 
@@ -122,12 +121,13 @@ public:
     Tensor<T, Dim+1, Eigen::RowMajor> backward(const Tensor<T, Dim+1, Eigen::RowMajor> &out_gradient, Optimizer<T> &optimizer, int minibatchInd = 1) override {
         Tensor<T, Dim+1, Eigen::RowMajor> kernels_gradients = kernels.constant(0);
         Tensor<T, Dim+1, Eigen::RowMajor> inputs_minibatch = input_hash_map[minibatchInd];
-        Tensor<T, Dim+1, Eigen::RowMajor> input_gradients = inputs_minibatch.constant(0);
+        Tensor<T, Dim+1, Eigen::RowMajor> input_gradients = Tensor<T, Dim+1, Eigen::RowMajor>(
+                inputs_minibatch.dimension(0), inputs_minibatch.dimension(1), inputs_minibatch.dimension(2), inputs_minibatch.dimension(3));
+        input_gradients.setConstant(0.0);
 
         Eigen::array<ptrdiff_t, 2> dims({1, 2});
-
         for (int batch_ind = 0; batch_ind < inputs_minibatch.dimension(0); batch_ind++){
-            for (int i = 0; i < kernel_depth; i++) {
+            for (int i = 0; i < kernel_depth; ++i) {
                 for (int j = 0; j < input_depth; ++j) {
                     kernels_gradients.chip(i, 3).chip(j, 2) += (Tensor<T, 2, Eigen::RowMajor>)(inputs_minibatch
                             .chip(batch_ind, 0).chip(j, 2))
@@ -135,22 +135,26 @@ public:
                 }
             }
         }
-
         Eigen::array<std::pair<int, int>, 4> padding;
         padding[0] = std::make_pair(0, 0);
-        padding[1] = std::make_pair(1, 1);
-        padding[2] = std::make_pair(1, 1);
+        padding[1] = std::make_pair(kernel_size-1, kernel_size-1);
+        padding[2] = std::make_pair(kernel_size-1, kernel_size-1);
         padding[3] = std::make_pair(0, 0);
-        Eigen::Tensor<double, 4, Eigen::RowMajor> paddedInput = out_gradient.pad(padding);
-
-        for (int i = 0; i < kernel_depth; i++) {
-            input_gradients.chip(i, 3) = paddedInput.convolve(kernels.chip(i, 3).reverse(Eigen::array<int, 3>{0, 1, 2}), dims);
+        Eigen::Tensor<T, 4, Eigen::RowMajor> paddedInput = out_gradient.pad(padding);
+        for (int i = 0; i < kernel_depth; ++i) {
+            for (int j = 0; j < input_depth; ++j){
+                input_gradients.chip(j, 3) += (Tensor<T, 3, Eigen::RowMajor>)(
+                        paddedInput.slice(Eigen::array<Eigen::Index, 4>({0, 0, 0, i}),
+                                Eigen::array<Eigen::Index, 4>({paddedInput.dimension(0), paddedInput.dimension(1), paddedInput.dimension(2), 1})))
+                        .convolve((Tensor<T, 2, Eigen::RowMajor>)(kernels.chip(i, 3).chip(j, 2)).reverse(Eigen::array<int, 2>{0, 1}), dims).chip(0, 3);
+            }
+//            input_gradients.chip(i, 3) += paddedInput.convolve(kernels.chip(i, 3).reverse(Eigen::array<int, 3>{0, 1, 2}), dims);
         }
-
-        kernels -= optimizer.apply_optimization4d(kernels_gradients);
         Tensor<T, Dim, Eigen::RowMajor> tmp_biases = out_gradient.sum(Eigen::array<int, 1>{0});
+        mutex.lock();
+        kernels -= optimizer.apply_optimization4d(kernels_gradients);
         biases -= optimizer.apply_optimization3d(tmp_biases);
-
+        mutex.unlock();
         return input_gradients;
     }
 

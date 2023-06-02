@@ -28,7 +28,7 @@ struct NodeTriplet {
     function_node<std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> forward;
     function_node<Tensor<T, Dim + 1, Eigen::RowMajor>, Tensor<T, Dim + 1, Eigen::RowMajor>> test;
     function_node<std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>, std::pair<Tensor<T, Dim + 1, Eigen::RowMajor>, int>> backward;
-    std::function<Tensor<double, 3, Eigen::RowMajor>&(int)> get_minibatch;
+    std::function<Tensor<double, Dim+1, Eigen::RowMajor>&(int)> get_minibatch;
 };
 
 template<typename T, size_t Dim>
@@ -40,9 +40,9 @@ struct SkipNode{
 
 template<typename T>
 struct FlattenNode{
-    function_node<std::pair<Tensor<T,  4, Eigen::RowMajor>, int>, std::pair<Tensor<T, 2, Eigen::RowMajor>, int>> forward;
-    function_node<std::pair<Tensor<T,  2, Eigen::RowMajor>, int>, std::pair<Tensor<T, 4, Eigen::RowMajor>, int>> backward;
-    function_node<Tensor<T, 4, Eigen::RowMajor>, Tensor<T, 2, Eigen::RowMajor>> test;
+    function_node<std::pair<Tensor<T,  4, Eigen::RowMajor>, int>, std::pair<Tensor<T, 3, Eigen::RowMajor>, int>> forward;
+    function_node<std::pair<Tensor<T,  3, Eigen::RowMajor>, int>, std::pair<Tensor<T, 4, Eigen::RowMajor>, int>> backward;
+    function_node<Tensor<T, 4, Eigen::RowMajor>, Tensor<T, 3, Eigen::RowMajor>> test;
 };
 
 template<class T, size_t InpDim, size_t OutDim>
@@ -90,6 +90,21 @@ public:
 
     FlattenNode<T> addFlattenLayer(){
         auto flatten = new FlattenLayer<T>();
+
+        auto forward_func = [flatten](std::pair<Tensor<T, 4, Eigen::RowMajor>, int> inputs) -> std::pair<Tensor<T, 3, Eigen::RowMajor>, int> {
+            return std::make_pair(std::move(flatten->forward(inputs.first, inputs.second)), inputs.second);
+        };
+        auto test_func = [flatten](const Tensor<T, 4, Eigen::RowMajor> &inputs) -> Tensor<T, 3, Eigen::RowMajor> {
+            return flatten->forward(inputs, false);
+        };
+        auto backward_func = [flatten](std::pair<Tensor<T, 3, Eigen::RowMajor>, int> grads) -> std::pair<Tensor<T, 4, Eigen::RowMajor>, int> {
+            return std::make_pair(std::move(flatten->backward(grads.first, grads.second)), grads.second);
+        };
+        auto node_forward = function_node<std::pair<Tensor<T, 4, Eigen::RowMajor>, int>, std::pair<Tensor<T, 3, Eigen::RowMajor>, int>> (flowGraph, unlimited, forward_func);
+        auto node_test = function_node<Tensor<T, 4, Eigen::RowMajor>, Tensor<T, 3, Eigen::RowMajor>> (flowGraph, unlimited, test_func);
+        auto node_backward = function_node<std::pair<Tensor<T, 3, Eigen::RowMajor>, int> , std::pair<Tensor< T, 4, Eigen::RowMajor>, int >> (flowGraph, unlimited, backward_func);
+
+        return FlattenNode<T>{node_forward, node_backward, node_test};
     }
 
     template<typename LayerType, size_t Dim = 2, typename... Args>
@@ -141,11 +156,11 @@ public:
 
     auto predict(const Tensor<T, InpDim, Eigen::RowMajor> &inputs, const int n_minibathes, bool train = true) {
         size_t minibatch_size = inputs.dimension(0) / n_minibathes;
-        Eigen::array<size_t, 3> mini_batch_shape{minibatch_size, size_t(inputs.dimension(1)), 1};
+        Eigen::array<size_t, 4> mini_batch_shape{minibatch_size, size_t(inputs.dimension(1)), size_t(inputs.dimension(2)), size_t(inputs.dimension(3))};
 
         for (size_t i = 0; i < n_minibathes; i++) {
             modelInputNode.try_put(std::make_pair(
-                    std::move(inputs.slice(Eigen::array<size_t, 3>({i * minibatch_size, 0, 0}), mini_batch_shape)),
+                    std::move(inputs.slice(Eigen::array<size_t, 4>({i * minibatch_size, 0, 0, 0}), mini_batch_shape)),
                     int(i)));
         }
         flowGraph.wait_for_all();
@@ -183,14 +198,14 @@ public:
 
     void fit(const Tensor<T, InpDim, Eigen::RowMajor> &inputs, const Tensor<T, OutDim, Eigen::RowMajor> &labels, const size_t epochs, const int batch_size,
              const int n_minibathes) {
-        Eigen::array<int, 3> batch_shape{batch_size, int(inputs.dimension(1)), 1};
+        Eigen::array<int, 4> batch_shape{batch_size, int(inputs.dimension(1)), int(inputs.dimension(2)), int(inputs.dimension(3))};
         Eigen::array<int, 3> batch_shape_y{batch_size, int(labels.dimension(1)), 1};
         for (size_t epoch = 0; epoch < epochs; ++epoch) {
             auto progress_bar = tq::tqdm(tq::range((int) inputs.dimension(0)/ batch_size));
             progress_bar.set_min_update_time(0.5);
             progress_bar.set_prefix("Epoch " + std::to_string(epoch));
             for (int i : progress_bar) {
-                predict(inputs.slice(Eigen::array<int, 3>({i*batch_size, 0, 0}), batch_shape), n_minibathes);
+                predict(inputs.slice(Eigen::array<int, 4>({i*batch_size, 0, 0, 0}), batch_shape), n_minibathes);
                 backward(labels.slice(Eigen::array<int, 3>({i*batch_size, 0, 0}), batch_shape_y), n_minibathes);
             }
             std::cout << progress_bar.to_string() + " ";
@@ -217,23 +232,25 @@ private:
     int height;
     int width;
     int channels;
+    int batch_size;
 public:
     FlattenLayer() :
             height(0),
             width(0),
-            channels(0) {}
+            channels(0),
+            batch_size(0){}
 
-    Tensor<T, 2, Eigen::RowMajor> forward(const Tensor<T, 4, Eigen::RowMajor> &inputs, int minibatchInd = 1, bool train = false) {
+    Tensor<T, 3, Eigen::RowMajor> forward(const Tensor<T, 4, Eigen::RowMajor> &inputs, int minibatchInd = 1, bool train = false) {
+        batch_size = inputs.dimension(0);
         height = inputs.dimension(1);
         width = inputs.dimension(2);
         channels = inputs.dimension(3);
-
-        return inputs.reshape(Eigen::array<int, 2>({static_cast<int>(inputs.dimension(0)), height * width * channels}));
+        return inputs.reshape(Eigen::array<int, 3>({static_cast<int>(inputs.dimension(0)), height * width * channels, 1}));
     }
 
     Tensor<T, 4, Eigen::RowMajor>
-    backward(const Tensor<T, 2, Eigen::RowMajor> &out_gradient, int minibatchInd=1) {
-        return out_gradient.reshape(Eigen::array<int, 4>({static_cast<int>(out_gradient.dimension(0)), height, width, channels}));;
+    backward(const Tensor<T, 3, Eigen::RowMajor> &out_gradient, int minibatchInd=1) {
+        return out_gradient.reshape(Eigen::array<int, 4>({batch_size, height, width, channels}));
     }
 
 };
@@ -247,6 +264,19 @@ void connect(NodeTriplet<T, Dim1> &start, NodeTriplet<T, Dim2> &end) {
 
 template<class T, size_t Dim1, size_t Dim2>
 void connect(SkipNode<T, Dim1> &start, NodeTriplet<T, Dim2> &end){
+    make_edge(start.forward, end.forward);
+    make_edge(start.test, end.test);
+    make_edge(end.backward, start.backward);
+}
+template<class T>
+void connect(NodeTriplet<T, 3> &start, FlattenNode<T> &end){
+    make_edge(start.forward, end.forward);
+    make_edge(start.test, end.test);
+    make_edge(end.backward, start.backward);
+}
+
+template<class T>
+void connect(FlattenNode<T> &start, NodeTriplet<T, 2> &end){
     make_edge(start.forward, end.forward);
     make_edge(start.test, end.test);
     make_edge(end.backward, start.backward);

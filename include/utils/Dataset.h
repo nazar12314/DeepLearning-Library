@@ -122,4 +122,58 @@ public:
     }
 };
 
+template <size_t ROWS, size_t HEIGHT, size_t WEIGHT, size_t CHNALLES>
+Tensor<double, 4, Eigen::RowMajor> read_csv3d(const std::string& filename){
+    Tensor<double, 4, Eigen::RowMajor> data(ROWS, HEIGHT, WEIGHT, CHNALLES);
+
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::logic_error("Cannot open file of labels");
+    }
+    std::string line;
+    int row = 0;
+    while (getline(file, line)) {
+        std::stringstream ss(line);
+        std::string cell;
+        int height = 0;
+        int width = 0;
+        while (getline(ss, cell, ',')) {
+            float value = stof(cell);
+            data(row, height, width, 0) = value;
+            width++;
+            if (width==HEIGHT){
+                width = 0;
+                height++;
+            }
+        }
+        row++;
+    }
+
+    return data;
+}
+
+template <size_t ROWS, size_t COLS, size_t CHNALLES>
+Tensor<double, 3, Eigen::RowMajor> read_csv2d(const std::string& filename){
+    Tensor<double, 3, Eigen::RowMajor> data(ROWS, COLS, CHNALLES);
+
+    std::ifstream file(filename);
+    if (!file.is_open()) {
+        throw std::logic_error("Cannot open file of labels");
+    }
+    std::string line;
+    int row = 0;
+    while (getline(file, line)) {
+        std::stringstream ss(line);
+        std::string cell;
+        int col = 0;
+        while (getline(ss, cell, ',')) {
+            float value = stof(cell);
+            data(row, col, 0) = value;
+            col++;
+        }
+        row++;
+    }
+
+    return data;
+}
 #endif //NEURALIB_DATASET_H
